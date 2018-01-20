@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        layout="@layout/view_top"
+        android:id="@+id/registered_top_text" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:background="@drawable/background_registered"
+        android:orientation="vertical"
+        android:layout_marginTop="48dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_below="@+id/registered_top_text"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:inputType="phone"
+            android:hint="请输入手机号"
+            android:paddingLeft="42dp"
+            android:background="@null"
+            android:ems="10"
+            android:id="@+id/registered_phone"
+            android:gravity="center_vertical"
+            android:layout_weight="1" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@null"
+                android:inputType="phone"
+                android:hint="请输入验证码"
+                android:paddingLeft="42dp"
+                android:ems="10"
+                android:id="@+id/registered_number" />
+            <TextView
+                android:text="点击获取"
+                android:layout_width="wrap_content"
+                android:layout_height="24dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:id="@+id/registered_obtain"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:layout_centerVertical="true"/>
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

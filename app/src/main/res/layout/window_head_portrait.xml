@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/window_head_portrait_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/divider_design"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/window_head_portrait_shooting"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:text="拍一张" />
+
+    <TextView
+        android:id="@+id/window_head_portrait_select"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="从手机相册选取" />
+
+    <TextView
+        android:id="@+id/window_head_portrait_back"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/white"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="取消" />
+</LinearLayout>

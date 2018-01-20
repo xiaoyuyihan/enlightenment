@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="22dp"
+    android:orientation="horizontal"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:id="@+id/item_tab_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:paddingRight="1dp"
+        android:text="学习" />
+
+    <TextView
+        android:id="@+id/item_tab_number"
+        android:layout_width="14dp"
+        android:layout_height="6dp"
+        android:textSize="4sp"
+        android:gravity="center"
+        android:drawablePadding="-1dp"
+        android:drawableBottom="@drawable/background_top_number"
+        android:text="12" />
+</LinearLayout>

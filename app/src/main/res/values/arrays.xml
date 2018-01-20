@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="main_home_tob">
+        <item>最新</item>
+        <item>最热</item>
+        <item>喜爱</item>
+    </array>
+    <array name="main_found_top">
+        <item>知识屋</item>
+        <item>DIY室</item>
+        <item>求助厅</item>
+        <item>my小屋</item>
+    </array>
+</resources>

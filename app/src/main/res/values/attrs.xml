@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircularTextView">
+        <attr name="padding" format="dimension"></attr>
+        <attr name="textSize" format="dimension"></attr>
+        <attr name="backgroudColor" format="color"></attr>
+        <attr name="textColor" format="color"></attr>
+        <attr name="text" format="string"></attr>
+    </declare-styleable>
+    <declare-styleable name="StreakEditText">
+        <attr name="streakColor" format="color"/>
+        <attr name="streakPaddingHeight" format="dimension"/>
+        <attr name="streakWidth" format="dimension"/>
+    </declare-styleable>
+    <!--
+      borderOutThickness        -外圈
+      borderInsideThickness     -内圈
+      borderOutsideColor
+      borderInsideColor
+      text
+      textSize
+      borderShapeRound
+     -->
+    <declare-styleable name="ImageSphericView">
+        <attr name="borderOutThickness" format="dimension"/>
+        <attr name="borderInsideThickness" format="dimension"/>
+        <attr name="borderOutsideColor" format="color"/>
+        <attr name="borderInsideColor" format="color"/>
+        <attr name="image_text" format="string"/>
+        <attr name="image_textSize" format="dimension"/>
+        <attr name="borderShapeRound" format="boolean"/>
+        <attr name="image_textColor" format="color"/>
+    </declare-styleable>
+    <declare-styleable name="CircularLayout">
+        <attr name="circularPadding" format="dimension"/>
+        <attr name="ringSize" format="dimension"/>
+        <attr name="firstRadius" format="dimension"/>
+        <attr name="twoRadius" format="dimension"/>
+    </declare-styleable>
+    <declare-styleable name="ClipImageLayout" >
+        <attr name="clipDrawable" format="reference"/>
+        <attr name="clipPadding" format="dimension"/>
+    </declare-styleable>
+    <declare-styleable name="ArticleView">
+        <attr name="articleHeight" format="dimension"/>
+        <attr name="completeDegree" format="float"/>
+        <attr name="textArticleColor" format="color"/>
+        <attr name="textCompleteColor" format="color"/>
+        <attr name="backgroundColor" format="color"/>
+        <attr name="completeColor" format="color"/>
+        <attr name="articlePadding" format="dimension"/>
+        <attr name="articleTextSize" format="dimension"/>
+    </declare-styleable>
+</resources>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/fragment_found_top"
+        android:layout_width="match_parent"
+        android:layout_height="100dp">
+
+        <ImageView
+            android:id="@+id/fragment_found_image_top"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/background_found" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="36dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/fragment_found_name_top"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="发现"
+                android:textSize="16sp"
+                android:textColor="@color/black" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:background="#00000000" />
+
+            <TextView
+                android:id="@+id/fragment_found_introduce"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="纸上得来终觉浅，绝知此事要躬行"
+                android:textSize="10sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/fragment_found_tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/mainTopColor"
+        app:tabIndicatorColor="@color/colorAccent"
+        app:tabSelectedTextColor="@color/colorAccent"
+        app:layout_scrollFlags="exitUntilCollapsed"
+        app:tabTextColor="@color/white"
+        android:layout_below="@+id/fragment_found_top"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"/>
+    <ImageView
+        android:id="@+id/fragment_found_move"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginRight="18dp"
+        app:srcCompat="@drawable/ic_found_column"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@+id/fragment_found_tabLayout"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="18dp" />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/fragment_found_viewpager"
+        android:layout_below="@id/fragment_found_tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</RelativeLayout>

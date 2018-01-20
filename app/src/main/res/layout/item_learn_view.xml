@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/item_learn_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <enlightenment.com.view.ArticleView
+        android:id="@+id/item_learn_image_article"
+        android:layout_width="match_parent"
+        android:layout_height="14dp"
+        app:articleHeight="3dp"
+        app:articleTextSize="6sp"
+        app:completeDegree="0.1" />
+
+    <RelativeLayout
+        android:id="@+id/item_learn_image_top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/item_learn_image_article">
+
+        <enlightenment.com.view.ImageSphericView
+            android:id="@+id/item_learn_image_avatar"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="6dp"
+            android:src="@mipmap/logo" />
+
+        <TextView
+            android:id="@+id/item_learn_image_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/item_learn_image_avatar"
+            android:layout_marginLeft="10dp"
+            android:layout_toEndOf="@+id/item_learn_image_avatar"
+            android:layout_toRightOf="@+id/item_learn_image_avatar"
+            android:layout_marginTop="2dp"
+            android:text="李俊毅"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/item_learn_image_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/item_learn_image_username"
+            android:layout_below="@+id/item_learn_image_username"
+            android:layout_marginTop="6dp"
+            app:srcCompat="@drawable/ic_item_learn" />
+
+        <enlightenment.com.view.FlowLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/item_learn_image_top"
+            android:layout_marginTop="-2dp"
+            android:layout_marginLeft="4dp"
+            android:layout_toEndOf="@+id/item_learn_image_top">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_item_learn"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:textColor="@color/white"
+                android:text="艺术"
+                android:textSize="6sp" />
+
+        </enlightenment.com.view.FlowLayout>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/item_learn_image_username"
+            android:layout_marginRight="20dp"
+            android:text="坚持了12天"
+            android:textColor="#5f5f5f"
+            android:textSize="8sp" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/textView4"
+            android:layout_below="@+id/textView4"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_item_like"
+                android:drawablePadding="5dp"
+                android:text="4"
+                android:textSize="8sp" />
+
+            <View
+                android:layout_width="8dp"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_item_message"
+                android:drawablePadding="5dp"
+                android:text="4"
+                android:textSize="8sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/item_learn_image_text_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_learn_image_top_layout"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="@string/action_sign_in_short"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+
+</RelativeLayout>

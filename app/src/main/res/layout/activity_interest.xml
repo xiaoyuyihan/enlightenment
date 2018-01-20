@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="enlightenment.com.base.InterestActivity">
+
+    <include
+        android:id="@+id/interest_view_top"
+        layout="@layout/view_top" />
+    <enlightenment.com.view.CircularLayout
+        android:id="@+id/interest_circular"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="48dp"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"/>
+    <include
+        android:id="@+id/interest_view_loading"
+        layout="@layout/view_loading"/>
+
+</LinearLayout>
