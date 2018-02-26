@@ -36,6 +36,6 @@ public class AppActivity extends AppCompatActivity {
         }
     }
     public SharedPreferences getSharedPerferences(){
-        return getSharedPreferences(Constants.SHARED_NAME, Context.MODE_PRIVATE);
+        return getSharedPreferences(Constants.Set.SET, Context.MODE_PRIVATE);
     }
 }

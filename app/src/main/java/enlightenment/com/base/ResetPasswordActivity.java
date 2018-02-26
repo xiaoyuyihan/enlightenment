@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.dd.CircularProgressButton;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import enlightenment.com.contents.Constants;
 import enlightenment.com.contents.HttpUrls;
 import enlightenment.com.tool.device.SystemState;
@@ -23,21 +23,22 @@ import enlightenment.com.tool.okhttp.OkHttpUtils;
 
 /**
  * Created by lw on 2017/8/22.
+ * 修改密码
  */
 
 public class ResetPasswordActivity extends AppActivity implements baseView,View.OnClickListener{
 
-    @InjectView(R.id.top_left_image)
+    @BindView(R.id.top_left_image)
     public ImageView topLeft;
-    @InjectView(R.id.top_right_text)
+    @BindView(R.id.top_right_text)
     public TextView topRight;
-    @InjectView(R.id.top_center_text)
+    @BindView(R.id.top_center_text)
     public TextView topCenter;
-    @InjectView(R.id.reset)
+    @BindView(R.id.reset)
     public CircularProgressButton reset;
-    @InjectView(R.id.reset_password)
+    @BindView(R.id.reset_password)
     public TextInputEditText inputPassword;
-    @InjectView(R.id.reset_password_next)
+    @BindView(R.id.reset_password_next)
     public TextInputEditText InputPasswordNext;
 
     private basePresenter mPresenter;
@@ -46,7 +47,7 @@ public class ResetPasswordActivity extends AppActivity implements baseView,View.
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         topLeft.setOnClickListener(this);
         topCenter.setText("重置密码");
         topRight.setTextColor(getResources().getColor(R.color.mainTopColor));
@@ -97,6 +98,11 @@ public class ResetPasswordActivity extends AppActivity implements baseView,View.
         intent.putExtra(PhoneValidationActivity.TYPE_EXTES,PhoneValidationActivity.TYPE_FOTGET);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void requestException() {
+        showToast("请求不到数据，请检测一下网络信号");
     }
 
     @Override

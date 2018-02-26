@@ -78,9 +78,42 @@ public class MessageService extends Service {
         int action = intent.getIntExtra(MessageService.SERVICE_DATA_EXTRA, MessageService.ACTION_NO);
         switch (action) {
             case MessageService.ACTION_DETECT_MODULE_NEW:
-                extractModule();
+                extractMajor();
+                extractOrientation();
                 break;
         }
+    }
+
+    private void extractOrientation() {
+        if (FileUtils.isFile(FileUrls.PATH_APP_ORIENTATION)) {
+            //检测更新状态
+            List<ModuleFatherBean> list = FileUtils.readFileObject(FileUrls.PATH_APP_ORIENTATION);
+            if (list == null)
+                list = new ArrayList<>();
+            EnlightenmentApplication.getInstance().setOrientationBeen(list);
+        } else
+            downOrientation();
+    }
+
+    private void downOrientation() {
+        ModelUtil.getInstance().get(HttpUrls.Http_URL_DETECT_ORIENT,
+                new ModelUtil.CallBack() {
+                    @Override
+                    public void onResponse(String result, int id) {
+                        if (result != null) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(result);
+                                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                EnlightenmentApplication.getInstance().setOrientationBeen(
+                                        GsonUtils.parseJsonArrayWithGson(jsonArray.toString(), ModuleFatherBean[].class));
+                                FileUtils.writeFileObject(FileUrls.PATH_APP_ORIENTATION,
+                                        EnlightenmentApplication.getInstance().getOrientationBeen());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
     }
 
     @Override
@@ -100,13 +133,13 @@ public class MessageService extends Service {
         }
     }
 
-    private void extractModule() {
-        if (FileUtils.isFile(FileUrls.PATH_APP_MODULES)) {
+    private void extractMajor() {
+        if (FileUtils.isFile(FileUrls.PATH_APP_MAJOR)) {
             //检测更新状态
-            List<ModuleFatherBean> list = FileUtils.readFileObject(FileUrls.PATH_APP_MODULES);
+            List<ModuleFatherBean> list = FileUtils.readFileObject(FileUrls.PATH_APP_MAJOR);
             if (list == null)
                 list = new ArrayList<>();
-            EnlightenmentApplication.getInstance().setModuleFatherBeen(list);
+            EnlightenmentApplication.getInstance().setMajorBeen(list);
         } else
             downModule();
     }
@@ -120,10 +153,10 @@ public class MessageService extends Service {
                             try {
                                 JSONObject jsonObject = new JSONObject(result);
                                 JSONArray jsonArray = jsonObject.getJSONArray("data");
-                                EnlightenmentApplication.getInstance().setModuleFatherBeen(
+                                EnlightenmentApplication.getInstance().setMajorBeen(
                                         GsonUtils.parseJsonArrayWithGson(jsonArray.toString(), ModuleFatherBean[].class));
-                                FileUtils.writeFileObject(FileUrls.PATH_APP_MODULES,
-                                        EnlightenmentApplication.getInstance().getModuleFatherBeen());
+                                FileUtils.writeFileObject(FileUrls.PATH_APP_MAJOR,
+                                        EnlightenmentApplication.getInstance().getMajorBeen());
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

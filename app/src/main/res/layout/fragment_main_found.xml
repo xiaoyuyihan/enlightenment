@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/fragment_found_top"
         android:layout_width="match_parent"
-        android:layout_height="100dp">
+        android:layout_height="120dp">
 
         <ImageView
             android:id="@+id/fragment_found_image_top"

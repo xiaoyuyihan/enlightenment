@@ -3,39 +3,32 @@ package enlightenment.com.main;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
-import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.edit.EditActivity;
 
-import butterknife.OnClick;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import enlightenment.com.base.EnlightenmentApplication;
 import enlightenment.com.base.R;
 import enlightenment.com.establish.learn.LearnActivity;
 import enlightenment.com.search.SearchActivity;
 import enlightenment.com.view.AgainNestedScrollView;
 import enlightenment.com.view.CarouselView;
-import enlightenment.com.view.RollingLayout;
 
 /**
  * Created by lw on 2017/7/26.
@@ -52,8 +45,6 @@ public class HomeFragment extends Fragment implements MainView,View.OnClickListe
     }
 
     private View view;
-    private TabHost mTabHost;
-    private TabWidget mTabWidget;
     public TabLayout mTabLayout;
     private ViewPager mViewGroup;
     private TextView mSearch;
@@ -65,6 +56,9 @@ public class HomeFragment extends Fragment implements MainView,View.OnClickListe
     private HomeDynamicFragment currentFragment;
     private SwipeRefreshLayout refreshLayout;
     private CarouselView mRollingLayout;
+
+    @BindView(R.id.fragment_main_toolbar_layout)
+    CollapsingToolbarLayout mToolBarLayout;
 
     private MainPresenter mainPresenter;
 
@@ -80,6 +74,7 @@ public class HomeFragment extends Fragment implements MainView,View.OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_main_home, container, false);
+        ButterKnife.bind(this,view);
         initView();
         return view;
     }
@@ -108,10 +103,6 @@ public class HomeFragment extends Fragment implements MainView,View.OnClickListe
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                Object position=tab.getTag();
-                if (position!=null){
-                    HomeDynamicFragment.getInstance(new Integer(position.toString())).Refresh();
-                }
             }
 
             @Override
@@ -148,8 +139,7 @@ public class HomeFragment extends Fragment implements MainView,View.OnClickListe
                 startActivity(intent);
                 break;
             case R.id.fragment_home_learn:
-                intent = new Intent(getActivity(), LearnActivity.class);
-                intent.putExtra(LearnActivity.WRITE_FLAG,LearnActivity.LEARN_TYPE_LEARN);
+                intent = new Intent(getActivity(), EditActivity.class);
                 startActivity(intent);
                 break;
             case R.id.fragment_home_create:
@@ -206,4 +196,6 @@ public class HomeFragment extends Fragment implements MainView,View.OnClickListe
             return view;
         }
     }
+
+
 }

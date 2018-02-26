@@ -12,4 +12,5 @@ public interface baseView extends BaseView {
 
     void showToast(String message);
     void startNextActivity(Class name);
+    void requestException();
 }

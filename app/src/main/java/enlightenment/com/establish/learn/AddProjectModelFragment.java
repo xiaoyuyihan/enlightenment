@@ -58,7 +58,7 @@ public class AddProjectModelFragment extends DialogFragment implements View.OnCl
         topContentView.setText("选择模块");
         contentView.findViewById(R.id.top_right_text).setVisibility(View.GONE);
         flowLayout = (FlowLayout) contentView.findViewById(R.id.fragment_dialog_project_model_FlowLayout);
-        moduleFatherBeen = EnlightenmentApplication.getInstance().getModuleFatherBeen();
+        moduleFatherBeen = EnlightenmentApplication.getInstance().getMajorBeen();
         setFatherView(moduleFatherBeen);
         return contentView;
     }

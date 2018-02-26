@@ -13,29 +13,33 @@ import android.widget.TextView;
 
 import com.dd.CircularProgressButton;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import enlightenment.com.contents.Constants;
 import enlightenment.com.main.MainActivity;
+import enlightenment.com.tool.device.CheckUtils;
 import enlightenment.com.tool.device.SystemState;
 
+/***
+ * 登录页面
+ */
 public class LoginActivity extends AppActivity implements View.OnClickListener, baseView {
 
-    @InjectView(R.id.login_top_registered)
+    @BindView(R.id.login_top_registered)
     public TextView mRegistered;
-    @InjectView(R.id.login)
+    @BindView(R.id.login)
     public CircularProgressButton mLogin;
-    @InjectView(R.id.login_forget_password)
+    @BindView(R.id.login_forget_password)
     public TextView mForgetPassword;
-    @InjectView(R.id.login_username)
+    @BindView(R.id.login_username)
     public EditText mUsername;
-    @InjectView(R.id.login_password)
+    @BindView(R.id.login_password)
     public EditText mPassword;
-    @InjectView(R.id.login_qq)
+    @BindView(R.id.login_qq)
     public ImageView mLoginQQ;
-    @InjectView(R.id.login_sina)
+    @BindView(R.id.login_sina)
     public ImageView mLoginSina;
-    @InjectView(R.id.login_wx)
+    @BindView(R.id.login_wx)
     public ImageView mLoginWx;
 
 
@@ -50,7 +54,7 @@ public class LoginActivity extends AppActivity implements View.OnClickListener, 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         init();
     }
 
@@ -60,7 +64,7 @@ public class LoginActivity extends AppActivity implements View.OnClickListener, 
         mPresenter = basePresenter.getInstance();
         mPresenter.BindView(this);
         mPresenter.onStart();
-        String phone = getSharedPerferences().getString(Constants.SHARED_PHONE, null);
+        String phone = getSharedPerferences().getString(Constants.Set.SET_USER_NAME, null);
         if (phone != null) {
             mUsername.setText(phone);
         }
@@ -99,13 +103,18 @@ public class LoginActivity extends AppActivity implements View.OnClickListener, 
     }
 
     private void login() {
+        String phone=mUsername.getText().toString();
         if (mLogin.getProgress() == -1) {
             mLogin.setProgress(0);
             return;
         }
+        if(!CheckUtils.isMobile(phone)){
+            showToast("手机号格式错误，请检查后再进行操作");
+            return;
+        }
         if (SystemState.isNetworkState()) {
             mLogin.setProgress(50);
-            mPresenter.executeLogin(new LoginBean(mUsername.getText().toString(),
+            mPresenter.executeLogin(new LoginBean(phone,
                     mPassword.getText().toString()));
         } else {
             showToast("网络未打开");
@@ -137,12 +146,17 @@ public class LoginActivity extends AppActivity implements View.OnClickListener, 
     }
 
     @Override
+    public void requestException() {
+        showToast("请求不到数据，请检测一下网络信号");
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     public static class LoginBean{
-        private String phone;
+        private String username;
         private String password;
 
         public String getPassword() {
@@ -150,11 +164,11 @@ public class LoginActivity extends AppActivity implements View.OnClickListener, 
         }
 
         public String getPhone() {
-            return phone;
+            return username;
         }
 
         public void setPhone(String phone) {
-            this.phone = phone;
+            this.username = phone;
         }
 
         public void setPassword(String password) {
@@ -163,7 +177,7 @@ public class LoginActivity extends AppActivity implements View.OnClickListener, 
 
         private String mode="1";
         public LoginBean(String phone,String password){
-            this.phone=phone;
+            this.username=phone;
             this.password=password;
         }
     }

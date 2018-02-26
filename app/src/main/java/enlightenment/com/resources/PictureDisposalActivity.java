@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 import java.io.File;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import enlightenment.com.base.AppActivity;
 import enlightenment.com.base.EnlightenmentApplication;
 import enlightenment.com.base.R;
@@ -31,15 +31,15 @@ import enlightenment.com.view.ClipImageLayout;
 
 public class PictureDisposalActivity extends AppActivity implements View.OnClickListener {
 
-    @InjectView(R.id.top_left_image)
+    @BindView(R.id.top_left_image)
     ImageView leftimage;
-    @InjectView(R.id.top_center_text)
+    @BindView(R.id.top_center_text)
     TextView centerText;
-    @InjectView(R.id.top_right_text)
+    @BindView(R.id.top_right_text)
     TextView rightText;
-    @InjectView(R.id.clip_image)
+    @BindView(R.id.clip_image)
     ClipImageLayout clipImageLayout;
-    @InjectView(R.id.clip_image_view)
+    @BindView(R.id.clip_image_view)
     ImageView imageView;
 
     Bitmap bitmap=null;
@@ -62,7 +62,7 @@ public class PictureDisposalActivity extends AppActivity implements View.OnClick
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clip_image);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         rightText.setText("剪切");
         rightText.setOnClickListener(this);
         centerText.setText("剪切图片");

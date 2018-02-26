@@ -1,5 +1,6 @@
 package enlightenment.com.base;
 
+import android.content.Context;
 import android.util.ArrayMap;
 
 import org.json.JSONArray;
@@ -8,6 +9,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import enlightenment.com.contents.Constants;
@@ -17,6 +19,7 @@ import enlightenment.com.main.MainActivity;
 import enlightenment.com.module.ModuleFatherBean;
 import enlightenment.com.mvp.BasePresenter;
 import enlightenment.com.mvp.BaseView;
+import enlightenment.com.tool.DES;
 import enlightenment.com.tool.File.FileUtils;
 import enlightenment.com.tool.ModelUtil;
 import enlightenment.com.tool.gson.GsonUtils;
@@ -68,20 +71,43 @@ public class basePresenter<T extends baseView> extends BasePresenter {
      * @param loginBean
      * @param <T>
      */
-    public <T> void executeLogin(T loginBean) {
+    public <T> void executeLogin(final LoginActivity.LoginBean loginBean) {
         mModel.post(HttpUrls.HTTP_URL_LOGIN, TransformationUtils.beanToMap(loginBean),
                 new ModelUtil.CallBack() {
+                    @Override
+                    public void onException(Call call, Exception e, int id) {
+                        super.onException(call, e, id);
+                        mView.requestException();
+                    }
+
                     @Override
                     public void onResponse(String response, int id) {
                         if (response != null) {
                             try {
                                 JSONObject data = new JSONObject(response);
                                 if (data.getBoolean("Flag")) {
-                                    EnlightenmentApplication.getInstance().isBooleanShared(Constants.SHARED_IS_LOGIN, true);
-                                    EnlightenmentApplication.getInstance().setStringShared(Constants.SHARED_PHONE, Constants.phoneCode);
+                                    JSONObject MSG=data.getJSONObject("data");
+                                    EnlightenmentApplication.getInstance().isBooleanShared(
+                                            Constants.Set.SET_USER_IS, true);
+                                    EnlightenmentApplication.getInstance().setStringShared(
+                                            Constants.Set.SET_USER_NAME,
+                                            loginBean.getPhone());
+                                    EnlightenmentApplication.getInstance().setStringShared(
+                                            Constants.Set.SET_USER_PASSWORD,
+                                            loginBean.getPassword());
+                                    EnlightenmentApplication.getInstance().setStringShared(
+                                            Constants.Set.SET_USER_TOKEN,
+                                            MSG.getString("token"));
+                                    EnlightenmentApplication.getInstance().setStringShared(
+                                            Constants.Set.SET_USER_TOKEN_TIME,
+                                            MSG.getString("time"));
+                                    EnlightenmentApplication.getInstance().setStringShared(
+                                            Constants.Set.SET_USER_TOKEN_LONG,
+                                            MSG.getString("cycle"));
+
                                     mView.startNextActivity(MainActivity.class);
                                 } else
-                                    mView.showToast(data.getString("data"));
+                                    mView.showToast(data.getJSONObject("data").getString("msg"));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -208,10 +234,30 @@ public class basePresenter<T extends baseView> extends BasePresenter {
                             try {
                                 JSONObject jsonObject = new JSONObject(result);
                                 JSONArray jsonArray = jsonObject.getJSONArray("data");
-                                ((InterestActivity)mView).setModuleFatherBeen(
-                                        GsonUtils.parseJsonArrayWithGson(jsonArray.toString(), ModuleFatherBean[].class));
-                                FileUtils.writeFileObject(FileUrls.PATH_APP_MODULES,
-                                        EnlightenmentApplication.getInstance().getModuleFatherBeen());
+                                List<ModuleFatherBean> mList=GsonUtils.parseJsonArrayWithGson(
+                                        jsonArray.toString(), ModuleFatherBean[].class);
+                                ((InterestActivity)mView).setModuleFatherBeen(mList);
+                                FileUtils.writeFileObject(FileUrls.PATH_APP_MAJOR,
+                                        mList);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+        mModel.get(HttpUrls.Http_URL_DETECT_ORIENT,
+                new ModelUtil.CallBack() {
+                    @Override
+                    public void onResponse(String result, int id) {
+                        if (result != null) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(result);
+                                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                                List<ModuleFatherBean> mList=GsonUtils.parseJsonArrayWithGson(
+                                        jsonArray.toString(), ModuleFatherBean[].class);
+                                ((InterestActivity)mView).setModuleFatherBeen(mList);
+                                FileUtils.writeFileObject(FileUrls.PATH_APP_ORIENTATION,
+                                        mList);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

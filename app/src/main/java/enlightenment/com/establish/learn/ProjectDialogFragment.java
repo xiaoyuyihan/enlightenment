@@ -65,7 +65,6 @@ public class ProjectDialogFragment extends DialogFragment implements View.OnClic
         addView.setVisibility(View.VISIBLE);
         addView.setOnClickListener(this);
         contentView.findViewById(R.id.top_right_text).setVisibility(View.GONE);
-        swipeRefreshLayout=(SwipeRefreshLayout) contentView.findViewById(R.id.fragment_swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

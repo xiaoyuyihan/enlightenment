@@ -24,8 +24,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import enlightenment.com.module.ModuleChildBean;
 import enlightenment.com.module.ModuleFatherBean;
 import enlightenment.com.view.CircularLayout;
@@ -33,20 +33,21 @@ import enlightenment.com.view.CircularTextView;
 
 /**
  * Created by lw on 2017/8/15.
+ * 偏好页面
  */
 
 public class InterestActivity extends AppActivity implements baseView,
         View.OnClickListener {
     private LayoutInflater mInflater;
-    @InjectView(R.id.top_left_image)
+    @BindView(R.id.top_left_image)
     public ImageView topLeft;
-    @InjectView(R.id.top_right_text)
+    @BindView(R.id.top_right_text)
     public TextView topRight;
-    @InjectView(R.id.top_center_text)
+    @BindView(R.id.top_center_text)
     public TextView topCenter;
-    @InjectView(R.id.interest_circular)
+    @BindView(R.id.interest_circular)
     public CircularLayout circularLayout;
-    @InjectView(R.id.interest_view_loading)
+    @BindView(R.id.interest_view_loading)
     public LinearLayout loadingLayout;
 
     private String models = "";
@@ -59,7 +60,7 @@ public class InterestActivity extends AppActivity implements baseView,
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_interest);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         topLeft.setOnClickListener(this);
         topRight.setOnClickListener(this);
         topCenter.setText("选择兴趣点");
@@ -73,7 +74,7 @@ public class InterestActivity extends AppActivity implements baseView,
         mPresenter = basePresenter.getInstance();
         mPresenter.BindView(this);
         mPresenter.onStart();
-        moduleFatherBeen=EnlightenmentApplication.getInstance().getModuleFatherBeen();
+        moduleFatherBeen=EnlightenmentApplication.getInstance().getMajorBeen();
         circularAdapter =new CircularAdapter(moduleFatherBeen, this, new CircularAdapter.OnClickListener() {
 
             @Override
@@ -130,6 +131,11 @@ public class InterestActivity extends AppActivity implements baseView,
         intent.putExtra(PhoneValidationActivity.TYPE_EXTES, PhoneValidationActivity.TYPE_REGISTER);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void requestException() {
+        showToast("请求不到数据，请检测一下网络信号");
     }
 
     @Override

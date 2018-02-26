@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import enlightenment.com.base.AppActivity;
 import enlightenment.com.base.R;
 import enlightenment.com.base.RegisteredActivity;
@@ -31,20 +31,20 @@ public class PictureActivity extends AppActivity implements View.OnClickListener
 
     private List<String> paths;
 
-    @InjectView(R.id.picture_grid)
+    @BindView(R.id.picture_grid)
     GridView gridView;
-    @InjectView(R.id.top_left_image)
+    @BindView(R.id.top_left_image)
     ImageView leftView;
-    @InjectView(R.id.top_center_text)
+    @BindView(R.id.top_center_text)
     TextView centerView;
-    @InjectView(R.id.top_right_text)
+    @BindView(R.id.top_right_text)
     TextView rightView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         paths = getIntent().getExtras().getStringArrayList(PICTURE_EXTRA);
         rightView.setTextColor(getResources().getColor(R.color.mainTopColor));
         leftView.setOnClickListener(this);

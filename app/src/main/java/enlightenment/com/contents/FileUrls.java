@@ -29,5 +29,6 @@ public class FileUrls {
     }
     public static String PATH_CONTENTS = private_path+"/contents/";
     public static String PATH_PHOTO=public_path+"/photo/";
-    public static String PATH_APP_MODULES = PATH_CONTENTS+"modules.txt";
+    public static String PATH_APP_MAJOR = PATH_CONTENTS+"major.txt";
+    public static String PATH_APP_ORIENTATION = PATH_CONTENTS+"orientation.txt";
 }

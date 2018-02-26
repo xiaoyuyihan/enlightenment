@@ -1,42 +1,46 @@
 package enlightenment.com.base;
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.TextView;
 
-import org.apache.http.conn.scheme.HostNameResolver;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import enlightenment.com.contents.Constants;
+import enlightenment.com.contents.HttpUrls;
 import enlightenment.com.main.MainActivity;
 import enlightenment.com.service.MessageService;
+import enlightenment.com.tool.ModelUtil;
+import enlightenment.com.tool.gson.TransformationUtils;
+import okhttp3.Call;
 
 /**
- * Created by lw on 2017/7/20.
+ * Created by admin on 2017/7/20.
+ * 启动动画
  */
 
 public class StartActivity extends AppActivity {
 
     private Handler mHandler;
-    @InjectView(R.id.start_time)
+    @BindView(R.id.start_time)
     public TextView mStartView;
+
+    private boolean isLogin;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         startMessageService();
+        init();
         mStartView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,6 +65,54 @@ public class StartActivity extends AppActivity {
         mHandler.sendEmptyMessage(1);
     }
 
+    /***
+     * 每次获取token
+     */
+    private void init() {
+        isLogin=EnlightenmentApplication.getInstance().getSharedPreferences()
+                .getBoolean(Constants.Set.SET_USER_IS, false);
+        String phone=EnlightenmentApplication.getInstance().getSharedPreferences()
+                .getString(Constants.Set.SET_USER_NAME,null);
+        String password=EnlightenmentApplication.getInstance().getSharedPreferences()
+                .getString(Constants.Set.SET_USER_PASSWORD,null);
+        if (phone==null||password==null)
+            isLogin=false;
+        if (isLogin){
+            ModelUtil.getInstance().post(HttpUrls.HTTP_URL_LOGIN,
+                    TransformationUtils.beanToMap(
+                            new LoginActivity.LoginBean(phone,password)),
+                    new ModelUtil.CallBack() {
+                        @Override
+                        public void onException(Call call, Exception e, int id) {
+                            super.onException(call, e, id);
+                        }
+
+                        @Override
+                        public void onResponse(String response, int id) {
+                            if (response != null) {
+                                try {
+                                    JSONObject data = new JSONObject(response);
+                                    if (data.getBoolean("Flag")) {
+                                        JSONObject MSG=data.getJSONObject("data");
+                                        EnlightenmentApplication.getInstance().setStringShared(
+                                                Constants.Set.SET_USER_TOKEN,
+                                                MSG.getString("token"));
+                                        EnlightenmentApplication.getInstance().setStringShared(
+                                                Constants.Set.SET_USER_TOKEN_TIME,
+                                                MSG.getString("time"));
+                                        EnlightenmentApplication.getInstance().setStringShared(
+                                                Constants.Set.SET_USER_TOKEN_LONG,
+                                                MSG.getString("cycle"));
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    });
+        }
+    }
+
     private void startMessageService() {
         Intent intent=new Intent(this, MessageService.class);
         intent.putExtra(MessageService.SERVICE_DATA_EXTRA,MessageService.ACTION_DETECT_MODULE_NEW);
@@ -69,7 +121,7 @@ public class StartActivity extends AppActivity {
 
     private void startActivity() {
         Intent intent;
-        if (EnlightenmentApplication.getInstance().getSharedPerferences().getBoolean(Constants.SHARED_IS_LOGIN, false)) {
+        if (isLogin) {
             intent = new Intent(StartActivity.this, MainActivity.class);
         } else
             intent = new Intent(StartActivity.this, LoginActivity.class);

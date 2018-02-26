@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import enlightenment.com.base.AppActivity;
 import enlightenment.com.base.EnlightenmentApplication;
 import enlightenment.com.base.R;
@@ -43,15 +43,15 @@ public class AlbumActivity extends AppActivity implements GeneralAdapter.General
     public static final int FLAG_PICTURE=1;
     public static final String EXTRA_DATA="extra_data";
 
-    @InjectView(R.id.album_recycler)
+    @BindView(R.id.album_recycler)
     RecyclerView recyclerView;
-    @InjectView(R.id.progress_layout)
+    @BindView(R.id.progress_layout)
     LinearLayout progressLayout;
-    @InjectView(R.id.top_left_image)
+    @BindView(R.id.top_left_image)
     ImageView leftImage;
-    @InjectView(R.id.top_center_text)
+    @BindView(R.id.top_center_text)
     TextView centerText;
-    @InjectView(R.id.top_right_text)
+    @BindView(R.id.top_right_text)
     TextView rightText;
 
     private Handler mThreadHandler;
@@ -63,7 +63,7 @@ public class AlbumActivity extends AppActivity implements GeneralAdapter.General
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         rightText.setTextColor(getResources().getColor(R.color.mainTopColor));
         leftImage.setOnClickListener(new View.OnClickListener() {
             @Override

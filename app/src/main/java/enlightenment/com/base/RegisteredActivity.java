@@ -26,7 +26,7 @@ import com.dd.CircularProgressButton;
 import java.io.File;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import enlightenment.com.contents.Constants;
 import enlightenment.com.contents.FileUrls;
 import enlightenment.com.main.MainActivity;
@@ -39,6 +39,7 @@ import enlightenment.com.view.HeadPortraitWinPopupWindow;
 
 /**
  * Created by lw on 2017/7/24.
+ * 注册详细信息填写
  */
 
 public class RegisteredActivity extends AppActivity implements baseView, View.OnClickListener {
@@ -53,19 +54,19 @@ public class RegisteredActivity extends AppActivity implements baseView, View.On
     private static final String IMAGE_URL="image_url";
     private static final String PASSWORD_NEXT="PASSWORD_NEXT";
 
-    @InjectView(R.id.register_user_image)
+    @BindView(R.id.register_user_image)
     ImageView mUserImage;
-    @InjectView(R.id.registered_password)
+    @BindView(R.id.registered_password)
     TextInputEditText mPassword;
-    @InjectView(R.id.registered_password_next)
+    @BindView(R.id.registered_password_next)
     TextInputEditText mPasswordNext;
-    @InjectView(R.id.registered_username)
+    @BindView(R.id.registered_username)
     TextInputEditText mUsername;
-    @InjectView(R.id.registered_password_layout)
+    @BindView(R.id.registered_password_layout)
     TextInputLayout mPasswordLayout;
-    @InjectView(R.id.registered)
+    @BindView(R.id.registered)
     CircularProgressButton mRegistered;
-    @InjectView(R.id.registered_info)
+    @BindView(R.id.registered_info)
     TextView mInfo;
     basePresenter mPresenter;
     private HeadPortraitWinPopupWindow mPopupWindow;
@@ -77,7 +78,7 @@ public class RegisteredActivity extends AppActivity implements baseView, View.On
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registered);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         mRegistered.setOnClickListener(this);
         mUserImage.setOnClickListener(this);
 
@@ -142,6 +143,11 @@ public class RegisteredActivity extends AppActivity implements baseView, View.On
         Intent intent = new Intent(this, name);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void requestException() {
+        showToast("请求不到数据，请检测一下网络信号");
     }
 
     @Override

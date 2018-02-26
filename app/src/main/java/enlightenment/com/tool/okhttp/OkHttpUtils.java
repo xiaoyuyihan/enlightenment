@@ -4,6 +4,7 @@ package enlightenment.com.tool.okhttp;
 import java.io.IOException;
 import java.util.concurrent.Executor;
 
+import enlightenment.com.base.EnlightenmentApplication;
 import enlightenment.com.tool.okhttp.builder.GetBuilder;
 import enlightenment.com.tool.okhttp.builder.HeadBuilder;
 import enlightenment.com.tool.okhttp.builder.OtherRequestBuilder;
@@ -11,6 +12,9 @@ import enlightenment.com.tool.okhttp.builder.PostFileBuilder;
 import enlightenment.com.tool.okhttp.builder.PostFormBuilder;
 import enlightenment.com.tool.okhttp.builder.PostStringBuilder;
 import enlightenment.com.tool.okhttp.callback.Callback;
+import enlightenment.com.tool.okhttp.cookie.CookieJarImpl;
+import enlightenment.com.tool.okhttp.cookie.store.MemoryCookieStore;
+import enlightenment.com.tool.okhttp.cookie.store.PersistentCookieStore;
 import enlightenment.com.tool.okhttp.request.RequestCall;
 import enlightenment.com.tool.okhttp.utils.Platform;
 import okhttp3.Call;
@@ -32,6 +36,8 @@ public class OkHttpUtils {
         } else {
             mOkHttpClient = okHttpClient;
         }
+        mOkHttpClient=mOkHttpClient.newBuilder().cookieJar(new CookieJarImpl(
+                new MemoryCookieStore())).build();
 
         mPlatform = Platform.get();
     }

@@ -12,6 +12,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import enlightenment.com.base.EnlightenmentApplication;
+import enlightenment.com.contents.Constants;
 import enlightenment.com.contents.HttpUrls;
 import enlightenment.com.tool.ModelUtil;
 import enlightenment.com.mvp.BasePresenter;
@@ -79,17 +81,22 @@ public class MainPresenter<T extends MainView> extends BasePresenter {
 
     private void Refresh(final boolean Flag, final SwipeRefreshLayout swipeRefreshLayout, final int type, final RecyclerView.Adapter baseAdapter) {
         ModelUtil.getInstance().get(getUrl(Flag, type),
-                new ModelUtil.CallBack(){
+                new ModelUtil.CallBack() {
                     @Override
                     public void onResponse(String result, int id) {
                         if (result != null)
                             try {
                                 JSONArray jsonArray = new JSONObject(result).getJSONArray("data");
-                                List list = GsonUtils.parseJsonArrayWithGson(jsonArray.toString(), ContentBean[].class);
-                                addDataList(list, type, Flag);
-                                if (swipeRefreshLayout != null)
-                                    swipeRefreshLayout.setRefreshing(false);
-                                baseAdapter.notifyDataSetChanged();
+                                final List list = GsonUtils.parseJsonArrayWithGson(jsonArray.toString(), ContentBean[].class);
+                                mHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        addDataList(list, type, Flag);
+                                        baseAdapter.notifyDataSetChanged();
+                                        if (swipeRefreshLayout != null)
+                                            swipeRefreshLayout.setRefreshing(false);
+                                    }
+                                });
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -111,53 +118,50 @@ public class MainPresenter<T extends MainView> extends BasePresenter {
                 if (flag)
                     startNumber = 1;
                 else
-                    startNumber = HomeNewList.size()+1;
+                    startNumber = HomeNewList.size() + 1;
                 url = HttpUrls.HTTP_URL_HOME_NEW + "?page=" + startNumber;
                 break;
             case HomeDynamicFragment.FRAGMENT_HOT:
                 if (flag)
                     startNumber = 1;
                 else
-                    startNumber = HomeHotList.size()+1;
+                    startNumber = HomeHotList.size() + 1;
                 url = HttpUrls.HTTP_URL_HOME_HOT + "?page=" + startNumber;
                 break;
             case HomeDynamicFragment.FRAGMENT_LIVE:
                 if (flag)
                     startNumber = 1;
                 else
-                    startNumber = HomeLoveList.size()+1;
+                    startNumber = HomeLoveList.size() + 1;
                 url = HttpUrls.HTTP_URL_HOME_LOVE + "?page=" + startNumber;
                 break;
             case FoundDynamicFragment.FRAGMENT_KONWLEDGE:
-                if (flag)
-                    startNumber = 1;
-                else
-                    startNumber = FoundKnowledgeList.size()+1;
+                startNumber = FoundKnowledgeList.size() + 1;
                 url = HttpUrls.HTTP_URL_FOUND_KONWLEDGE + "?page=" + startNumber;
                 break;
             case FoundDynamicFragment.FRAGMENT_DIY:
                 if (flag)
                     startNumber = 1;
                 else
-                    startNumber = FoundDiyList.size()+1;
+                    startNumber = FoundDiyList.size() + 1;
                 url = HttpUrls.HTTP_URL_FOUND_DIY + "?page=" + startNumber;
                 break;
             case FoundDynamicFragment.FRAGMENT_HELP:
                 if (flag)
                     startNumber = 1;
                 else
-                    startNumber = FoundHelpList.size()+1;
+                    startNumber = FoundHelpList.size() + 1;
                 url = HttpUrls.HTTP_URL_FOUND_HELP + "?page=" + startNumber;
                 break;
             case FoundDynamicFragment.FRAGMENT_MYSELF:
                 if (flag)
                     startNumber = 1;
                 else
-                    startNumber = FoundMyselfList.size()+1;
+                    startNumber = FoundMyselfList.size() + 1;
                 url = HttpUrls.HTTP_URL_FOUND_MYSELF + "?page=" + startNumber;
                 break;
         }
-        return url;
+        return url+"&token="+ EnlightenmentApplication.getInstance().getString(Constants.Set.SET_USER_TOKEN);
     }
 
     //记住item的ID

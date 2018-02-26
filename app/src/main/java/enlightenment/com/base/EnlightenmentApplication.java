@@ -20,16 +20,17 @@ import enlightenment.com.tool.okhttp.OkHttpUtils;
 public class EnlightenmentApplication extends Application {
     private static OkHttpUtils mHttpUtils;
     private static EnlightenmentApplication app;
-    private List<ModuleFatherBean> moduleFatherBeen;
+    private List<ModuleFatherBean> majorBeen;
+    private List<ModuleFatherBean> orientationBeen;
     private String modules="";
     private HandlerThread mHandlerThread;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        mHttpUtils = OkHttpUtils.getInstance();
         app=this;
         getHandlerThread();
+        mHttpUtils = OkHttpUtils.getInstance();
     }
 
     public OkHttpUtils getHttpUtils() {
@@ -41,29 +42,33 @@ public class EnlightenmentApplication extends Application {
     public static EnlightenmentApplication getInstance(){
         return app;
     }
-    public SharedPreferences getSharedPerferences(){
-        return getSharedPreferences(Constants.SHARED_NAME, Context.MODE_PRIVATE);
+    public SharedPreferences getSharedPreferences(){
+        return getSharedPreferences(Constants.Set.SET, Context.MODE_PRIVATE);
+    }
+
+    public String getString(String key){
+        return getSharedPreferences().getString(key,null);
     }
     public void setStringShared(String name,String value){
-        SharedPreferences sharedPreferences=getSharedPerferences();
+        SharedPreferences sharedPreferences=getSharedPreferences();
         SharedPreferences.Editor editor=sharedPreferences.edit();
         editor.putString(name,value);
         editor.commit();
     }
 
     public void isBooleanShared(String name,boolean value){
-        SharedPreferences sharedPreferences=getSharedPerferences();
+        SharedPreferences sharedPreferences=getSharedPreferences();
         SharedPreferences.Editor editor=sharedPreferences.edit();
         editor.putBoolean(name,value);
         editor.commit();
     }
 
-    public void setModuleFatherBeen(List<ModuleFatherBean> moduleFatherBeen) {
-        this.moduleFatherBeen = moduleFatherBeen;
+    public void setMajorBeen(List<ModuleFatherBean> majorBeen) {
+        this.majorBeen = majorBeen;
     }
 
-    public List<ModuleFatherBean> getModuleFatherBeen() {
-        return moduleFatherBeen;
+    public List<ModuleFatherBean> getMajorBeen() {
+        return majorBeen;
     }
 
     public void setModules(String modules) {
@@ -72,6 +77,14 @@ public class EnlightenmentApplication extends Application {
 
     public String getModules() {
         return modules;
+    }
+
+    public void setOrientationBeen(List<ModuleFatherBean> orientationBeen) {
+        this.orientationBeen = orientationBeen;
+    }
+
+    public List<ModuleFatherBean> getOrientationBeen() {
+        return orientationBeen;
     }
 
     public HandlerThread getHandlerThread() {

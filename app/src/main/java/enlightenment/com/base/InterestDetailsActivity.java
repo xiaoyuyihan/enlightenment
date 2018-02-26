@@ -26,12 +26,13 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import enlightenment.com.module.ModuleChildBean;
 import enlightenment.com.view.FlowLayout;
 
 /**
  * Created by lw on 2017/8/15.
+ * 偏好选择详情页面
  */
 
 public class InterestDetailsActivity extends AppActivity implements View.OnClickListener {
@@ -40,11 +41,11 @@ public class InterestDetailsActivity extends AppActivity implements View.OnClick
     private ArrayList<ModuleChildBean> moduleChildBeen;
     private String module="";
 
-    @InjectView(R.id.fab)
+    @BindView(R.id.fab)
     FloatingActionButton fab;
-    @InjectView(R.id.cv_add)
+    @BindView(R.id.cv_add)
     CardView cvAdd;
-    @InjectView(R.id.interest_flow)
+    @BindView(R.id.interest_flow)
     FlowLayout mFlowLayout;
 
     @Override
@@ -52,7 +53,7 @@ public class InterestDetailsActivity extends AppActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_interest_details);
         moduleChildBeen = getIntent().getExtras().getParcelableArrayList(EXTRA_OBJECT);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ShowEnterAnimation();

@@ -68,7 +68,8 @@
                 android:paddingRight="4dp"
                 android:textColor="@color/white"
                 android:text="艺术"
-                android:textSize="6sp" />
+                android:textSize="6sp"
+                android:layout_alignParentStart="true" />
 
         </enlightenment.com.view.FlowLayout>
 

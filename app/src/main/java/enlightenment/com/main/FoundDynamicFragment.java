@@ -82,7 +82,7 @@ public class FoundDynamicFragment extends Fragment implements MainView {
                 mainPresenter.upRefresh(FoundDynamicFragment.this, refreshLayout, adapter);
             }
         });
-        adapter = new MainItemAdapter(getActivity(), mainPresenter.getDataList(getTypeFragment()), R.layout.item_learn_view);
+        adapter = new MainItemAdapter(getActivity(), mainPresenter.getDataList(getTypeFragment()), R.layout.item_learn_text);
         //线性布局管理器
         RecyclerView.LayoutManager recyclerViewLayoutManager = new LinearLayoutManager(getActivity());
         //设置布局管理器

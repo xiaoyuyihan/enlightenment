@@ -20,11 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
+import butterknife.BindView;
 import enlightenment.com.contents.Constants;
 
 /**
  * Created by lw on 2017/7/20.
+ * 验证码获取
  */
 
 public class PhoneValidationActivity extends AppActivity implements  baseView,View.OnClickListener{
@@ -33,17 +34,17 @@ public class PhoneValidationActivity extends AppActivity implements  baseView,Vi
     public static final int TYPE_FOTGET=3;
     public static final String TYPE_EXTES="TYPE";
 
-    @InjectView(R.id.registered_obtain)
+    @BindView(R.id.registered_obtain)
     public TextView mObtain;
-    @InjectView(R.id.registered_phone)
+    @BindView(R.id.registered_phone)
     public EditText mPhone;
-    @InjectView(R.id.registered_number)
+    @BindView(R.id.registered_number)
     public EditText mNumber;
-    @InjectView(R.id.top_right_text)
+    @BindView(R.id.top_right_text)
     public TextView topRightText;
-    @InjectView(R.id.top_center_text)
+    @BindView(R.id.top_center_text)
     public TextView topCenterText;
-    @InjectView(R.id.top_left_image)
+    @BindView(R.id.top_left_image)
     public ImageView topLeftImage;
 
     private basePresenter mPresenter;
@@ -73,7 +74,7 @@ public class PhoneValidationActivity extends AppActivity implements  baseView,Vi
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_vaildation);
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
         init();
     }
 
@@ -135,6 +136,11 @@ public class PhoneValidationActivity extends AppActivity implements  baseView,Vi
         Intent intent = new Intent(PhoneValidationActivity.this, name);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void requestException() {
+        showToast("请求不到数据，请检测一下网络信号");
     }
 
     @Override
