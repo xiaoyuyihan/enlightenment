@@ -122,7 +122,7 @@ public class FoundDynamicFragment extends Fragment implements MainView {
     }
 
     @Override
-    public Activity getMainActivity() {
-        return null;
+    public void showToast(String message) {
+
     }
 }

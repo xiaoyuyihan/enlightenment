@@ -6,28 +6,8 @@
     <include
         layout="@layout/view_top"/>
 
-    <LinearLayout
-        android:id="@+id/fragment_dialog_project_loading"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center">
-
-        <ProgressBar
-            style="?android:attr/progressBarStyleSmall"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:id="@+id/progressBar3" />
-
-        <TextView
-            android:text="正在加载中···"
-            android:gravity="center"
-            android:textSize="16sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView6" />
-    </LinearLayout>
+    <include
+        layout="@layout/fragment_dialog_loading"/>
 
     <include
         layout="@layout/fragment_recycler"/>

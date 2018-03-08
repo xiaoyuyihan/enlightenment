@@ -28,14 +28,46 @@
     <style name="Translucent" parent="AppTheme.NoActionBar">
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
+
     <style name="TextAppearance.AppCompat.SmallTitle">
         <item name="android:textSize">18dp</item>
     </style>
+
     <style name="TextAppearance.AppCompat.BigTitle">
         <item name="android:textSize">24dp</item>
     </style>
+
     <style name="menu_labels_style">
         <item name="android:background">@drawable/shape_background_beige_round_textview</item>
         <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="informationTextStyle">
+        <item name="android:background">@color/white</item>
+        <item name="android:textColor">@color/black_50</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_marginTop">12dp</item>
+    </style>
+
+    <style name="InformationNewColumnTextStyle">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="InformationNewColumnContentStyle">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">right|center_vertical</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:padding">4dp</item>
+    </style>
+
+    <style name="InformationNewColumnImageStyle">
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="android:paddingRight">4dp</item>
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:src">@drawable/ic_right_arrow</item>
     </style>
 </resources>

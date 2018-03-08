@@ -42,7 +42,7 @@
                     android:layout_marginTop="12dp"
                     android:background="@drawable/background_border_corners_4"
                     android:drawableLeft="@drawable/ic_home_search"
-                    android:drawablePadding="10dp"
+                    android:drawablePadding="12dp"
                     android:gravity="center_vertical"
                     android:hint="搜索"
                     android:inputType="textPersonName"

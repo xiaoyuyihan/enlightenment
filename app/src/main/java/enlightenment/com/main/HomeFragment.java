@@ -25,7 +25,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import enlightenment.com.base.EnlightenmentApplication;
 import enlightenment.com.base.R;
-import enlightenment.com.establish.learn.LearnActivity;
 import enlightenment.com.search.SearchActivity;
 import enlightenment.com.view.AgainNestedScrollView;
 import enlightenment.com.view.CarouselView;
@@ -126,11 +125,6 @@ public class HomeFragment extends Fragment implements MainView,View.OnClickListe
     }
 
     @Override
-    public Activity getMainActivity() {
-        return null;
-    }
-
-    @Override
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()){
@@ -140,6 +134,7 @@ public class HomeFragment extends Fragment implements MainView,View.OnClickListe
                 break;
             case R.id.fragment_home_learn:
                 intent = new Intent(getActivity(), EditActivity.class);
+                intent.putExtra(EditActivity.ACTIVITY_EDIT_TYPE,EditActivity.ACTIVITY_EDIT_TYPE_CREATE);
                 startActivity(intent);
                 break;
             case R.id.fragment_home_create:
@@ -147,6 +142,11 @@ public class HomeFragment extends Fragment implements MainView,View.OnClickListe
             case R.id.fragment_home_question:
                 break;
         }
+    }
+
+    @Override
+    public void showToast(String message) {
+
     }
 
     static class MessageFragmentPagerAdapter extends FragmentPagerAdapter {

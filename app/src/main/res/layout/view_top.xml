@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:text="继续"
             android:textSize="14sp"
-            android:padding="8dp"/>
+            android:padding="12dp"/>
         <ImageView
             android:id="@+id/top_right_image"
             android:layout_width="48dp"

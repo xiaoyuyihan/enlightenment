@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="24dp"
+    android:layout_marginLeft="12dp">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_edit_top" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:paddingLeft="6dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="分类"
+            style="@style/InformationNewColumnTextStyle"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="学习"
+            style="@style/InformationNewColumnContentStyle"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            style="@style/InformationNewColumnImageStyle"/>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_edit_top" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:paddingLeft="6dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="模块"
+            style="@style/InformationNewColumnTextStyle"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="人文-环境与艺术设计"
+            style="@style/InformationNewColumnContentStyle"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            style="@style/InformationNewColumnImageStyle"/>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_edit_top" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:paddingLeft="6dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="栏目"
+            style="@style/InformationNewColumnTextStyle"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="艺术设计概述"
+            style="@style/InformationNewColumnContentStyle"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            style="@style/InformationNewColumnImageStyle"/>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_edit_top" />
+</LinearLayout>

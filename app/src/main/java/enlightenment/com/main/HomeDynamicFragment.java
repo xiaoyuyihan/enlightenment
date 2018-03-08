@@ -107,11 +107,6 @@ public class HomeDynamicFragment extends Fragment implements MainView, SwipeRefr
 
     }
 
-    @Override
-    public Activity getMainActivity() {
-        return getActivity();
-    }
-
     public int getTypeFragment() {
         return typeFragment;
     }
@@ -119,5 +114,10 @@ public class HomeDynamicFragment extends Fragment implements MainView, SwipeRefr
     @Override
     public void onRefresh() {
         Refresh();
+    }
+
+    @Override
+    public void showToast(String message) {
+
     }
 }

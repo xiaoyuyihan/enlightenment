@@ -110,9 +110,4 @@ public class ResetPasswordActivity extends AppActivity implements baseView,View.
         super.onStop();
         mPresenter.unBindView(this);
     }
-
-    @Override
-    public AppCompatActivity getMainActivity() {
-        return this;
-    }
 }

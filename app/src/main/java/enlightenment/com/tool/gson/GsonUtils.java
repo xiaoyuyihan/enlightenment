@@ -26,4 +26,9 @@ public class GsonUtils {
         return Arrays.asList(result);
     }
 
+    public static <T> T parseJsonWithToBean(String json, Class<T> type){
+        Gson gson = new Gson();
+        T bean = gson.fromJson(json,type);
+        return bean;
+    }
 }

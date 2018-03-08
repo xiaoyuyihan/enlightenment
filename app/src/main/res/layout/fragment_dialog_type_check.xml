@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include
+        android:id="@+id/fragment_dialog_type_check_top"
+        layout="@layout/view_top" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/shape_bg_dialog_type_check"
+            android:paddingLeft="16dp"
+            android:paddingRight="8dp"
+            android:layout_weight="1">
+            <ImageView
+                android:id="@+id/fragment_dialog_type_check_learn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerInside"
+                app:srcCompat="@drawable/ic_news_type_diy" />
+
+            <TextView
+                android:text="学习"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/shape_bg_dialog_type_check"
+            android:paddingLeft="8dp"
+            android:paddingRight="16dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:id="@+id/fragment_dialog_type_check_diy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/ic_news_type_note" />
+            <TextView
+                android:text="创造"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

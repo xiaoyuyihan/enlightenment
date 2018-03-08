@@ -6,40 +6,33 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 import enlightenment.com.base.EnlightenmentApplication;
-import enlightenment.com.contents.Constants;
 import enlightenment.com.contents.FileUrls;
 import enlightenment.com.contents.HttpUrls;
-import enlightenment.com.module.ModuleFatherBean;
+import enlightenment.com.module.ModuleBean;
 import enlightenment.com.tool.File.FileUtils;
-import enlightenment.com.tool.ModelUtil;
+import enlightenment.com.tool.okhttp.ModelUtil;
 import enlightenment.com.tool.gson.GsonUtils;
-import enlightenment.com.tool.okhttp.OkHttpBaseCallback;
-import enlightenment.com.tool.okhttp.OkHttpUtils;
 
 /**
  * Created by lw on 2017/8/17.
  * 检测模块是否存在或更新
  */
 
-public class MessageService extends Service {
+public class DownloadService extends Service {
     public static final String SERVICE_DATA_EXTRA = "MessageService_Extra";
     public static final int ACTION_NO = -1;
     public static final int ACTION_DETECT_MODULE_NEW = 1;       //模块更新检测
 
 
-    private MessageBinder messageBinder = new MessageBinder(this);
+    private DownloadBinder messageBinder = new DownloadBinder(this);
 
     @Nullable
     @Override
@@ -75,9 +68,9 @@ public class MessageService extends Service {
     }
 
     private void switchService(Intent intent) {
-        int action = intent.getIntExtra(MessageService.SERVICE_DATA_EXTRA, MessageService.ACTION_NO);
+        int action = intent.getIntExtra(DownloadService.SERVICE_DATA_EXTRA, DownloadService.ACTION_NO);
         switch (action) {
-            case MessageService.ACTION_DETECT_MODULE_NEW:
+            case DownloadService.ACTION_DETECT_MODULE_NEW:
                 extractMajor();
                 extractOrientation();
                 break;
@@ -87,7 +80,7 @@ public class MessageService extends Service {
     private void extractOrientation() {
         if (FileUtils.isFile(FileUrls.PATH_APP_ORIENTATION)) {
             //检测更新状态
-            List<ModuleFatherBean> list = FileUtils.readFileObject(FileUrls.PATH_APP_ORIENTATION);
+            List<ModuleBean> list = FileUtils.readFileObject(FileUrls.PATH_APP_ORIENTATION);
             if (list == null)
                 list = new ArrayList<>();
             EnlightenmentApplication.getInstance().setOrientationBeen(list);
@@ -105,7 +98,7 @@ public class MessageService extends Service {
                                 JSONObject jsonObject = new JSONObject(result);
                                 JSONArray jsonArray = jsonObject.getJSONArray("data");
                                 EnlightenmentApplication.getInstance().setOrientationBeen(
-                                        GsonUtils.parseJsonArrayWithGson(jsonArray.toString(), ModuleFatherBean[].class));
+                                        GsonUtils.parseJsonArrayWithGson(jsonArray.toString(), ModuleBean[].class));
                                 FileUtils.writeFileObject(FileUrls.PATH_APP_ORIENTATION,
                                         EnlightenmentApplication.getInstance().getOrientationBeen());
                             } catch (JSONException e) {
@@ -121,14 +114,14 @@ public class MessageService extends Service {
         super.onDestroy();
     }
 
-    class MessageBinder extends Binder {
-        private MessageService messageService;
+    class DownloadBinder extends Binder {
+        private DownloadService messageService;
 
-        public MessageBinder(MessageService service) {
+        public DownloadBinder(DownloadService service) {
             this.messageService = service;
         }
 
-        public MessageService getMessageService() {
+        public DownloadService getMessageService() {
             return messageService;
         }
     }
@@ -136,16 +129,18 @@ public class MessageService extends Service {
     private void extractMajor() {
         if (FileUtils.isFile(FileUrls.PATH_APP_MAJOR)) {
             //检测更新状态
-            List<ModuleFatherBean> list = FileUtils.readFileObject(FileUrls.PATH_APP_MAJOR);
-            if (list == null)
+            List<ModuleBean> list = FileUtils.readFileObject(FileUrls.PATH_APP_MAJOR);
+            if (list == null) {
                 list = new ArrayList<>();
+                downModule();
+            }
             EnlightenmentApplication.getInstance().setMajorBeen(list);
         } else
             downModule();
     }
 
     private void downModule() {
-        ModelUtil.getInstance().get(HttpUrls.Http_URL_DETECT_MODULE,
+        ModelUtil.getInstance().get(HttpUrls.Http_URL_DETECT_MAJOR,
                 new ModelUtil.CallBack() {
                     @Override
                     public void onResponse(String result, int id) {
@@ -154,7 +149,7 @@ public class MessageService extends Service {
                                 JSONObject jsonObject = new JSONObject(result);
                                 JSONArray jsonArray = jsonObject.getJSONArray("data");
                                 EnlightenmentApplication.getInstance().setMajorBeen(
-                                        GsonUtils.parseJsonArrayWithGson(jsonArray.toString(), ModuleFatherBean[].class));
+                                        GsonUtils.parseJsonArrayWithGson(jsonArray.toString(), ModuleBean[].class));
                                 FileUtils.writeFileObject(FileUrls.PATH_APP_MAJOR,
                                         EnlightenmentApplication.getInstance().getMajorBeen());
                             } catch (JSONException e) {

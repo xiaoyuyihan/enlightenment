@@ -7,7 +7,7 @@ import java.util.List;
 import enlightenment.com.base.EnlightenmentApplication;
 import enlightenment.com.main.ContentBean;
 import enlightenment.com.module.ModuleChildBean;
-import enlightenment.com.module.ModuleFatherBean;
+import enlightenment.com.module.ModuleBean;
 
 /**
  * Created by lw on 2018/2/10.
@@ -17,7 +17,7 @@ public class CheckUtils {
     /**
      * 验证手机格式
      */
-    public static boolean isMobile(String number) {
+    public static boolean isPhone(String number) {
     /*
     移动：134、135、136、137、138、139、150、151、152、157(TD)、158、159、178(新)、182、184、187、188
     联通：130、131、132、152、155、156、185、186
@@ -34,20 +34,20 @@ public class CheckUtils {
     }
 
     public static String getModelName(ContentBean contentBean){
-        List<ModuleFatherBean> list;
-        if (Integer.valueOf(contentBean.getType())==0){
+        List<ModuleBean> list;
+        if (Integer.valueOf(contentBean.getType())==1){
             list= EnlightenmentApplication.getInstance().getMajorBeen();
         }else {
             list= EnlightenmentApplication.getInstance().getMajorBeen();
         }
-        for(ModuleFatherBean fatherBean:list){
-            if (contentBean.getFatherID()-fatherBean.getIdentity()*100<100){
+        for(ModuleBean fatherBean:list){
+            if (contentBean.getColumnFatherID()-fatherBean.getIdentity()*100<100){
                 for (ModuleChildBean childBean:fatherBean.getChildBeen()){
-                    if(childBean.getIdentity()==contentBean.getFatherID())
+                    if(childBean.getIdentity()==contentBean.getColumnFatherID())
                         return childBean.getName();
                 }
             }
         }
-        return "";
+        return " ";
     }
 }

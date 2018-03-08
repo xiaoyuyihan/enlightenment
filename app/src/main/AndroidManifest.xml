@@ -58,8 +58,22 @@
         <activity android:name="enlightenment.com.resources.PictureActivity"/>
         <activity android:name="enlightenment.com.resources.AlbumActivity"/>
         <activity android:name="enlightenment.com.resources.PictureDisposalActivity"/>
-        <activity android:name="enlightenment.com.establish.learn.LearnActivity"/>
-        <service android:name="enlightenment.com.service.MessageService"/>
+
+        <activity android:name="enlightenment.com.information.InformationActivity">
+            <intent-filter>
+                <action android:name="com.information.INFORMATION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <service android:name="enlightenment.com.service.DownloadService"/>
+        <service android:name="enlightenment.com.service.UploadService">
+            <intent-filter>
+                <action android:name="com.enlightenment.UPLOAD_SERVICE"/>
+            </intent-filter>
+        </service>
+
+
         <receiver android:name="enlightenment.com.broadcast.NetworkReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>

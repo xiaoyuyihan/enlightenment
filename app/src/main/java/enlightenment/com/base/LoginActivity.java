@@ -108,7 +108,7 @@ public class LoginActivity extends AppActivity implements View.OnClickListener, 
             mLogin.setProgress(0);
             return;
         }
-        if(!CheckUtils.isMobile(phone)){
+        if(!CheckUtils.isPhone(phone)){
             showToast("手机号格式错误，请检查后再进行操作");
             return;
         }
@@ -125,11 +125,7 @@ public class LoginActivity extends AppActivity implements View.OnClickListener, 
     protected void onStop() {
         super.onStop();
         mPresenter.unBindView(this);
-    }
-
-    @Override
-    public AppCompatActivity getMainActivity() {
-        return LoginActivity.this;
+        mPresenter.onStop();
     }
 
     @Override

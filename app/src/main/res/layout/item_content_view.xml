@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="240dp">
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp"
+    android:maxHeight="240dp">
 
     <LinearLayout
         android:id="@+id/item_content_top_layout"

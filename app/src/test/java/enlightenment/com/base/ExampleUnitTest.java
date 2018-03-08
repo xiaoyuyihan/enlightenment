@@ -1,16 +1,9 @@
 package enlightenment.com.base;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Test;
 
-import enlightenment.com.contents.Constants;
 import enlightenment.com.contents.HttpUrls;
-import enlightenment.com.main.MainActivity;
-import enlightenment.com.tool.ModelUtil;
-import enlightenment.com.tool.gson.TransformationUtils;
-
-import static org.junit.Assert.*;
+import enlightenment.com.tool.okhttp.ModelUtil;
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -25,7 +18,7 @@ public class ExampleUnitTest {
 
     @Test
     public void TestModelUtil(){
-        ModelUtil.getInstance().get(HttpUrls.Http_URL_DETECT_MODULE,
+        ModelUtil.getInstance().get(HttpUrls.Http_URL_DETECT_MAJOR,
                 new ModelUtil.CallBack() {
                     @Override
                     public void onResponse(String response, int id) {

@@ -3,6 +3,7 @@ package enlightenment.com.tool.okhttp;
 
 import java.io.IOException;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 import enlightenment.com.base.EnlightenmentApplication;
 import enlightenment.com.tool.okhttp.builder.GetBuilder;
@@ -26,6 +27,8 @@ import okhttp3.Response;
  */
 public class OkHttpUtils {
     public static final long DEFAULT_MILLISECONDS = 10_000L;
+    public static final long READ_TIME_OUT=60*2;
+    public static final long WRITE_TIME_OUT=60*2;
     private volatile static OkHttpUtils mInstance;
     private OkHttpClient mOkHttpClient;
     private Platform mPlatform;
@@ -36,8 +39,11 @@ public class OkHttpUtils {
         } else {
             mOkHttpClient = okHttpClient;
         }
-        mOkHttpClient=mOkHttpClient.newBuilder().cookieJar(new CookieJarImpl(
-                new MemoryCookieStore())).build();
+        mOkHttpClient = mOkHttpClient.newBuilder()
+                .readTimeout(READ_TIME_OUT, TimeUnit.SECONDS)
+                .writeTimeout(WRITE_TIME_OUT, TimeUnit.SECONDS)
+                .cookieJar(new CookieJarImpl(new MemoryCookieStore()))
+                .build();
 
         mPlatform = Platform.get();
     }

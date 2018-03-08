@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/view_top"/>
+    <ImageView
+        android:id="@+id/edit_common_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_edit_top" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black_20"
+        android:orientation="vertical">
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:inputType="textPersonName"
+            android:background="@color/white"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="24dp"
+            android:padding="8dp"
+            android:hint="请输入标题"
+            android:id="@+id/text_information_column_name" />
+        <CheckBox
+            android:id="@+id/text_information_column_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:gravity="center"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="6dp"
+            android:padding="2dp"
+            android:hint="自己可见"
+            style="@style/ImageCheckStyle"/>
+
+        <TextView
+            android:text="保存至栏目"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:paddingRight="24dp"
+            android:paddingLeft="24dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            style="@style/informationTextStyle"
+            android:id="@+id/text_information_column" />
+
+        <ViewStub
+            android:id="@+id/text_information_stub_column"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout="@layout/fragment_recycler_only"
+            android:layout_weight="1"/>
+        <TextView
+            android:text="新建栏目并保存"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            style="@style/informationTextStyle"
+            android:id="@+id/text_information_news_column" />
+        <ViewStub
+            android:id="@+id/text_information_stub_news_column"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout="@layout/view_information_create_column"/>
+
+    </LinearLayout>
+</LinearLayout>

@@ -151,11 +151,6 @@ public class RegisteredActivity extends AppActivity implements baseView, View.On
     }
 
     @Override
-    public AppCompatActivity getMainActivity() {
-        return null;
-    }
-
-    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.registered:

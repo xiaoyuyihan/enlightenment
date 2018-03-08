@@ -2,20 +2,13 @@ package enlightenment.com.base;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,7 +20,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import enlightenment.com.module.ModuleChildBean;
-import enlightenment.com.module.ModuleFatherBean;
+import enlightenment.com.module.ModuleBean;
 import enlightenment.com.view.CircularLayout;
 import enlightenment.com.view.CircularTextView;
 
@@ -52,7 +45,7 @@ public class InterestActivity extends AppActivity implements baseView,
 
     private String models = "";
 
-    private List<ModuleFatherBean> moduleFatherBeen;
+    private List<ModuleBean> moduleFatherBeen;
     private basePresenter mPresenter;
     private CircularAdapter circularAdapter;
 
@@ -139,11 +132,6 @@ public class InterestActivity extends AppActivity implements baseView,
     }
 
     @Override
-    public AppCompatActivity getMainActivity() {
-        return this;
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //多次重复添加兴趣点
         if (requestCode == 1) {
@@ -169,12 +157,12 @@ public class InterestActivity extends AppActivity implements baseView,
     }
 
     public static class CircularAdapter extends BaseAdapter {
-        List<ModuleFatherBean> moduleFatherBeen;
+        List<ModuleBean> moduleFatherBeen;
         Activity appActivity;
         LayoutInflater mInflater;
         OnClickListener onClickLinster;
 
-        public CircularAdapter(List<ModuleFatherBean> moduleFatherBeen, Activity appActivity, OnClickListener clickLinster) {
+        public CircularAdapter(List<ModuleBean> moduleFatherBeen, Activity appActivity, OnClickListener clickLinster) {
             this.moduleFatherBeen = moduleFatherBeen;
             this.appActivity=appActivity;
             this.mInflater=LayoutInflater.from(appActivity);
@@ -187,7 +175,7 @@ public class InterestActivity extends AppActivity implements baseView,
         }
 
         @Override
-        public ModuleFatherBean getItem(int i) {
+        public ModuleBean getItem(int i) {
             return moduleFatherBeen.get(i);
         }
 

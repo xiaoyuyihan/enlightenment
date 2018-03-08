@@ -5,13 +5,12 @@ import android.os.Parcelable;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by lw on 2017/8/22.
  */
 
-public class ModuleFatherBean implements Parcelable,Serializable{
+public class ModuleBean implements Parcelable,Serializable{
     private static final long serialVersionUID = 1L;
     private String name;
     private int identity;
@@ -19,7 +18,7 @@ public class ModuleFatherBean implements Parcelable,Serializable{
     private String picture;
     private ArrayList<ModuleChildBean> child;
 
-    protected ModuleFatherBean(Parcel in) {
+    protected ModuleBean(Parcel in) {
         name = in.readString();
         identity = in.readInt();
         introduction = in.readString();
@@ -27,15 +26,15 @@ public class ModuleFatherBean implements Parcelable,Serializable{
         child = in.createTypedArrayList(ModuleChildBean.CREATOR);
     }
 
-    public static final Creator<ModuleFatherBean> CREATOR = new Creator<ModuleFatherBean>() {
+    public static final Creator<ModuleBean> CREATOR = new Creator<ModuleBean>() {
         @Override
-        public ModuleFatherBean createFromParcel(Parcel in) {
-            return new ModuleFatherBean(in);
+        public ModuleBean createFromParcel(Parcel in) {
+            return new ModuleBean(in);
         }
 
         @Override
-        public ModuleFatherBean[] newArray(int size) {
-            return new ModuleFatherBean[size];
+        public ModuleBean[] newArray(int size) {
+            return new ModuleBean[size];
         }
     };
 

@@ -18,6 +18,7 @@ public class ContentBean {
     private int viewType;
     private int fatherID;
     private int columnID;
+    private int columnFatherID;
     private String visition;            //是否隐藏
     private String type;                //类型
     private String live;
@@ -184,5 +185,13 @@ public class ContentBean {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public int getColumnFatherID() {
+        return columnFatherID;
+    }
+
+    public void setColumnFatherID(int columnFatherID) {
+        this.columnFatherID = columnFatherID;
     }
 }

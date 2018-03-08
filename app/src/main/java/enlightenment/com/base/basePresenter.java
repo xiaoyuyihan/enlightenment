@@ -1,6 +1,5 @@
 package enlightenment.com.base;
 
-import android.content.Context;
 import android.util.ArrayMap;
 
 import org.json.JSONArray;
@@ -8,7 +7,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -16,15 +14,13 @@ import enlightenment.com.contents.Constants;
 import enlightenment.com.contents.FileUrls;
 import enlightenment.com.contents.HttpUrls;
 import enlightenment.com.main.MainActivity;
-import enlightenment.com.module.ModuleFatherBean;
+import enlightenment.com.module.ModuleBean;
 import enlightenment.com.mvp.BasePresenter;
 import enlightenment.com.mvp.BaseView;
-import enlightenment.com.tool.DES;
 import enlightenment.com.tool.File.FileUtils;
-import enlightenment.com.tool.ModelUtil;
+import enlightenment.com.tool.okhttp.ModelUtil;
 import enlightenment.com.tool.gson.GsonUtils;
 import enlightenment.com.tool.gson.TransformationUtils;
-import enlightenment.com.tool.okhttp.OkHttpUtils;
 import okhttp3.Call;
 
 /**
@@ -33,7 +29,6 @@ import okhttp3.Call;
 
 public class basePresenter<T extends baseView> extends BasePresenter {
     private static basePresenter basePresenter;
-    private ModelUtil mModel;
     private T mView;
 
     public static basePresenter getInstance() {
@@ -44,7 +39,7 @@ public class basePresenter<T extends baseView> extends BasePresenter {
     }
 
     public basePresenter() {
-        mModel = ModelUtil.getInstance();
+        super();
     }
 
     @Override
@@ -226,7 +221,7 @@ public class basePresenter<T extends baseView> extends BasePresenter {
     }
 
     public void obtainModule(){
-        mModel.get(HttpUrls.Http_URL_DETECT_MODULE,
+        mModel.get(HttpUrls.Http_URL_DETECT_MAJOR,
                 new ModelUtil.CallBack() {
                     @Override
                     public void onResponse(String result, int id) {
@@ -234,8 +229,8 @@ public class basePresenter<T extends baseView> extends BasePresenter {
                             try {
                                 JSONObject jsonObject = new JSONObject(result);
                                 JSONArray jsonArray = jsonObject.getJSONArray("data");
-                                List<ModuleFatherBean> mList=GsonUtils.parseJsonArrayWithGson(
-                                        jsonArray.toString(), ModuleFatherBean[].class);
+                                List<ModuleBean> mList=GsonUtils.parseJsonArrayWithGson(
+                                        jsonArray.toString(), ModuleBean[].class);
                                 ((InterestActivity)mView).setModuleFatherBeen(mList);
                                 FileUtils.writeFileObject(FileUrls.PATH_APP_MAJOR,
                                         mList);
@@ -253,8 +248,8 @@ public class basePresenter<T extends baseView> extends BasePresenter {
                             try {
                                 JSONObject jsonObject = new JSONObject(result);
                                 JSONArray jsonArray = jsonObject.getJSONArray("data");
-                                List<ModuleFatherBean> mList=GsonUtils.parseJsonArrayWithGson(
-                                        jsonArray.toString(), ModuleFatherBean[].class);
+                                List<ModuleBean> mList=GsonUtils.parseJsonArrayWithGson(
+                                        jsonArray.toString(), ModuleBean[].class);
                                 ((InterestActivity)mView).setModuleFatherBeen(mList);
                                 FileUtils.writeFileObject(FileUrls.PATH_APP_ORIENTATION,
                                         mList);

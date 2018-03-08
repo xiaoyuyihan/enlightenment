@@ -16,8 +16,8 @@ import butterknife.BindView;
 import enlightenment.com.contents.Constants;
 import enlightenment.com.contents.HttpUrls;
 import enlightenment.com.main.MainActivity;
-import enlightenment.com.service.MessageService;
-import enlightenment.com.tool.ModelUtil;
+import enlightenment.com.service.DownloadService;
+import enlightenment.com.tool.okhttp.ModelUtil;
 import enlightenment.com.tool.gson.TransformationUtils;
 import okhttp3.Call;
 
@@ -114,8 +114,8 @@ public class StartActivity extends AppActivity {
     }
 
     private void startMessageService() {
-        Intent intent=new Intent(this, MessageService.class);
-        intent.putExtra(MessageService.SERVICE_DATA_EXTRA,MessageService.ACTION_DETECT_MODULE_NEW);
+        Intent intent=new Intent(this, DownloadService.class);
+        intent.putExtra(DownloadService.SERVICE_DATA_EXTRA, DownloadService.ACTION_DETECT_MODULE_NEW);
         startService(intent);
     }
 

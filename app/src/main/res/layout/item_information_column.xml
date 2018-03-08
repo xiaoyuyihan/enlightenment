@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentLeft="true"
+    android:orientation="vertical">
+
+    <ViewStub
+        android:id="@+id/item_information_column_stub"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout="@layout/item_information_column_name" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/background_information_column"
+        android:orientation="horizontal"
+        android:padding="1dp">
+
+        <TextView
+            android:id="@+id/item_information_column_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:maxWidth="96dp"
+            android:minWidth="72dp"
+            android:maxLines="2"
+            android:ellipsize="end"
+            android:scrollbarStyle="outsideOverlay"
+            android:scrollbars="vertical"
+            android:gravity="center"
+            android:padding="6dp"
+            android:text="练习"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/item_information_column_recycler"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal" />
+
+        <ImageView
+            android:id="@+id/item_information_column_add_child"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="6dp"
+            android:padding="6dp"
+            android:src="@drawable/ic_add" />
+    </LinearLayout>
+</LinearLayout>

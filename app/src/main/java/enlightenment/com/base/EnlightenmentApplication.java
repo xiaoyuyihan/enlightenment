@@ -3,14 +3,12 @@ package enlightenment.com.base;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Handler;
 import android.os.HandlerThread;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import enlightenment.com.contents.Constants;
-import enlightenment.com.module.ModuleFatherBean;
+import enlightenment.com.module.ModuleBean;
 import enlightenment.com.tool.okhttp.OkHttpUtils;
 
 /**
@@ -20,8 +18,8 @@ import enlightenment.com.tool.okhttp.OkHttpUtils;
 public class EnlightenmentApplication extends Application {
     private static OkHttpUtils mHttpUtils;
     private static EnlightenmentApplication app;
-    private List<ModuleFatherBean> majorBeen;
-    private List<ModuleFatherBean> orientationBeen;
+    private List<ModuleBean> majorBeen;
+    private List<ModuleBean> orientationBeen;
     private String modules="";
     private HandlerThread mHandlerThread;
 
@@ -63,11 +61,11 @@ public class EnlightenmentApplication extends Application {
         editor.commit();
     }
 
-    public void setMajorBeen(List<ModuleFatherBean> majorBeen) {
+    public void setMajorBeen(List<ModuleBean> majorBeen) {
         this.majorBeen = majorBeen;
     }
 
-    public List<ModuleFatherBean> getMajorBeen() {
+    public List<ModuleBean> getMajorBeen() {
         return majorBeen;
     }
 
@@ -79,11 +77,11 @@ public class EnlightenmentApplication extends Application {
         return modules;
     }
 
-    public void setOrientationBeen(List<ModuleFatherBean> orientationBeen) {
+    public void setOrientationBeen(List<ModuleBean> orientationBeen) {
         this.orientationBeen = orientationBeen;
     }
 
-    public List<ModuleFatherBean> getOrientationBeen() {
+    public List<ModuleBean> getOrientationBeen() {
         return orientationBeen;
     }
 

@@ -5,22 +5,30 @@ package enlightenment.com.contents;
  */
 
 public class HttpUrls {
-    public static final String HTTP_URL="http://192.168.0.7:5000";
-    public static final String HTTP_URL_LOGIN=HTTP_URL+"/api/login";
-    public static final String HTTP_URL_SEND_PHONE=HTTP_URL+"/api/getVerification";
-    public static final String HTTP_URL_REGISTERED=HTTP_URL+"/api/registered";
-    public static final String Http_URL_DETECT_MODULE=HTTP_URL+"/api/getMajor";
-    public static final String Http_URL_DETECT_ORIENT=HTTP_URL+"/api/getOrientation";
-    public static final String HTTP_URL_CHANGE_PASSWORD=HTTP_URL+"/api/changePassword";
+    public static final String HTTP_URL="http://192.168.0.126:5000/api/";
+    public static final String HTTP_URL_LOGIN=HTTP_URL+"login";
+    public static final String HTTP_URL_SEND_PHONE=HTTP_URL+"getVerification";
+    public static final String HTTP_URL_REGISTERED=HTTP_URL+"registered";
+    public static final String Http_URL_DETECT_MAJOR=HTTP_URL+"getMajor";                  //学习的模块
+    public static final String Http_URL_DETECT_ORIENT=HTTP_URL+"getOrientation";            //DIY的模块
+    public static final String HTTP_URL_CHANGE_PASSWORD=HTTP_URL+"changePassword";
+    public static final String HTTP_UTL_GET_USER_COLUMN=HTTP_URL+"getUserColumn";
 
     /********************************Main***********************************/
-    public static final String HTTP_URL_HOME_NEW=HTTP_URL+"/api/newContent";
-    public static final String HTTP_URL_HOME_HOT=HTTP_URL+"/api/hotContent";
-    public static final String HTTP_URL_HOME_LOVE=HTTP_URL+"/api/recommended";
+    public static final String HTTP_URL_HOME_NEW=HTTP_URL+"newContent";
+    public static final String HTTP_URL_HOME_HOT=HTTP_URL+"hotContent";
+    public static final String HTTP_URL_HOME_LOVE=HTTP_URL+"recommended";
 
-    public static final String HTTP_URL_FOUND_KONWLEDGE=HTTP_URL+"/api/obtainContent";
-    public static final String HTTP_URL_FOUND_DIY=HTTP_URL+"/api/obtainContent";
-    public static final String HTTP_URL_FOUND_HELP=HTTP_URL+"/api/obtainHelp";
-    public static final String HTTP_URL_FOUND_MYSELF=HTTP_URL+"/api/obtainMyself";
+    public static final String HTTP_URL_FOUND_KONWLEDGE=HTTP_URL+"obtainContent";
+    public static final String HTTP_URL_FOUND_DIY=HTTP_URL+"obtainContent";
+    public static final String HTTP_URL_FOUND_HELP=HTTP_URL+"obtainHelp";
+    public static final String HTTP_URL_FOUND_MYSELF=HTTP_URL+"obtainMyself";
 
+    /*******************************Information****************************/
+    public static final String HTTP_URL_NEWS_COLUMN=HTTP_URL+"setColumn";
+    public static final String HTTP_URL_NEWS_CHILD_COLUMN=HTTP_URL+"setChildColumn";
+    public static final String HTTP_URL_UPLOAD_CONTENT=HTTP_URL+"setColumnContent";
+    public static final String HTTP_URL_SAVE_PHOTO=HTTP_URL+"savePhotoFile";
+    public static final String HTTP_URL_SAVE_AUDIO=HTTP_URL+"saveAudioFile";
+    public static final String HTTP_URL_SAVE_VIDEO=HTTP_URL+"saveVideoFile";
 }

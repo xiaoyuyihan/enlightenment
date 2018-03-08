@@ -15,11 +15,10 @@ import java.util.List;
 import enlightenment.com.base.EnlightenmentApplication;
 import enlightenment.com.contents.Constants;
 import enlightenment.com.contents.HttpUrls;
-import enlightenment.com.tool.ModelUtil;
+import enlightenment.com.tool.okhttp.ModelUtil;
 import enlightenment.com.mvp.BasePresenter;
 import enlightenment.com.mvp.BaseView;
 import enlightenment.com.tool.gson.GsonUtils;
-import enlightenment.com.tool.okhttp.OkHttpUtils;
 import okhttp3.Call;
 
 /**

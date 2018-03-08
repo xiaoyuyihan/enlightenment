@@ -39,6 +39,15 @@ public class MainActivity extends AppActivity implements View.OnClickListener {
         init();
         // 设置默认的Fragment
         setDefaultFragment();
+
+        checkNotification();
+    }
+
+    /**
+     * 检测通知是否开启
+     */
+    private void checkNotification() {
+
     }
 
     private void init() {

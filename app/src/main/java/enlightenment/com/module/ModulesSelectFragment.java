@@ -54,8 +54,8 @@ public class ModulesSelectFragment extends Fragment {
 
         initView();
 
-        List<List<ModuleFatherBean>> childsModules = new ArrayList<>();
-        List<ModuleFatherBean> fatherModules = new ArrayList<>();
+        List<List<ModuleBean>> childsModules = new ArrayList<>();
+        List<ModuleBean> fatherModules = new ArrayList<>();
         ModulesSelectAdapter modulesSelectAdapter = new ModulesSelectAdapter(getActivity(), childsModules, fatherModules);
         moduleView.setAdapter(modulesSelectAdapter);
         return view;
@@ -81,10 +81,10 @@ public class ModulesSelectFragment extends Fragment {
 
     class ModulesSelectAdapter extends BaseExpandableListAdapter {
         Context context;
-        List<List<ModuleFatherBean>> childsModules = new ArrayList<>();
-        List<ModuleFatherBean> fatherModules = new ArrayList<>();
+        List<List<ModuleBean>> childsModules = new ArrayList<>();
+        List<ModuleBean> fatherModules = new ArrayList<>();
 
-        public ModulesSelectAdapter(Context context, List<List<ModuleFatherBean>> childsModules, List<ModuleFatherBean> fatherModules) {
+        public ModulesSelectAdapter(Context context, List<List<ModuleBean>> childsModules, List<ModuleBean> fatherModules) {
             this.context = context;
             this.childsModules = childsModules;
             this.fatherModules = fatherModules;
@@ -188,10 +188,10 @@ public class ModulesSelectFragment extends Fragment {
 
     class ChildsModulesAdapter extends BaseAdapter {
 
-        private List<ModuleFatherBean> moduleBeens;
+        private List<ModuleBean> moduleBeens;
         private Context context;
 
-        public ChildsModulesAdapter(List<ModuleFatherBean> moduleBeen, Context context) {
+        public ChildsModulesAdapter(List<ModuleBean> moduleBeen, Context context) {
             this.moduleBeens = moduleBeen;
             this.context = context;
         }

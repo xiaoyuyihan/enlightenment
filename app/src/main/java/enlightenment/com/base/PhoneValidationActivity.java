@@ -116,11 +116,6 @@ public class PhoneValidationActivity extends AppActivity implements  baseView,Vi
     }
 
     @Override
-    public AppCompatActivity getMainActivity() {
-        return PhoneValidationActivity.this;
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
         mPresenter.unBindView(this);
