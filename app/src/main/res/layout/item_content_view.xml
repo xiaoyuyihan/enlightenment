@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="4dp"
-    android:paddingBottom="4dp"
-    android:maxHeight="240dp">
+    android:maxHeight="360dp"
+    android:paddingBottom="2dp"
+    android:paddingTop="4dp">
 
     <LinearLayout
         android:id="@+id/item_content_top_layout"
@@ -62,25 +63,74 @@
             android:layout_marginLeft="6dp"
             android:text="@string/app_name"
             android:textColor="@color/black"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/item_content_center_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:maxLines="6"
+            android:maxLines="5"
             android:padding="4dp"
             android:text="@string/large_text"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/item_content_resource"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/item_content_center_layout"
+        android:layout_below="@+id/item_content_center_layout"
+        android:layout_marginRight="24dp"
+        android:orientation="vertical">
+
+        <enlightenment.com.view.NineGridLayout.ItemNineGridLayout
+            android:id="@+id/item_content_center_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:sapcing="4dp"></enlightenment.com.view.NineGridLayout.ItemNineGridLayout>
+
+        <LinearLayout
+            android:id="@+id/item_content_audio_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:visibility="gone"
+            android:background="@color/mainTopColor"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <ImageView
+                android:id="@+id/item_content_audio_play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_edit_play" />
+
+            <TextView
+                android:id="@+id/item_content_audio_name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_marginLeft="24dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:text="@string/action_settings"
+                android:textColor="@color/white" />
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/item_content_bottom_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/item_content_center_layout"
-        android:layout_below="@+id/item_content_center_layout"
+        android:layout_alignStart="@+id/item_content_resource"
+        android:layout_below="@+id/item_content_resource"
         android:layout_marginTop="6dp"
         android:orientation="horizontal">
 

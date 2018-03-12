@@ -78,38 +78,11 @@ public class StartActivity extends AppActivity {
         if (phone==null||password==null)
             isLogin=false;
         if (isLogin){
-            ModelUtil.getInstance().post(HttpUrls.HTTP_URL_LOGIN,
-                    TransformationUtils.beanToMap(
-                            new LoginActivity.LoginBean(phone,password)),
-                    new ModelUtil.CallBack() {
-                        @Override
-                        public void onException(Call call, Exception e, int id) {
-                            super.onException(call, e, id);
-                        }
-
-                        @Override
-                        public void onResponse(String response, int id) {
-                            if (response != null) {
-                                try {
-                                    JSONObject data = new JSONObject(response);
-                                    if (data.getBoolean("Flag")) {
-                                        JSONObject MSG=data.getJSONObject("data");
-                                        EnlightenmentApplication.getInstance().setStringShared(
-                                                Constants.Set.SET_USER_TOKEN,
-                                                MSG.getString("token"));
-                                        EnlightenmentApplication.getInstance().setStringShared(
-                                                Constants.Set.SET_USER_TOKEN_TIME,
-                                                MSG.getString("time"));
-                                        EnlightenmentApplication.getInstance().setStringShared(
-                                                Constants.Set.SET_USER_TOKEN_LONG,
-                                                MSG.getString("cycle"));
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    });
+            Intent intent=new Intent(this, DownloadService.class);
+            intent.putExtra(DownloadService.SERVICE_DATA_EXTRA, DownloadService.ACTION_DETECT_REQUEST_TOKEN);
+            intent.putExtra(DownloadService.SERVICE_REQUEST_TOKEN_PHONE,phone);
+            intent.putExtra(DownloadService.SERVICE_REQUEST_TOKEN_PASSWORD,password);
+            startService(intent);
         }
     }
 

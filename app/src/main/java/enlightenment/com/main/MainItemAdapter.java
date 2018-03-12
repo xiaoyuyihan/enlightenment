@@ -16,6 +16,7 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import java.util.ArrayList;
 
 import enlightenment.com.base.R;
+import enlightenment.com.tool.Image.MediaPlayerUtil;
 import enlightenment.com.tool.device.CheckUtils;
 
 /**
@@ -62,7 +63,7 @@ public class MainItemAdapter extends RecyclerView.Adapter {
             if (bean instanceof ContentBean) {
                 ContentBean contentBean = (ContentBean) bean;
                 Glide.with(context).load(contentBean.getAvatar()).asBitmap().centerCrop()
-                        .placeholder(R.drawable.image_logo)
+                        .placeholder(R.mipmap.logo)
                         .into(new BitmapImageViewTarget(mTextViewHolder.getAvatarView()){
                             @Override
                             protected void setResource(Bitmap resource) {
@@ -72,10 +73,20 @@ public class MainItemAdapter extends RecyclerView.Adapter {
                                 mTextViewHolder.getAvatarView().setImageDrawable(circularBitmapDrawable);
                             }
                         });
+                if (contentBean.getPhoto()!=null&&!contentBean.getPhoto().equals(""))
+                    mTextViewHolder.setImages(contentBean.getPhoto());
                 mTextViewHolder.setUsernameView(contentBean.getUsername());
                 mTextViewHolder.setModelNameView(CheckUtils.getModelName(contentBean));
                 mTextViewHolder.setContentNameView(contentBean.getName());
-                mTextViewHolder.setContent(contentBean.getContent());
+                if (contentBean.getContent()!=null&&!contentBean.getContent().equals(""))
+                    mTextViewHolder.setContent(contentBean.getContent());
+                if (contentBean.getAudio()!=null&&!contentBean.getAudio().equals(""))
+                    mTextViewHolder.setAudio(contentBean.getAudio(), new MediaPlayerUtil.OnNextAudioListener() {
+                        @Override
+                        public void onNext(int position) {
+                            mTextViewHolder.setAudioNameText(position);
+                        }
+                    });
                 mTextViewHolder.setLiveView(contentBean.getLive());
                 mTextViewHolder.setNumberView(contentBean.getNumber());
                 mTextViewHolder.setType(contentBean.getType());

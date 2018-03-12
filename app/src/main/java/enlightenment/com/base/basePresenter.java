@@ -102,7 +102,7 @@ public class basePresenter<T extends baseView> extends BasePresenter {
 
                                     mView.startNextActivity(MainActivity.class);
                                 } else
-                                    mView.showToast(data.getJSONObject("data").getString("msg"));
+                                    mView.showToast(data.getString("data"));
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -118,6 +118,8 @@ public class basePresenter<T extends baseView> extends BasePresenter {
     public void sendPhoneCode(String phone) {
         Map map=new ArrayMap();
         map.put("phone",phone);
+        if (mModel==null)
+            mModel=ModelUtil.getInstance();
         mModel.post(HttpUrls.HTTP_URL_SEND_PHONE,map,
                 new ModelUtil.CallBack(){
                     @Override

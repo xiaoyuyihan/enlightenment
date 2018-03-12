@@ -14,12 +14,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import enlightenment.com.base.EnlightenmentApplication;
+import enlightenment.com.base.LoginActivity;
+import enlightenment.com.contents.Constants;
 import enlightenment.com.contents.FileUrls;
 import enlightenment.com.contents.HttpUrls;
 import enlightenment.com.module.ModuleBean;
 import enlightenment.com.tool.File.FileUtils;
+import enlightenment.com.tool.gson.TransformationUtils;
 import enlightenment.com.tool.okhttp.ModelUtil;
 import enlightenment.com.tool.gson.GsonUtils;
+import okhttp3.Call;
 
 /**
  * Created by lw on 2017/8/17.
@@ -27,9 +31,14 @@ import enlightenment.com.tool.gson.GsonUtils;
  */
 
 public class DownloadService extends Service {
-    public static final String SERVICE_DATA_EXTRA = "MessageService_Extra";
+    public static final String SERVICE_DATA_EXTRA = "MessageService_Extra_Type";
+
+    public static final String SERVICE_REQUEST_TOKEN_PHONE="SERVICE_REQUEST_TOKEN_PHONE";
+    public static final String SERVICE_REQUEST_TOKEN_PASSWORD="SERVICE_REQUEST_TOKEN_PASSWORD";
+
     public static final int ACTION_NO = -1;
     public static final int ACTION_DETECT_MODULE_NEW = 1;       //模块更新检测
+    public static final int ACTION_DETECT_REQUEST_TOKEN=2;      //请求token
 
 
     private DownloadBinder messageBinder = new DownloadBinder(this);
@@ -74,6 +83,11 @@ public class DownloadService extends Service {
                 extractMajor();
                 extractOrientation();
                 break;
+            case ACTION_DETECT_REQUEST_TOKEN:
+                String phone=intent.getStringExtra(DownloadService.SERVICE_REQUEST_TOKEN_PHONE);
+                String password=intent.getStringExtra(DownloadService.SERVICE_REQUEST_TOKEN_PASSWORD);
+                requestToken(phone,password);
+                break;
         }
     }
 
@@ -101,6 +115,41 @@ public class DownloadService extends Service {
                                         GsonUtils.parseJsonArrayWithGson(jsonArray.toString(), ModuleBean[].class));
                                 FileUtils.writeFileObject(FileUrls.PATH_APP_ORIENTATION,
                                         EnlightenmentApplication.getInstance().getOrientationBeen());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+    }
+
+    private void requestToken(String phone,String password){
+        ModelUtil.getInstance().post(HttpUrls.HTTP_URL_LOGIN,
+                TransformationUtils.beanToMap(
+                        new LoginActivity.LoginBean(phone,password)),
+                new ModelUtil.CallBack() {
+                    @Override
+                    public void onException(Call call, Exception e, int id) {
+                        super.onException(call, e, id);
+                    }
+
+                    @Override
+                    public void onResponse(String response, int id) {
+                        if (response != null) {
+                            try {
+                                JSONObject data = new JSONObject(response);
+                                if (data.getBoolean("Flag")) {
+                                    JSONObject MSG=data.getJSONObject("data");
+                                    EnlightenmentApplication.getInstance().setStringShared(
+                                            Constants.Set.SET_USER_TOKEN,
+                                            MSG.getString("token"));
+                                    EnlightenmentApplication.getInstance().setStringShared(
+                                            Constants.Set.SET_USER_TOKEN_TIME,
+                                            MSG.getString("time"));
+                                    EnlightenmentApplication.getInstance().setStringShared(
+                                            Constants.Set.SET_USER_TOKEN_LONG,
+                                            MSG.getString("cycle"));
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.PhoneNumberUtils;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.BindView;
 import enlightenment.com.contents.Constants;
+import enlightenment.com.tool.device.CheckUtils;
 
 /**
  * Created by lw on 2017/7/20.
@@ -82,6 +84,7 @@ public class PhoneValidationActivity extends AppActivity implements  baseView,Vi
     protected void onStart() {
         super.onStart();
         mPresenter = basePresenter.getInstance();
+        mPresenter.onStart();
         mPresenter.BindView(this);
     }
     private void init(){
@@ -147,8 +150,12 @@ public class PhoneValidationActivity extends AppActivity implements  baseView,Vi
             case R.id.registered_obtain:
                 mHandler.sendEmptyMessage(TIME_RETURN);
                 Constants.phoneCode=mPhone.getText().toString();
-                mPresenter.sendPhoneCode(Constants.phoneCode);
-                mObtain.setClickable(false);
+                if (CheckUtils.isPhone(Constants.phoneCode)){
+                    mPresenter.sendPhoneCode(Constants.phoneCode);
+                    mObtain.setClickable(false);
+                }else {
+                    showToast("手机格式错误");
+                }
                 break;
         }
     }

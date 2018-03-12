@@ -36,7 +36,6 @@ public class LoadingDialog extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        getDialog().setCancelable(false);
         DisplayMetrics dm = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
         getDialog().getWindow().setLayout((int) (dm.widthPixels * 0.8), (int) (dm.heightPixels * 0.5));
