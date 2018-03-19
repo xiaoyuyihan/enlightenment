@@ -216,7 +216,7 @@ public abstract class NineGridLayout extends ViewGroup {
                 final TextView textView = new TextView(mContext);
                 textView.setText("+" + String.valueOf(overCount));
                 textView.setTextColor(Color.WHITE);
-                textView.setPadding(0, singleHeight / 2 - getFontHeight(textSize), 0, 0);
+                textView.setPadding(0, singleHeight / 2 - getFontHeight(textSize)*3/2, 0, 0);
                 textView.setTextSize(textSize);
                 textView.setGravity(Gravity.CENTER);
                 textView.setBackgroundColor(Color.BLACK);
@@ -278,7 +278,6 @@ public abstract class NineGridLayout extends ViewGroup {
         imageView.layout(0, 0, width, height);
 
         LayoutParams params = getLayoutParams();
-//        params.width = width;
         params.height = height;
         setLayoutParams(params);
     }

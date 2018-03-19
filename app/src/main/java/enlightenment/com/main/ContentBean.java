@@ -1,10 +1,13 @@
 package enlightenment.com.main;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by lw on 2017/9/5.
  */
 
-public class ContentBean {
+public class ContentBean implements Parcelable{
     private int id;
     private String name;                //标题
     private String subtitle;            //副标题
@@ -26,6 +29,42 @@ public class ContentBean {
     private String username;
     private String avatar;
     private String number;
+
+    protected ContentBean(Parcel in) {
+        id = in.readInt();
+        name = in.readString();
+        subtitle = in.readString();
+        content = in.readString();
+        time = in.readString();
+        phone = in.readString();
+        photo = in.readString();
+        video = in.readString();
+        audio = in.readString();
+        url = in.readString();
+        viewType = in.readInt();
+        fatherID = in.readInt();
+        columnID = in.readInt();
+        columnFatherID = in.readInt();
+        visition = in.readString();
+        type = in.readString();
+        live = in.readString();
+        columnName = in.readString();
+        username = in.readString();
+        avatar = in.readString();
+        number = in.readString();
+    }
+
+    public static final Creator<ContentBean> CREATOR = new Creator<ContentBean>() {
+        @Override
+        public ContentBean createFromParcel(Parcel in) {
+            return new ContentBean(in);
+        }
+
+        @Override
+        public ContentBean[] newArray(int size) {
+            return new ContentBean[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -193,5 +232,35 @@ public class ContentBean {
 
     public void setColumnFatherID(int columnFatherID) {
         this.columnFatherID = columnFatherID;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(name);
+        dest.writeString(subtitle);
+        dest.writeString(content);
+        dest.writeString(time);
+        dest.writeString(phone);
+        dest.writeString(photo);
+        dest.writeString(video);
+        dest.writeString(audio);
+        dest.writeString(url);
+        dest.writeInt(viewType);
+        dest.writeInt(fatherID);
+        dest.writeInt(columnID);
+        dest.writeInt(columnFatherID);
+        dest.writeString(visition);
+        dest.writeString(type);
+        dest.writeString(live);
+        dest.writeString(columnName);
+        dest.writeString(username);
+        dest.writeString(avatar);
+        dest.writeString(number);
     }
 }

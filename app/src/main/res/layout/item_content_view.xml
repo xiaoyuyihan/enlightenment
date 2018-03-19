@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:maxHeight="360dp"
     android:paddingBottom="2dp"
     android:paddingTop="4dp">
@@ -50,40 +52,35 @@
         android:id="@+id/item_content_center_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/item_content_top_layout"
-        android:layout_below="@+id/item_content_top_layout"
-        android:layout_marginLeft="36dp"
+        android:layout_marginLeft="48dp"
         android:layout_marginRight="24dp"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/item_content_center_name"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="6dp"
+            android:padding="2dp"
             android:text="@string/app_name"
             android:textColor="@color/black"
             android:textSize="18sp" />
-
         <TextView
-            android:id="@+id/item_content_center_content"
-            android:layout_width="match_parent"
+            android:id="@+id/item_content_text_content"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="5"
-            android:padding="4dp"
-            android:text="@string/large_text"
-            android:textSize="12sp"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:padding="2dp"
+            android:text="@string/app_name"
+            android:textSize="12sp" />
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/item_content_resource"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/item_content_center_layout"
-        android:layout_below="@+id/item_content_center_layout"
         android:layout_marginRight="24dp"
+        android:layout_marginLeft="48dp"
         android:orientation="vertical">
 
         <enlightenment.com.view.NineGridLayout.ItemNineGridLayout
@@ -91,7 +88,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            app:sapcing="4dp"></enlightenment.com.view.NineGridLayout.ItemNineGridLayout>
+            app:sapcing="4dp"/>
 
         <LinearLayout
             android:id="@+id/item_content_audio_layout"
@@ -127,18 +124,17 @@
 
     <LinearLayout
         android:id="@+id/item_content_bottom_layout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/item_content_resource"
-        android:layout_below="@+id/item_content_resource"
         android:layout_marginTop="6dp"
+        android:layout_marginLeft="48dp"
+        android:layout_marginRight="24dp"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/item_content_bottom_live"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:padding="6dp"
             android:text="赞6"
             android:textColor="@color/black_50"
@@ -148,7 +144,6 @@
             android:id="@+id/item_content_bottom_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:padding="6dp"
             android:text="评论1001"
             android:textColor="@color/black_50"
@@ -158,10 +153,20 @@
             android:id="@+id/item_content_bottom_type"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:padding="6dp"
             android:text="创造"
             android:textColor="@color/black_50"
             android:textSize="8sp" />
+        <TextView
+            android:id="@+id/item_content_bottom_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="left|center_vertical"
+            android:text="2018年3月14日 09:36:20"
+            android:textSize="8sp"
+            android:textColor="@color/black_50"
+            android:textAlignment="viewEnd"
+            tools:ignore="RtlCompat" />
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

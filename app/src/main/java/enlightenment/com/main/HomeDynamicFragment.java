@@ -1,6 +1,7 @@
 package enlightenment.com.main;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -15,12 +16,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import enlightenment.com.base.R;
+import enlightenment.com.details.ContentDetailsActivity;
+import enlightenment.com.tool.okhttp.builder.GetBuilder;
+import enlightenment.com.view.Dialog.ImageShowDialog;
+import enlightenment.com.view.NineGridLayout.ItemNineGridLayout;
 
 /**
  * Created by lw on 2017/7/27.
  */
 
-public class HomeDynamicFragment extends Fragment implements MainView, SwipeRefreshLayout.OnRefreshListener {
+public class HomeDynamicFragment extends Fragment implements MainView,
+        SwipeRefreshLayout.OnRefreshListener, OnContentItemListener{
 
     public static final int FRAGMENT_NEW = 0;
     public static final int FRAGMENT_HOT = 1;
@@ -83,6 +89,17 @@ public class HomeDynamicFragment extends Fragment implements MainView, SwipeRefr
         mSwipeRefresh.setOnRefreshListener(this);
         adapter = new MainItemAdapter(getActivity(), mainPresenter.getDataList(getTypeFragment()),
                 R.layout.item_content_view);
+        adapter.setOnClickImageListener(new ItemNineGridLayout.OnClickImageListener() {
+            @Override
+            public void onClickImage(String url) {
+                ImageShowDialog imageShowDialog=new ImageShowDialog();
+                Bundle bundle=new Bundle();
+                bundle.putString(ImageShowDialog.IMAGE_SHOW_DATA,url);
+                imageShowDialog.setArguments(bundle);
+                imageShowDialog.show(getFragmentManager(),"ImageShowDialog");
+            }
+        });
+        adapter.setOnContentItemListener(this);
         //线性布局管理器
         RecyclerView.LayoutManager recyclerViewLayoutManager = new LinearLayoutManager(getActivity());
         //设置布局管理器
@@ -122,6 +139,23 @@ public class HomeDynamicFragment extends Fragment implements MainView, SwipeRefr
 
     @Override
     public void showToast(String message) {
+
+    }
+
+    @Override
+    public void onItemClick(ContentBean contentBean) {
+        Intent intent=new Intent(getActivity(), ContentDetailsActivity.class);
+        intent.putExtra(ContentDetailsActivity.CONTENT_EXTRA_DATA,contentBean);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onAvatarClick() {
+
+    }
+
+    @Override
+    public void onModelClick() {
 
     }
 }

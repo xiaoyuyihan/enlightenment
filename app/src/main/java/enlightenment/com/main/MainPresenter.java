@@ -90,7 +90,7 @@ public class MainPresenter<T extends MainView> extends BasePresenter {
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        addDataList(list, type, Flag);
+                                        addDataList(list, type, Flag,baseAdapter);
                                         baseAdapter.notifyDataSetChanged();
                                         if (swipeRefreshLayout != null)
                                             swipeRefreshLayout.setRefreshing(false);
@@ -164,7 +164,7 @@ public class MainPresenter<T extends MainView> extends BasePresenter {
     }
 
     //记住item的ID
-    private void addDataList(List data, int type, boolean Flag) {
+    private void addDataList(List data, int type, boolean Flag, RecyclerView.Adapter baseAdapter) {
         switch (type) {
             case HomeDynamicFragment.FRAGMENT_NEW:
                 if (Flag) {

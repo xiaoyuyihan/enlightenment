@@ -66,6 +66,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name="enlightenment.com.details.ContentDetailsActivity"/>
+
         <service android:name="enlightenment.com.service.DownloadService"/>
         <service android:name="enlightenment.com.service.UploadService">
             <intent-filter>
