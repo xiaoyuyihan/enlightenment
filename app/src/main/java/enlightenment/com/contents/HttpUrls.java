@@ -5,7 +5,7 @@ package enlightenment.com.contents;
  */
 
 public class HttpUrls {
-    public static final String HTTP_URL="http://192.168.1.113:5000/api/";
+    public static final String HTTP_URL="http://192.168.0.114:5000/api/";
     public static final String HTTP_URL_LOGIN=HTTP_URL+"login";
     public static final String HTTP_URL_SEND_PHONE=HTTP_URL+"getVerification";
     public static final String HTTP_URL_REGISTERED=HTTP_URL+"registered";

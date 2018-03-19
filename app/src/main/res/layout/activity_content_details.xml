@@ -5,7 +5,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="enlightenment.com.details.ContentDetailsActivity">
-    <include layout="@layout/view_content_top" />
+    <include
+        android:id="@+id/view_content_top"
+        layout="@layout/view_content_top" />
     <FrameLayout
         android:id="@+id/content_details_fragment"
         android:layout_width="match_parent"

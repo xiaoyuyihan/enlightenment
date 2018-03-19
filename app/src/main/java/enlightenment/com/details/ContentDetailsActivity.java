@@ -8,11 +8,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -27,6 +29,8 @@ import butterknife.OnClick;
 import enlightenment.com.base.AppActivity;
 import enlightenment.com.base.R;
 import enlightenment.com.main.ContentBean;
+import enlightenment.com.view.HeadPortraitWinPopupWindow;
+import enlightenment.com.view.PopupWindow.CommonPopupWindow;
 
 /**
  * Created by lw on 2018/3/14.

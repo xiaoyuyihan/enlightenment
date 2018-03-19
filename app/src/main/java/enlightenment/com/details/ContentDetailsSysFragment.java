@@ -3,6 +3,7 @@ package enlightenment.com.details;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -28,12 +29,16 @@ import enlightenment.com.main.ContentBean;
 import enlightenment.com.tool.device.CheckUtils;
 import enlightenment.com.tool.glide.GlideCircleTransform;
 import enlightenment.com.tool.recycelr.SpacesItemDecoration;
+import enlightenment.com.view.PopupWindow.CommonPopupWindow;
 
 /**
  * Created by lw on 2018/3/16.
  */
 
 public class ContentDetailsSysFragment extends Fragment {
+
+    @BindView(R.id.view_content_details_coordinator)
+    CoordinatorLayout mCoordinator;
 
     @BindView(R.id.content_details_top_name)
     TextView mContentName;
@@ -57,6 +62,8 @@ public class ContentDetailsSysFragment extends Fragment {
     @BindView(R.id.view_content_details_bottom_recycler)
     RecyclerView mRecycler;
 
+    RecyclerView mShrinkRecycler;
+
     private StaggeredGridLayoutManager mGridManager;
     private LinearLayoutManager mShrinkGridManager;
     private ContentResAdapter mContentResAdapter;
@@ -77,13 +84,29 @@ public class ContentDetailsSysFragment extends Fragment {
         mGridManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
         mShrinkGridManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         init();
+        mShrinkRecycler = (RecyclerView) LayoutInflater.from(getActivity()).inflate(R.layout.fragment_recycler_only, null);
         return mContentView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
+    }
 
+    private void showPopupWindow() {
+        mShrinkRecycler.setLayoutManager(mShrinkGridManager);
+        ContentResAdapter contentResAdapter=new ContentResAdapter();
+        contentResAdapter.setFlag(true);
+        mShrinkRecycler.setAdapter(contentResAdapter);
+        CommonPopupWindow popupWindow = new CommonPopupWindow.Builder(getActivity())
+                //设置PopupWindow布局
+                .setView(mShrinkRecycler)
+                //设置宽高
+                .setSize(ViewGroup.LayoutParams.MATCH_PARENT, 72)
+                //开始构建
+                .create();
+        //弹出PopupWindow
+        popupWindow.showAsDropDown(mCoordinator);
     }
 
     private void init() {
@@ -120,6 +143,12 @@ public class ContentDetailsSysFragment extends Fragment {
 
     class ContentResAdapter extends RecyclerView.Adapter {
 
+        private boolean isFlag = false;
+
+        public void setFlag(boolean flag) {
+            isFlag = flag;
+        }
+
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             ResViewHolder mResView = new ResViewHolder(
@@ -132,7 +161,10 @@ public class ContentDetailsSysFragment extends Fragment {
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
             ResViewHolder resView = (ResViewHolder) holder;
             if (position < mPhotos.length) {
-                resView.setImageUrl(mPhotos[position]);
+                if (!isFlag)
+                    resView.setImageUrl(mPhotos[position]);
+                else
+                    resView.setImage(mPhotos[position]);
             } else {
                 resView.setResUrl(mAudios[position]);
             }
@@ -156,6 +188,10 @@ public class ContentDetailsSysFragment extends Fragment {
         public ResViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+        }
+
+        public void setImage(String url) {
+            Glide.with(ContentDetailsSysFragment.this).load(url).into(mDetailsImage);
         }
 
         public void setImageUrl(String url) {
