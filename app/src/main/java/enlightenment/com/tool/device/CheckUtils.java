@@ -40,14 +40,16 @@ public class CheckUtils {
         }else {
             list= EnlightenmentApplication.getInstance().getMajorBeen();
         }
-        for(ModuleBean fatherBean:list){
-            if (contentBean.getColumnFatherID()-fatherBean.getIdentity()*100<100){
-                for (ModuleChildBean childBean:fatherBean.getChildBeen()){
-                    if(childBean.getIdentity()==contentBean.getColumnFatherID())
-                        return childBean.getName();
-                }
-            }
-        }
+         if(list !=null){
+             for(ModuleBean fatherBean:list){
+                 if (contentBean.getColumnFatherID()-fatherBean.getIdentity()*100<100){
+                     for (ModuleChildBean childBean:fatherBean.getChildBeen()){
+                         if(childBean.getIdentity()==contentBean.getColumnFatherID())
+                             return childBean.getName();
+                     }
+                 }
+             }
+         }
         return " ";
     }
 

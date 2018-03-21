@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="fragment_automatic_tool_drawable">
+        <item>@drawable/ic_edit_automatic_all</item>
+        <item>@drawable/ic_edit_automatic_rename</item>
+        <item>@drawable/ic_edit_automatic_move</item>
+        <item>@drawable/ic_edit_automatic_delete</item>
+        <item>@drawable/ic_edit_automatic_back</item>
+    </array>
+    <string-array name="fragment_automatic_tool_string">
+        <item>全选</item>
+        <item>重命名</item>
+        <item>移动</item>
+        <item>删除</item>
+        <item>返回</item>
+    </string-array>
+</resources>

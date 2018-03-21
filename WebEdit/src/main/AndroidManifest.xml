@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.webeditproject">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <application
+        android:allowBackup="true"
+        android:supportsRtl="true">
+        <activity
+            android:name="com.edit.EditActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"></activity>
+        <activity android:name="com.provider.view.ParticularActivity" />
+        <activity
+            android:name="com.webedit.HtmlEditActivity"
+            android:theme="@style/translucent"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name="com.provider.view.ProviderActivity">
+            <intent-filter>
+                <action android:name="com.provider.ACTION_PROVIDER" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.camera.CameraActivity">
+            <intent-filter>
+                <action android:name="com.camera.ACTION_START_CAMERA" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.camera.CameraBrowseActivity" />
+
+        <service android:name="com.service.MediaService" />
+    </application>
+
+</manifest>

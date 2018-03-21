@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_edit_common"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/edit_common_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/edit_common_content"></FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/edit_common_top"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="18dp">
+
+        <TextView
+            android:id="@+id/edit_common_top_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="12dp"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="取消"
+            android:textColor="@color/black_50"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:id="@+id/edit_common_custom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_edit_top_item"
+                android:layout_marginLeft="4dp"
+                android:padding="2dp"
+                android:backgroundTint="@color/powderBlue"
+                android:src="@drawable/ic_custom" />
+
+            <ImageView
+                android:id="@+id/edit_common_automatic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_edit_top_item"
+                android:layout_marginLeft="4dp"
+                android:padding="2dp"
+                android:src="@drawable/ic_automatic" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/edit_common_top_next"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="12dp"
+            android:gravity="center"
+            android:padding="4dp"
+            android:text="下一步"
+            android:textColor="@color/black_50"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/edit_common_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_common_top"
+        android:background="@drawable/background_edit_top" />
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/edit_common_top_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/edit_common_top"
+        android:layout_gravity="bottom|right"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="16dp"
+        app:fab_addButtonColorNormal="@color/white"
+        app:fab_addButtonPlusIconColor="@color/colorPrimary"
+        app:fab_addButtonSize="mini"
+        app:fab_expandDirection="down"
+        app:fab_labelsPosition="right">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/edit_common_menu_audio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_icon="@drawable/ic_music"
+            app:fab_size="mini"
+            app:fab_stroke_visible="false"
+            app:fab_title="音频" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/edit_common_menu_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_icon="@drawable/ic_video"
+            app:fab_size="mini"
+            app:fab_title="视频" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/edit_common_menu_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_icon="@drawable/ic_photo"
+            app:fab_size="mini"
+            app:fab_title="图片" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/edit_common_menu_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_icon="@drawable/ic_text"
+            app:fab_size="mini"
+            app:fab_title="图片" />
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+</RelativeLayout>

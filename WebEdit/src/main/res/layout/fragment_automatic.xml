@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+    <EditText
+        android:id="@+id/fragment_automatic_edit"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="top|left"
+        android:background="@null"
+        android:paddingBottom="24dp"
+        android:layout_above="@+id/fragment_automatic_tool" />
+    <com.edit.automatic.ToolLinearLayout
+        android:id="@+id/fragment_automatic_tool"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="-120dp"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/fragment_automatic_tool_top"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:background="@drawable/background_automatic_tool_top"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_automatic_tool_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:background="@drawable/background_automatic_tool_content"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_automatic_tool_recycler_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/background_automatic_tool">
+
+        </android.support.v7.widget.RecyclerView>
+    </com.edit.automatic.ToolLinearLayout>
+
+</RelativeLayout>
