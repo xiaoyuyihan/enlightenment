@@ -20,13 +20,19 @@ import java.io.IOException;
 
 public class MediaService extends Service {
 
-    public static final String DATA_AUDIO_DURATION="DATA_AUDIO_DURATION";
-    public static final String ACTION_MEDIA_SERVICE="com.edit.media.service.action";
+    public static final String DATA_AUDIO_DURATION = "DATA_AUDIO_DURATION";
+    public static final String ACTION_MEDIA_SERVICE = "com.edit.media.service.action";
+
+    public static final int SERVICE_MEDIA_STATE_CREATE = 0;
+    public static final int SERVICE_MEDIA_STATE_PLAYING = 1;
+    public static final int SERVICE_MEDIA_STATE_PAUSE = 2;
+    public static final int SERVICE_MEDIA_STATE_STOP = 3;
 
     private MediaBinder mMediaBinder = new MediaBinder();
     private MediaPlayer mMediaPlayer;
     private String mPath;
-    private static final String Tag=MediaService.class.getName();
+    private static final String Tag = MediaService.class.getName();
+    private int mPlayState = SERVICE_MEDIA_STATE_CREATE;
 
     @Nullable
     @Override
@@ -36,7 +42,7 @@ public class MediaService extends Service {
 
     @Override
     public void onCreate() {
-        if (mMediaPlayer ==null)
+        if (mMediaPlayer == null)
             mMediaPlayer = new MediaPlayer();
         super.onCreate();
     }
@@ -47,22 +53,35 @@ public class MediaService extends Service {
     }
 
 
-
     public MediaPlayer getMediaPlayer() {
         return mMediaPlayer;
     }
 
-    public void setMediaDataSource(String path){
-        Log.d(Tag,"set path "+path);
-        if (mPath!=null&&mPath.equals(path)){
+    public void setMediaDataSource(String path) {
+        Log.d(Tag, "set path " + path);
+        if (mPath != null && mPath.equals(path)) {
             onPauseAudio();
-        }else {
-            mPath=path;
+            sendDurationBroad(mMediaPlayer.getDuration());
+        } else {
+            mPath = path;
             initMediaDataSource(mPath);
         }
     }
 
-    private void initMediaDataSource(String path){
+    private void initMediaDataSource(String path) {
+        if (mMediaPlayer == null) {
+            mMediaPlayer = new MediaPlayer();
+            mPlayState = SERVICE_MEDIA_STATE_CREATE;
+        }
+        if (mPlayState == SERVICE_MEDIA_STATE_PLAYING || mMediaPlayer.isPlaying()) {
+            mMediaPlayer.pause();
+            mMediaPlayer.stop();
+        } else if (mPlayState == SERVICE_MEDIA_STATE_CREATE
+                && mMediaPlayer == null) {
+            mMediaPlayer = new MediaPlayer();
+        } else if (mPlayState == SERVICE_MEDIA_STATE_PAUSE) {
+            mMediaPlayer.stop();
+        }
         try {
             mMediaPlayer.setDataSource(path);
             // 使用系统的媒体音量控制
@@ -75,12 +94,13 @@ public class MediaService extends Service {
                         .build();
                 mMediaPlayer.setAudioAttributes(attributes);
             }
-            mMediaPlayer.prepare();
+            mMediaPlayer.prepareAsync();
             mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     sendDurationBroad(mp.getDuration());
                     mp.start();
+                    mPlayState = SERVICE_MEDIA_STATE_PLAYING;
                 }
             });
             mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -89,40 +109,88 @@ public class MediaService extends Service {
                     mp.start();
                 }
             });
+            mMediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                    mediaPlayer.start();
+                    return false;
+                }
+            });
         } catch (IOException e) {
             e.printStackTrace();
-            mMediaPlayer=null;
+            mMediaPlayer = null;
+
         }
     }
 
     public void sendDurationBroad(int duration) {
         Intent intent = new Intent();
         intent.setAction(ACTION_MEDIA_SERVICE);
-        intent.putExtra(DATA_AUDIO_DURATION,duration);
+        intent.putExtra(DATA_AUDIO_DURATION, duration);
         sendBroadcast(intent);
     }
 
-    public void onStopAudio(){
-        if (mMediaPlayer!=null)
+    public void onStopAudio() {
+        if (mMediaPlayer != null &&
+                mPlayState != SERVICE_MEDIA_STATE_STOP) {
+            if (mPlayState == SERVICE_MEDIA_STATE_PLAYING)
+                mMediaPlayer.pause();
             mMediaPlayer.stop();
+            mPlayState = SERVICE_MEDIA_STATE_STOP;
+        }
     }
 
-    public void onSeekTo(int position){
-        if (mMediaPlayer!=null)
+    public void onCloseAudio() {
+        if (mMediaPlayer != null &&
+                mPlayState != SERVICE_MEDIA_STATE_CREATE) {
+            if (mPlayState == SERVICE_MEDIA_STATE_PLAYING) {
+                mMediaPlayer.pause();
+                mMediaPlayer.stop();
+            }
+            if (mPlayState == SERVICE_MEDIA_STATE_PAUSE)
+                mMediaPlayer.stop();
+            mMediaPlayer.release();
+            mMediaPlayer = null;
+            mPlayState = SERVICE_MEDIA_STATE_CREATE;
+        }
+    }
+
+    public void onReleaseAudio(){
+        if (mMediaPlayer != null &&
+                mPlayState != SERVICE_MEDIA_STATE_CREATE) {
+            if (mPlayState == SERVICE_MEDIA_STATE_PLAYING) {
+                mMediaPlayer.pause();
+                mMediaPlayer.stop();
+            }
+            if (mPlayState == SERVICE_MEDIA_STATE_PAUSE)
+                mMediaPlayer.stop();
+            mPlayState = SERVICE_MEDIA_STATE_CREATE;
+        }
+    }
+
+    public void onSeekTo(int position) {
+        if (mMediaPlayer != null)
             mMediaPlayer.seekTo(position);
     }
 
-    public void onPauseAudio(){
-        if (mMediaPlayer!=null)
-            if (mMediaPlayer.isPlaying()){
+    public void onPauseAudio() {
+        if (mMediaPlayer != null)
+            if (mMediaPlayer.isPlaying()) {
                 mMediaPlayer.pause();
-            }else
+                mPlayState = SERVICE_MEDIA_STATE_PAUSE;
+            } else {
                 mMediaPlayer.start();
+                mPlayState = SERVICE_MEDIA_STATE_PLAYING;
+            }
     }
 
-    public void onResetAudio(){
-        if (mMediaPlayer!=null)
+    public void onResetAudio() {
+        if (mMediaPlayer != null)
             mMediaPlayer.reset();
+    }
+
+    public int getAudioState() {
+        return mPlayState;
     }
 
     @Override
@@ -130,12 +198,13 @@ public class MediaService extends Service {
         super.onDestroy();
     }
 
-    public class MediaBinder extends Binder{
+    public class MediaBinder extends Binder {
         @Override
         protected boolean onTransact(int code, Parcel data, Parcel reply, int flags) throws RemoteException {
             return super.onTransact(code, data, reply, flags);
         }
-        public MediaService getService(){
+
+        public MediaService getService() {
             return MediaService.this;
         }
     }

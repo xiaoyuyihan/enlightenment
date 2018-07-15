@@ -23,7 +23,7 @@ public class TransformationUtils {
             for (Field field : fields) {
                 field.setAccessible(true);
                 String proName = field.getName();
-                if (proName.contains("this"))
+                if (proName.contains("this")||proName.contains("$"))
                     continue;
                 Object proValue = null;
                 try {

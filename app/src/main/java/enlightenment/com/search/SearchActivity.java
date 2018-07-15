@@ -17,11 +17,15 @@ import scut.carson_ho.searchview.bCallBack;
 
 public class SearchActivity extends AppActivity {
     public SearchView mSearchView;
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
-        mSearchView = (SearchView)findViewById(R.id.search_view);
+    protected int getLayoutId() {
+        return R.layout.activity_search;
+    }
+
+    @Override
+    protected void init() {
+        mSearchView = (SearchView) findViewById(R.id.search_view);
         mSearchView.setOnClickBack(new bCallBack() {
             @Override
             public void BackAciton() {
@@ -31,8 +35,13 @@ public class SearchActivity extends AppActivity {
         mSearchView.setOnClickSearch(new ICallBack() {
             @Override
             public void SearchAciton(String string) {
-                Toast.makeText(SearchActivity.this,string,Toast.LENGTH_SHORT).show();
+                Toast.makeText(SearchActivity.this, string, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void initData() {
+
     }
 }

@@ -27,6 +27,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity android:name="com.audio.AudioActivity">
+            <intent-filter>
+                <action android:name="com.audio.ACTION_START_AUDIO"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
         <activity android:name="com.camera.CameraActivity">
             <intent-filter>
                 <action android:name="com.camera.ACTION_START_CAMERA" />

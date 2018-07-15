@@ -57,7 +57,7 @@ public class OnRecyclerScrollListener extends RecyclerView.OnScrollListener {
                 break;
         }
     }
-    interface OnRefreshListener{
+    public interface OnRefreshListener{
         void Refresh();
     }
 }

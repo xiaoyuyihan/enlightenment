@@ -2,6 +2,8 @@ package enlightenment.com.base;
 
 import android.util.ArrayMap;
 
+import com.google.gson.JsonSyntaxException;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,6 +12,7 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import enlightenment.com.base.registered.InterestActivity;
 import enlightenment.com.contents.Constants;
 import enlightenment.com.contents.FileUrls;
 import enlightenment.com.contents.HttpUrls;
@@ -54,6 +57,7 @@ public class basePresenter<T extends baseView> extends BasePresenter {
         if (mView.equals(view)) {
             mView = null;
         }
+        basePresenter = null;
     }
 
     @Override
@@ -105,6 +109,7 @@ public class basePresenter<T extends baseView> extends BasePresenter {
                                     mView.showToast(data.getString("data"));
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                mView.requestException();
                             }
                         }
                     }
@@ -134,6 +139,7 @@ public class basePresenter<T extends baseView> extends BasePresenter {
                                     mView.showToast("验证码申请今日已达到上限");
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                mView.requestException();
                             }
                         }
                     }
@@ -154,7 +160,7 @@ public class basePresenter<T extends baseView> extends BasePresenter {
         if (VerificationCode.equals(Constants.phoneVerification) &&
                 current - Constants.VerificationTimeout * 1000 < 60 * 1000 * 6) {
             if (mView instanceof PhoneValidationActivity) {
-                if (((PhoneValidationActivity) mView).activiyType == PhoneValidationActivity.TYPE_REGISTER)
+                if (((PhoneValidationActivity) mView).activityType == PhoneValidationActivity.TYPE_REGISTER)
                     mView.startNextActivity(InterestActivity.class);
                     //重置密码
                 else
@@ -192,6 +198,7 @@ public class basePresenter<T extends baseView> extends BasePresenter {
                                     mView.showToast(data.getString("data"));
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                mView.requestException();
                             }
                         }
                     }
@@ -211,11 +218,12 @@ public class basePresenter<T extends baseView> extends BasePresenter {
                         if (response != null) {
                             try {
                                 JSONObject data = new JSONObject(response);
+                                mView.showToast(data.getString("data"));
                                 if (data.getBoolean("Flag"))
                                     mView.startNextActivity(LoginActivity.class);
-                                mView.showToast(data.getString("data"));
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                mView.requestException();
                             }
                         }
                     }
@@ -238,6 +246,8 @@ public class basePresenter<T extends baseView> extends BasePresenter {
                                         mList);
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                            }catch (JsonSyntaxException e){
+                                e.printStackTrace();
                             }
                         }
                     }
@@ -252,10 +262,12 @@ public class basePresenter<T extends baseView> extends BasePresenter {
                                 JSONArray jsonArray = jsonObject.getJSONArray("data");
                                 List<ModuleBean> mList=GsonUtils.parseJsonArrayWithGson(
                                         jsonArray.toString(), ModuleBean[].class);
-                                ((InterestActivity)mView).setModuleFatherBeen(mList);
+                                ((InterestActivity)mView).setCreateFatherBeen(mList);
                                 FileUtils.writeFileObject(FileUrls.PATH_APP_ORIENTATION,
                                         mList);
                             } catch (JSONException e) {
+                                e.printStackTrace();
+                            }catch (JsonSyntaxException e){
                                 e.printStackTrace();
                             }
                         }

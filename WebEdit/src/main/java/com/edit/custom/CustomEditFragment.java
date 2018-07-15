@@ -75,6 +75,7 @@ public class CustomEditFragment extends Fragment implements OnFragmentResultList
         mRecyclerView.setPadding(12,12,12,12);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(mEditAdapter);
+        mRecyclerView.setNestedScrollingEnabled(false);
         SimpleItemTouchHelperCallback mCallback = new SimpleItemTouchHelperCallback<>(mEditAdapter, mEditBeanList);
         mCallback.setSwipeState(new SimpleItemTouchHelperCallback.SwipeStateAlterHelper() {
             @Override
@@ -160,16 +161,16 @@ public class CustomEditFragment extends Fragment implements OnFragmentResultList
             RecyclerView.ViewHolder mViewHolder = null;
             switch (viewType) {
                 case EditBean.TYPE_AUDIO:
-                    mViewHolder = new AudioViewHolder(mInflater.inflate(R.layout.view_item_edit_audio, parent, false));
+                    mViewHolder = new CustomViewHolder.AudioViewHolder(mInflater.inflate(R.layout.view_item_edit_audio, parent, false));
                     break;
                 case EditBean.TYPE_PHOTO:
-                    mViewHolder = new PhotoViewHolder(mInflater.inflate(R.layout.view_item_edit_photo, parent, false));
+                    mViewHolder = new CustomViewHolder.PhotoViewHolder(mInflater.inflate(R.layout.view_item_edit_photo, parent, false),getActivity());
                     break;
                 case EditBean.TYPE_TEXT:
-                    mViewHolder = new TextViewHolder(mInflater.inflate(R.layout.view_item_edit_text, parent, false));
+                    mViewHolder = new CustomViewHolder.TextViewHolder(mInflater.inflate(R.layout.view_item_edit_text, parent, false));
                     break;
                 case EditBean.TYPE_VIDEO:
-                    mViewHolder = new VideoViewHolder(mInflater.inflate(R.layout.view_item_edit_video, parent, false));
+                    mViewHolder = new CustomViewHolder.VideoViewHolder(mInflater.inflate(R.layout.view_item_edit_video, parent, false));
                     break;
             }
             return mViewHolder;
@@ -179,8 +180,8 @@ public class CustomEditFragment extends Fragment implements OnFragmentResultList
         public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
             Log.d("EditAdapter", "onBindViewHolder");
             final EditBean currentBean = mEditBeanList.get(position);
-            if (holder instanceof TextViewHolder) {
-                TextViewHolder textViewHolder = (TextViewHolder) holder;
+            if (holder instanceof CustomViewHolder.TextViewHolder) {
+                CustomViewHolder.TextViewHolder textViewHolder = (CustomViewHolder.TextViewHolder) holder;
                 textViewHolder.setHtml(currentBean.getHTML5());
                 textViewHolder.setHtmlSize(currentBean.getHtmlTextSize());
                 textViewHolder.setGravity(currentBean.getGravity());
@@ -194,8 +195,8 @@ public class CustomEditFragment extends Fragment implements OnFragmentResultList
                         startActivityForResult(intent, HtmlEditActivity.HTML_EDIT_TYPE_REWRITE);
                     }
                 });
-            } else if (holder instanceof AudioViewHolder) {
-                AudioViewHolder audioViewHolder = (AudioViewHolder) holder;
+            } else if (holder instanceof CustomViewHolder.AudioViewHolder) {
+                CustomViewHolder.AudioViewHolder audioViewHolder = (CustomViewHolder.AudioViewHolder) holder;
                 audioViewHolder.setTopName(currentBean.getProviderName());
                 audioViewHolder.setTime(TypeConverUtil.TimeMSToMin(currentBean.getTime()));
                 audioViewHolder.setPlayClick(new View.OnClickListener() {
@@ -206,10 +207,10 @@ public class CustomEditFragment extends Fragment implements OnFragmentResultList
                         }
                     }
                 });
-            } else if (holder instanceof VideoViewHolder) {
+            } else if (holder instanceof CustomViewHolder.VideoViewHolder) {
 
-            } else if (holder instanceof PhotoViewHolder) {
-                PhotoViewHolder photoViewHolder = (PhotoViewHolder) holder;
+            } else if (holder instanceof CustomViewHolder.PhotoViewHolder) {
+                CustomViewHolder.PhotoViewHolder photoViewHolder = (CustomViewHolder.PhotoViewHolder) holder;
                 photoViewHolder.setPhotoView(currentBean.getPath());
             }
         }
@@ -225,102 +226,6 @@ public class CustomEditFragment extends Fragment implements OnFragmentResultList
         }
 
     }
-
-    class TextViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R2.id.view_item_edit_text)
-        TextView mTextView;
-
-        public TextViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-
-        public void setHtml(String mHtml) {
-            Spanned html;
-            if (Build.VERSION.SDK_INT >= 24) {
-                html = Html.fromHtml(mHtml, Html.FROM_HTML_MODE_LEGACY);
-            } else {
-                html = Html.fromHtml(mHtml);
-            }
-            if (html.length() > 2)
-                html = (Spanned) html.subSequence(0, html.length() - 2);
-            mTextView.setText(html);
-        }
-
-        public void setHtmlSize(int size) {
-            mTextView.setTextSize(size);
-        }
-
-        public void setGravity(String gravity) {
-            if (gravity.equals("left")) {
-                mTextView.setGravity(Gravity.LEFT);
-            } else if (gravity.equals("center")) {
-                mTextView.setGravity(Gravity.CENTER);
-            } else if (gravity.equals("right")) {
-                mTextView.setGravity(Gravity.RIGHT);
-            }
-        }
-    }
-
-    class VideoViewHolder extends RecyclerView.ViewHolder {
-
-        public VideoViewHolder(View itemView) {
-            super(itemView);
-        }
-    }
-
-    class PhotoViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R2.id.view_item_edit_photo)
-        ImageView mPhotoView;
-
-        public PhotoViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-
-        public void setPhotoView(String bitmap) {
-            Glide.with(CustomEditFragment.this).load(new File(bitmap)).into(mPhotoView);
-        }
-    }
-
-    public class AudioViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R2.id.view_item_edit_audio_play)
-        ImageView mPlay;
-        @BindView(R2.id.view_item_edit_audio_top)
-        TextView mTopName;
-        @BindView(R2.id.view_item_edit_audio_seekbar)
-        SeekBar mSeekBar;
-        @BindView(R2.id.view_item_edit_audio_current_time)
-        TextView mCurrentTime;
-        @BindView(R2.id.view_item_edit_audio_time)
-        TextView mTime;
-
-        public AudioViewHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this, itemView);
-        }
-
-        public void setPlayClick(View.OnClickListener onClickListener) {
-            mPlay.setOnClickListener(onClickListener);
-        }
-
-        public void setTime(String time) {
-            mTime.setText(time);
-        }
-
-        public TextView getCurrentTime() {
-            return mCurrentTime;
-        }
-
-        public SeekBar getSeekBar() {
-            return mSeekBar;
-        }
-
-        public void setTopName(String name) {
-            mTopName.setText(name);
-        }
-    }
-
     public interface AudioPlayClick {
         void onClick(RecyclerView.ViewHolder holder, String path);
     }

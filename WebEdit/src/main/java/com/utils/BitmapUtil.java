@@ -8,6 +8,11 @@ import android.graphics.BitmapFactory;
  */
 
 public class BitmapUtil {
+    /**
+     * 获取照片宽高比
+     * @param path
+     * @return
+     */
     public static float getImageSizeAhead(String path) {
         if (path!=null){
             BitmapFactory.Options options = new BitmapFactory.Options();

@@ -50,7 +50,7 @@ public class PhoneValidationActivity extends AppActivity implements  baseView,Vi
     public ImageView topLeftImage;
 
     private basePresenter mPresenter;
-    public int activiyType;
+    public int activityType;
 
     public Handler mHandler= new Handler(Looper.getMainLooper()){
         private int time=60;
@@ -72,13 +72,6 @@ public class PhoneValidationActivity extends AppActivity implements  baseView,Vi
             }
         }
     };
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_phone_vaildation);
-        ButterKnife.bind(this);
-        init();
-    }
 
     @Override
     protected void onStart() {
@@ -87,10 +80,18 @@ public class PhoneValidationActivity extends AppActivity implements  baseView,Vi
         mPresenter.onStart();
         mPresenter.BindView(this);
     }
-    private void init(){
-        activiyType=getIntent().getExtras().getInt(PhoneValidationActivity.TYPE_EXTES);
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.activity_phone_vaildation;
+    }
+
+    @Override
+    protected void init(){
+        ButterKnife.bind(this);
+        activityType=getIntent().getExtras().getInt(PhoneValidationActivity.TYPE_EXTES);
         topRightText.setTextColor(getResources().getColor(R.color.mainTopColor));
-        if (activiyType==TYPE_REGISTER)
+        if (activityType==TYPE_REGISTER)
             topCenterText.setText("注册帐号");
         else
             topCenterText.setText("找回密码");
@@ -119,6 +120,11 @@ public class PhoneValidationActivity extends AppActivity implements  baseView,Vi
     }
 
     @Override
+    protected void initData() {
+
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         mPresenter.unBindView(this);
@@ -127,6 +133,11 @@ public class PhoneValidationActivity extends AppActivity implements  baseView,Vi
     @Override
     public void showToast(String message) {
         Toast.makeText(PhoneValidationActivity.this,message,Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public Object getObj() {
+        return null;
     }
 
     @Override

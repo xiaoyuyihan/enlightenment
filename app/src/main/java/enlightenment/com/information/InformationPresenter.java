@@ -10,14 +10,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import enlightenment.com.base.InterestActivity;
-import enlightenment.com.contents.FileUrls;
 import enlightenment.com.contents.HttpUrls;
 import enlightenment.com.module.ModuleBean;
-import enlightenment.com.module.ModuleChildBean;
 import enlightenment.com.mvp.BasePresenter;
 import enlightenment.com.mvp.BaseView;
-import enlightenment.com.tool.File.FileUtils;
+import enlightenment.com.operationBean.ColumnBean;
 import enlightenment.com.tool.gson.GsonUtils;
 import enlightenment.com.tool.okhttp.ModelUtil;
 
@@ -60,6 +57,7 @@ public class InformationPresenter<T extends InformationView> extends BasePresent
         super.unBindView(baseView);
         if (mView.equals(baseView))
             mView = null;
+        informationPresenter = null;
     }
 
     public void loadColumn() {

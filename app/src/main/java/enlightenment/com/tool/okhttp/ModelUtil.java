@@ -52,7 +52,8 @@ public class ModelUtil implements BaseModel {
                 .build()
                 .execute(new StringCallback() {
                     @Override
-                    public void onError(final Call call, final Exception e, final int id) {
+                    public void onError(final Call call, final Exception e, final int id, final int code) {
+                        super.onError(call,e,id,code);
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -81,7 +82,8 @@ public class ModelUtil implements BaseModel {
                 .build()
                 .execute(new StringCallback() {
                     @Override
-                    public void onError(final Call call, final Exception e, final int id) {
+                    public void onError(final Call call, final Exception e, final int id, final int code) {
+                        super.onError(call,e,id,code);
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -111,7 +113,8 @@ public class ModelUtil implements BaseModel {
                 .build()
                 .execute(new StringCallback() {
                     @Override
-                    public void onError(final Call call, final Exception e, final int id) {
+                    public void onError(final Call call, final Exception e, final int id, final int code) {
+                        super.onError(call,e,id,code);
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -151,6 +154,15 @@ public class ModelUtil implements BaseModel {
                 .execute(m);
     }
 
+    public void postFileProgress(String url,Map params, Callback m){
+        OkHttpUtils
+                .post()
+                .url(url)
+                .params(params)
+                .build()
+                .execute(m);
+    }
+
     public Response postSynchFile(String url, String key, File file,String token) throws IOException {
         return OkHttpUtils.post().url(url).addFile(key,file).addParams("token",token).build().execute();
     }
@@ -164,7 +176,8 @@ public class ModelUtil implements BaseModel {
                 .build()//
                 .execute(new StringCallback() {
                     @Override
-                    public void onError(final Call call, final Exception e, final int id) {
+                    public void onError(final Call call, final Exception e, final int id, final int code) {
+                        super.onError(call,e,id,code);
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -194,7 +207,8 @@ public class ModelUtil implements BaseModel {
                 .build()//
                 .execute(new StringCallback() {
                     @Override
-                    public void onError(final Call call, final Exception e, final int id) {
+                    public void onError(final Call call, final Exception e, final int id,final int code) {
+                        super.onError(call,e,id,code);
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
@@ -223,7 +237,7 @@ public class ModelUtil implements BaseModel {
                 .execute(new FileCallBack(File, FileName) {
 
                     @Override
-                    public void onError(Call call, Exception e, int id) {
+                    public void onError(Call call, Exception e, int id,int code) {
 
                     }
 

@@ -129,6 +129,6 @@
             app:fab_colorNormal="@color/white"
             app:fab_icon="@drawable/ic_text"
             app:fab_size="mini"
-            app:fab_title="图片" />
+            app:fab_title="文字" />
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 </RelativeLayout>

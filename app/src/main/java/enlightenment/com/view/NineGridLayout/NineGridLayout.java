@@ -54,7 +54,7 @@ public abstract class NineGridLayout extends ViewGroup {
     private void init(Context context) {
         mContext = context;
         if (getListSize(mUrlList) == 0) {
-            setVisibility(GONE);
+            setVisibility(View.GONE);
         }
     }
 

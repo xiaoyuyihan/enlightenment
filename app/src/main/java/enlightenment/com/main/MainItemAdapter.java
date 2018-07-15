@@ -5,20 +5,26 @@ import android.graphics.Bitmap;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.edit.EditActivity;
+import com.edit.bean.EditBean;
+import com.edit.bean.WebContentBean;
+import com.google.gson.JsonSyntaxException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import enlightenment.com.base.R;
+import enlightenment.com.operationBean.ContentBean;
 import enlightenment.com.tool.Image.MediaPlayerUtil;
 import enlightenment.com.tool.device.CheckUtils;
-import enlightenment.com.view.Dialog.ImageShowDialog;
+import enlightenment.com.tool.gson.GsonUtils;
 import enlightenment.com.view.NineGridLayout.ItemNineGridLayout;
 
 /**
@@ -37,7 +43,7 @@ public class MainItemAdapter extends RecyclerView.Adapter {
     private ItemNineGridLayout.OnClickImageListener onClickImageListener;
     private OnContentItemListener onContentItemListener;
 
-    public void setOnContentItemListener(OnContentItemListener onContentItemListener) {
+    public void setOnItemListener(OnContentItemListener onContentItemListener) {
         this.onContentItemListener = onContentItemListener;
     }
 
@@ -58,7 +64,7 @@ public class MainItemAdapter extends RecyclerView.Adapter {
         switch (viewType) {
             case TYPE_LOAD_MORE:
                 view = LayoutInflater.from(context).inflate(R.layout.item_footer_view, parent, false);
-                mViewHolder = new ItemViewHolder.ImageViewHolder(view);
+                mViewHolder = new ItemViewHolder.BaseViewHolder(view);
                 break;
             case TYPE_TEXT_MORE:
                 view = LayoutInflater.from(context).inflate(viewID, parent, false);
@@ -87,19 +93,45 @@ public class MainItemAdapter extends RecyclerView.Adapter {
                                 mTextViewHolder.getAvatarView().setImageDrawable(circularBitmapDrawable);
                             }
                         });
-                if (contentBean.getPhoto() != null && !contentBean.getPhoto().equals(""))
-                    mTextViewHolder.setImages(contentBean.getPhoto(),onClickImageListener);
                 mTextViewHolder.setUsernameView(contentBean.getUsername());
                 mTextViewHolder.setModelNameView(CheckUtils.getModelName(contentBean));
                 mTextViewHolder.setContentNameView(contentBean.getName());
-                mTextViewHolder.setContent(contentBean.getContent());
-                if (contentBean.getAudio() != null && !contentBean.getAudio().equals(""))
-                    mTextViewHolder.setAudio(contentBean.getAudio(), new MediaPlayerUtil.OnNextAudioListener() {
-                        @Override
-                        public void onNext(int position) {
-                            mTextViewHolder.setAudioNameText(position);
+                if (GsonUtils.isJSONVaild(contentBean.getContent())) {
+                    List<WebContentBean> webContentBeans = createShowDate(contentBean.getContent());
+                    if (webContentBeans.size() > 0) {
+                        switch (webContentBeans.get(0).getViewFlag()) {
+                            case EditBean.TYPE_AUDIO:
+                                mTextViewHolder.setAudio(webContentBeans.get(0).getContent(), new MediaPlayerUtil.OnNextAudioListener() {
+                                    @Override
+                                    public void onNext(int position) {
+
+                                    }
+                                });
+                                break;
+                            case EditBean.TYPE_PHOTO:
+                                mTextViewHolder.setImages(webContentBeans.get(0).getContent(), onClickImageListener);
+                                break;
+                            case EditBean.TYPE_TEXT:
+                                mTextViewHolder.setWebContent(webContentBeans.get(0).getContent());
+                                break;
+                            case EditBean.TYPE_VIDEO:
+                                break;
                         }
-                    });
+                    }
+                } else {
+                    if (contentBean.getPhoto() != null && !contentBean.getPhoto().equals(""))
+                        mTextViewHolder.setImages(contentBean.getPhoto(), onClickImageListener);
+                    if (contentBean.getContent() != null && !contentBean.getContent().equals(""))
+                        mTextViewHolder.setContent(contentBean.getContent());
+                    if (contentBean.getAudio() != null && !contentBean.getAudio().equals(""))
+                        mTextViewHolder.setAudio(contentBean.getAudio(), new MediaPlayerUtil.OnNextAudioListener() {
+                            @Override
+                            public void onNext(int position) {
+                                mTextViewHolder.setAudioNameText(position);
+                            }
+                        });
+                }
+
                 mTextViewHolder.setLiveView(contentBean.getLive());
                 mTextViewHolder.setNumberView(contentBean.getNumber());
                 mTextViewHolder.setType(contentBean.getType());
@@ -114,9 +146,23 @@ public class MainItemAdapter extends RecyclerView.Adapter {
         }
     }
 
+    private List<WebContentBean> createShowDate(String content) {
+        try{
+            return GsonUtils.parseJsonArrayWithGson(content, WebContentBean[].class);
+        }catch (JsonSyntaxException e){
+            Log.d(MainItemAdapter.class.getName(),e.toString());
+            return createShowDate(content);
+        }
+    }
+
     @Override
     public int getItemCount() {
         return mData.size() > 6 ? mData.size() + 1 : mData.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
     @Override

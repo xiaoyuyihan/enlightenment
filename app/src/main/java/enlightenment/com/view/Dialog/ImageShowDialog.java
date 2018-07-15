@@ -50,7 +50,7 @@ public class ImageShowDialog extends DialogFragment {
         getDialog().getWindow().setLayout((int) (dm.widthPixels * 0.8), (int) (dm.heightPixels * 0.8));
         url=getArguments().getString(IMAGE_SHOW_DATA,null);
         if (url!=null){
-            Glide.with(this).load(url).into(imageView);
+            Glide.with(this).load(url).placeholder(R.drawable.ic_banner_default).into(imageView);
         }
     }
 }

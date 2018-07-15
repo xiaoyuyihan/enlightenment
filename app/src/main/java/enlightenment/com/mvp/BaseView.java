@@ -9,4 +9,5 @@ import android.support.v7.app.AppCompatActivity;
 
 public interface BaseView {
     void showToast(String message);
+    Object getObj();
 }

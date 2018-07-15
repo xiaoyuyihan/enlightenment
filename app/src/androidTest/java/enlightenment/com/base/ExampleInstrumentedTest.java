@@ -7,6 +7,8 @@ import android.support.test.runner.AndroidJUnit4;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import enlightenment.com.tool.device.CheckUtils;
+
 import static org.junit.Assert.*;
 
 /**
@@ -22,5 +24,9 @@ public class ExampleInstrumentedTest {
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         assertEquals("enlightenment.com.enlightenment", appContext.getPackageName());
+    }
+    @Test
+    public void test(){
+        System.out.print(CheckUtils.checkPassword("123456"));
     }
 }

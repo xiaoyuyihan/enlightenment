@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.BindView;
 import enlightenment.com.base.AppActivity;
 import enlightenment.com.base.R;
-import enlightenment.com.base.RegisteredActivity;
+import enlightenment.com.base.registered.RegisteredActivity;
 
 /**
  * Created by lw on 2017/9/13.
@@ -41,15 +41,23 @@ public class PictureActivity extends AppActivity implements View.OnClickListener
     TextView rightView;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_picture);
+    protected int getLayoutId() {
+        return R.layout.activity_picture;
+    }
+
+    @Override
+    protected void init() {
         ButterKnife.bind(this);
         paths = getIntent().getExtras().getStringArrayList(PICTURE_EXTRA);
         rightView.setTextColor(getResources().getColor(R.color.mainTopColor));
         leftView.setOnClickListener(this);
         centerView.setText("选择图片");
         gridView.setAdapter(new PictureAdapter());
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     @Override

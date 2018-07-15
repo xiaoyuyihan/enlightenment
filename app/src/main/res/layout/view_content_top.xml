@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@color/view_background"
     android:gravity="center"
     android:fitsSystemWindows="true"
     android:layout_alignParentTop="true"
@@ -30,6 +30,7 @@
             android:maxLines="1"
             android:maxLength="12"
             android:ellipsize="end"
+            android:textColor="@color/text_color"
             android:gravity="center|left"
             android:textSize="14sp"
             android:id="@+id/view_content_top_text" />
@@ -40,6 +41,7 @@
            android:layout_height="wrap_content"
            android:text="111"
            android:textSize="8sp"
+           android:textColor="@color/text_color"
            android:gravity="bottom"
            android:padding="6dp"
            android:drawablePadding="4dp"
@@ -53,6 +55,7 @@
             android:gravity="bottom"
             android:padding="6dp"
             android:drawablePadding="4dp"
+            android:textColor="@color/text_color"
             android:drawableLeft="@drawable/ic_live_no"/>
         <ImageView
             android:id="@+id/view_content_top_share"

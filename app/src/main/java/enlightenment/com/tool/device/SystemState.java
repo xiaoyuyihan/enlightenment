@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.media.MediaCodecInfo;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -64,7 +65,17 @@ public class SystemState {
         if(connManager.getActiveNetworkInfo() != null) {
             return connManager.getActiveNetworkInfo().isAvailable();
         }
+        return false;
+    }
 
+    public static boolean isWIFIState(){
+        ConnectivityManager connectivityManager = (ConnectivityManager) EnlightenmentApplication.getInstance()
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetInfo != null
+                && activeNetInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+            return true;
+        }
         return false;
     }
 }

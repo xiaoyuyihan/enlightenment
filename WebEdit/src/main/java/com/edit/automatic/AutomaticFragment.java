@@ -86,7 +86,7 @@ public class AutomaticFragment extends Fragment implements OnFragmentResultListe
 
     private void init() {
         int mType=getArguments().getInt(EditActivity.ACTIVITY_EDIT_TYPE);
-        if (mType==EditActivity.ACTIVITY_EDIT_TYPE_AUTOMTIC){
+        if (mType==EditActivity.ACTIVITY_EDIT_TYPE_AUTOMATIC){
             String text=getArguments().getString(EditActivity.ACTIVITY_EDIT_TEXT);
             mEditText.setText(text);
             //mEditBeanList.clear();
@@ -204,7 +204,7 @@ public class AutomaticFragment extends Fragment implements OnFragmentResultListe
         String text=mEditText.getText().toString();
         if (!text.equals(" ")&&!text.equals("")||mEditBeanList.size()>0){
             // mEditBeanList and Text
-            intent.putExtra(EditActivity.ACTIVITY_EDIT_TYPE, EditActivity.ACTIVITY_EDIT_TYPE_AUTOMTIC);
+            intent.putExtra(EditActivity.ACTIVITY_EDIT_TYPE, EditActivity.ACTIVITY_EDIT_TYPE_AUTOMATIC);
             intent.putExtra(EditActivity.ACTIVITY_EDIT_TEXT, mEditText.getText().toString());
             IntentBean.getInstance().setData(mEditBeanList);
             return true;

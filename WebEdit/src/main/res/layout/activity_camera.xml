@@ -24,30 +24,24 @@
 
     </FrameLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/camera_back"
+        android:layout_width="36dp"
         android:layout_height="36dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="12dp"
         android:layout_marginTop="18dp"
-        android:orientation="horizontal">
+        android:padding="8dp"
+        android:src="@drawable/ic_camera_close" />
 
-        <ImageView
-            android:id="@+id/camera_back"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_alignParentLeft="true"
-            android:padding="8dp"
-            android:layout_marginLeft="12dp"
-            android:src="@drawable/ic_camera_close"/>
-
-        <ImageView
-            android:id="@+id/camera_conversions"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:paddingBottom="6dp"
-            android:paddingTop="6dp"
-            android:src="@drawable/ic_camera_conversions" />
-    </RelativeLayout>
+    <ImageView
+        android:id="@+id/camera_conversions"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="18dp"
+        android:padding="8dp"
+        android:src="@drawable/ic_camera_conversions" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -65,14 +59,14 @@
             app:srcCompat="@drawable/ic_take_pictures" />
 
         <ImageView
+            android:id="@+id/camera_provider_check"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            app:srcCompat="@drawable/ic_photo_check"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="48dp"
             android:layout_marginRight="24dp"
-            android:id="@+id/camera_provider_check" />
+            app:srcCompat="@drawable/ic_photo_set" />
     </RelativeLayout>
 
 </RelativeLayout>

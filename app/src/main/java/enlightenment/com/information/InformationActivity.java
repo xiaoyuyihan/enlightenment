@@ -1,19 +1,19 @@
 package enlightenment.com.information;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
+import android.provider.Settings;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.SpannedString;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import com.edit.EditActivity;
 import com.provider.view.LoadingDialog;
+import com.utils.MessageDialogFragment;
 
 import java.util.ArrayList;
 
@@ -38,6 +39,8 @@ import butterknife.OnClick;
 import enlightenment.com.base.AppActivity;
 import enlightenment.com.base.R;
 import enlightenment.com.module.ModuleBean;
+import enlightenment.com.operationBean.ColumnBean;
+import enlightenment.com.operationBean.InformationBean;
 import enlightenment.com.service.UploadService;
 import enlightenment.com.tool.device.SystemState;
 
@@ -48,7 +51,9 @@ import enlightenment.com.tool.device.SystemState;
 
 public class InformationActivity extends AppActivity implements InformationView,
         View.OnClickListener, TypeCheckDialog.OnClickTypeCheck,
-        ModelCheckDialog.OnClickModelCheck, OnItemClickListener {
+        ModelCheckDialog.OnClickModelCheck, OnItemClickListener ,
+        MessageDialogFragment.OnMsgDialogClickListener{
+    public static final int ACTIVITY_INFORMATION_FLAG = 1;
 
     @BindView(R.id.top_center_text)
     TextView mTopCenterView;
@@ -83,6 +88,9 @@ public class InformationActivity extends AppActivity implements InformationView,
 
     private boolean isVisibility = false;
     private String mTextData = null;
+    /**
+     * 视图类型
+     */
     private int mType;
     private int mInformationType = -1;
     private int mModelID = -1;
@@ -100,17 +108,18 @@ public class InformationActivity extends AppActivity implements InformationView,
     TypeCheckDialog typeCheckDialog;
     ModelCheckDialog modelCheckDialog;
 
+    MessageDialogFragment messageDialogFragment;
+
     InformationBean bean;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_text_information);
-        ButterKnife.bind(this);
-        init();
+    protected int getLayoutId() {
+        return R.layout.activity_text_information;
     }
 
-    private void init() {
+    @Override
+    protected void init() {
+        ButterKnife.bind(this);
         mType = getIntent().getExtras().getInt(EditActivity.ACTIVITY_EDIT_TYPE);
         mTextData = getIntent().getExtras().getString(EditActivity.ACTIVITY_EDIT_TEXT, "");
         mTopCenterView.setText("作品信息");
@@ -121,6 +130,11 @@ public class InformationActivity extends AppActivity implements InformationView,
                 isVisibility = b;
             }
         });
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     @Override
@@ -150,22 +164,42 @@ public class InformationActivity extends AppActivity implements InformationView,
 
     @OnClick(R.id.top_right_text)
     public void onSubject(View view) {
-        if (SystemState.isNetworkState()){
+        checkNotification();
+    }
+
+    private void checkNotification() {
+        NotificationManagerCompat manager = NotificationManagerCompat.from(this);
+        if (!manager.areNotificationsEnabled()) {
+            messageDialogFragment = new MessageDialogFragment();
+            messageDialogFragment.setMessage("我们找不到通知你的方式，请给我们开启访问通知对权限");
+            messageDialogFragment.setMessageImageVisibility(View.GONE);
+            messageDialogFragment.setOnMsgDialogClickListener(this);
+            messageDialogFragment.show(getSupportFragmentManager(), "MessageDialogFragment");
+        }else {
+            subjectContent();
+        }
+        showCustomToast("通知开启："+manager.areNotificationsEnabled());
+    }
+
+    private void subjectContent(){
+        if (SystemState.isNetworkState()) {
             createInformationBean();
             onBindService();
-        }else
+        } else
             showToast("我找不到回家的地址了，请检查网络");
     }
 
+
+    @SuppressLint("WrongConstant")
     private void onBindService() {
-        if (bean ==null){
+        if (bean == null) {
             return;
         }
-        mCon=new ServiceConnection() {
+        mCon = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
                 if (iBinder instanceof UploadService.UploadBinder)
-                    ((UploadService.UploadBinder)iBinder).addUploadData(bean);
+                    ((UploadService.UploadBinder) iBinder).addUploadData(bean);
                 unbindService(mCon);
                 finish();
             }
@@ -175,29 +209,30 @@ public class InformationActivity extends AppActivity implements InformationView,
 
             }
         };
-        Intent intentService=new Intent(this,UploadService.class);
+        Intent intentService = new Intent(this, UploadService.class);
         startService(intentService);
-        bindService(intentService,mCon, Service.BIND_AUTO_CREATE);
+        bindService(intentService, mCon, Service.BIND_AUTO_CREATE);
     }
 
     private void createInformationBean() {
-        String informName=mName.getText().toString();
-        if (informName.equals("")){
+        String informName = mName.getText().toString();
+        if (informName.equals("")) {
             showToast("标题不能为空");
             return;
         }
-        if (columnID<0){
+        if (columnID < 0) {
             showToast("文章栏目所属不能为空");
             return;
         }
-        if (mInformationType<0){
+        if (mInformationType < 0) {
             showToast("文章所属类型不能为空");
             return;
         }
-        bean=new InformationBean();
+        bean = new InformationBean();
         bean.setName(informName);
         bean.setContent(mTextData);
-        bean.setVisition(isVisibility?"1":"0");
+        bean.setVisition(isVisibility ? "2" : "1");
+        bean.setViewType(String.valueOf(mType));
         bean.setType(String.valueOf(mInformationType));
         bean.setColumnID(String.valueOf(columnID));
         bean.setFatherID(String.valueOf(fatherID));
@@ -272,6 +307,11 @@ public class InformationActivity extends AppActivity implements InformationView,
         showCustomToast(message);
     }
 
+    @Override
+    public Object getObj() {
+        return null;
+    }
+
     /**
      * show column 选择
      */
@@ -326,7 +366,7 @@ public class InformationActivity extends AppActivity implements InformationView,
                 newsProjectModelDialog.dismiss();
                 mColumnView.setText(columnBean.getName());
                 columnID = columnBean.getId();
-                //showLoadingView("文本上传中···");
+                showLoadingView("文本上传中···");
             }
 
             @Override
@@ -395,6 +435,8 @@ public class InformationActivity extends AppActivity implements InformationView,
         }
     }
 
+
+
     private void loadingModule() {
         showLoadingView(null);
         informationPresenter.loadModel(mInformationType);
@@ -432,7 +474,7 @@ public class InformationActivity extends AppActivity implements InformationView,
         this.fatherID = fatherID;
         SpannableString spanned = new SpannableString("保存到 " + columnName);
         spanned.setSpan(new ForegroundColorSpan(
-                getResources().getColor(R.color.black_50)),
+                        getResources().getColor(R.color.black_50)),
                 0, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         spanned.setSpan(new ForegroundColorSpan(
                         getResources().getColor(R.color.colorPrimary)),
@@ -440,6 +482,37 @@ public class InformationActivity extends AppActivity implements InformationView,
         //设置字体大小
         spanned.setSpan(new AbsoluteSizeSpan(42), 4, spanned.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         mSaveColumnText.setText(spanned);
+    }
+
+    @Override
+    public void onSureBut() {
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", getPackageName(), null);
+        intent.setData(uri);
+        startActivityForResult(intent,ACTIVITY_INFORMATION_FLAG);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == ACTIVITY_INFORMATION_FLAG) {
+            NotificationManagerCompat manager = NotificationManagerCompat.from(this);
+            if (manager.areNotificationsEnabled()&&messageDialogFragment!=null) {
+                messageDialogFragment.dismiss();
+                messageDialogFragment =null;
+                subjectContent();
+            }
+        }else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+
+    @Override
+    public void onCancel() {
+        messageDialogFragment.dismiss();
+        messageDialogFragment =null;
+        subjectContent();
     }
 
     class ColumnAdapter extends RecyclerView.Adapter {
@@ -483,7 +556,7 @@ public class InformationActivity extends AppActivity implements InformationView,
                 @Override
                 public void onClick(View view) {
                     onItemClickListener.onItemClick(columnBean.getId(), -1, columnBean.getName());
-                    mInformationType=columnBean.getType();
+                    mInformationType = columnBean.getType();
                 }
             });
             columnViewHolder.setImageOnClick(new View.OnClickListener() {
@@ -583,7 +656,7 @@ public class InformationActivity extends AppActivity implements InformationView,
                 public void onClick(View view) {
                     if (onItemClickListener != null)
                         onItemClickListener.onItemClick(bean.getFatherID(), bean.getId(), bean.getName());
-                    mInformationType=bean.getType();
+                    mInformationType = bean.getType();
                 }
             });
         }

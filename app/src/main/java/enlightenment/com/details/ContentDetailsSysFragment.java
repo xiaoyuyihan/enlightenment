@@ -1,15 +1,19 @@
 package enlightenment.com.details;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,33 +21,37 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.target.SimpleTarget;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import enlightenment.com.base.R;
-import enlightenment.com.main.ContentBean;
+import enlightenment.com.operationBean.ContentBean;
+import enlightenment.com.operationBean.CommentBean;
 import enlightenment.com.tool.device.CheckUtils;
+import enlightenment.com.tool.device.DisplayUtils;
 import enlightenment.com.tool.glide.GlideCircleTransform;
 import enlightenment.com.tool.recycelr.SpacesItemDecoration;
-import enlightenment.com.view.PopupWindow.CommonPopupWindow;
+import enlightenment.com.view.PopupWindow.ContentShrinkPopupWindow;
 
 /**
  * Created by lw on 2018/3/16.
  */
 
-public class ContentDetailsSysFragment extends Fragment {
+public class ContentDetailsSysFragment extends ContentDetailsFragment {
+    private String Tag = "ContentDetailsSysFragment";
 
-    @BindView(R.id.view_content_details_coordinator)
-    CoordinatorLayout mCoordinator;
+    @BindView(R.id.view_content_details_scroll)
+    NestedScrollView mCoordinator;
 
     @BindView(R.id.content_details_top_name)
     TextView mContentName;
-    @BindView(R.id.content_details_recycler)
+    @BindView(R.id.content_details_recycler_grid)
     RecyclerView mContentRecycler;
+    @BindView(R.id.content_details_recycler_horizontal)
+    RecyclerView mContentHorRecycler;
     @BindView(R.id.view_content_details_sys_text)
     TextView mSysContent;
 
@@ -60,14 +68,12 @@ public class ContentDetailsSysFragment extends Fragment {
     @BindView(R.id.view_content_details_bottom_reward)
     TextView mContentReward;
     @BindView(R.id.view_content_details_bottom_recycler)
-    RecyclerView mRecycler;
+    RecyclerView mCommentRecycler;
 
-    RecyclerView mShrinkRecycler;
-
-    private StaggeredGridLayoutManager mGridManager;
-    private LinearLayoutManager mShrinkGridManager;
+    private GridLayoutManager mGridManager;
     private ContentResAdapter mContentResAdapter;
-    private ContentResAdapter mContentShrinkResAdapter;
+    private ContentResAdapter mContentHorAdapter;
+    private CommentAdapter mCommentAdapter;
 
     private ContentBean mContent;
     private String[] mPhotos = new String[0];
@@ -75,17 +81,42 @@ public class ContentDetailsSysFragment extends Fragment {
 
     private View mContentView;
 
+    private ContentShrinkPopupWindow popupWindow = null;
+
+    private boolean mResViewFlag = true;
+    private boolean mResFlag = true;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mContentView = inflater.inflate(R.layout.view_content_details_sys, container, false);
         ButterKnife.bind(this, mContentView);
         mContent = getArguments().getParcelable(ContentDetailsActivity.CONTENT_EXTRA_DATA);
-        mGridManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL);
-        mShrinkGridManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        mGridManager = new GridLayoutManager(getContext(), 3);
+        //mGridManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
         init();
-        mShrinkRecycler = (RecyclerView) LayoutInflater.from(getActivity()).inflate(R.layout.fragment_recycler_only, null);
+        initHor();
+
         return mContentView;
+    }
+
+    private void initHor() {
+        mContentHorAdapter = new ContentResAdapter(getActivity(), mPhotos, mAudios);
+        mContentHorAdapter.setFlag(true);
+        mContentHorRecycler.setLayoutManager(
+                new LinearLayoutManager(getActivity(),
+                        LinearLayoutManager.HORIZONTAL, false));
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
+                getActivity(), DividerItemDecoration.HORIZONTAL);
+        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider_item_transparent));
+        mContentHorRecycler.addItemDecoration(dividerItemDecoration);
+        mContentHorRecycler.setAdapter(mContentHorAdapter);
+        mContentHorAdapter.setOnContentResItemClickListener(new OnContentResItemClickListener() {
+            @Override
+            public void onClick(String url, int flag) {
+                showPopupWindow(url,flag);
+            }
+        });
     }
 
     @Override
@@ -93,20 +124,14 @@ public class ContentDetailsSysFragment extends Fragment {
         super.onStart();
     }
 
-    private void showPopupWindow() {
-        mShrinkRecycler.setLayoutManager(mShrinkGridManager);
-        ContentResAdapter contentResAdapter=new ContentResAdapter();
-        contentResAdapter.setFlag(true);
-        mShrinkRecycler.setAdapter(contentResAdapter);
-        CommonPopupWindow popupWindow = new CommonPopupWindow.Builder(getActivity())
-                //设置PopupWindow布局
-                .setView(mShrinkRecycler)
-                //设置宽高
-                .setSize(ViewGroup.LayoutParams.MATCH_PARENT, 72)
-                //开始构建
-                .create();
+    private void showPopupWindow(String url, int flag) {
+
+        popupWindow = new ContentShrinkPopupWindow(getActivity(), url, flag);
+        int[] location = new int[2];
+        mCoordinator.getLocationOnScreen(location);
         //弹出PopupWindow
-        popupWindow.showAsDropDown(mCoordinator);
+        popupWindow.showAtLocation(mCoordinator,
+                Gravity.TOP | Gravity.CENTER_HORIZONTAL, location[0], location[1]);
     }
 
     private void init() {
@@ -118,47 +143,119 @@ public class ContentDetailsSysFragment extends Fragment {
             mPhotos = new String[0];
         if (mAudios == null)
             mAudios = new String[0];
+        if (mAudios.length == 0 && mPhotos.length == 0) {
+            mResFlag = false;
+        }
         mContentName.setText(mContent.getName());
         mSysContent.setText(mContent.getContent());
-        mContentResAdapter = new ContentResAdapter();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mCoordinator.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                    boolean flag = isViewVisible(mContentRecycler);
+                    if (mResFlag) {
+                        if (scrollY > oldScrollY) {
+                            // down
+                            if (!flag && mResViewFlag) {
+                                mResViewFlag = !mResViewFlag;
+                                mContentRecycler.setVisibility(View.GONE);
+                                mContentHorRecycler.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        if (scrollY < oldScrollY) {
+                            //up
+                            if (flag && !mResViewFlag) {
+                                mResViewFlag = !mResViewFlag;
+                                mContentRecycler.setVisibility(View.VISIBLE);
+                                mContentHorRecycler.setVisibility(View.GONE);
+                            }
+                        }
+
+                        if (scrollY == 0) {
+                            mContentRecycler.setBackground(null);
+                        } else {
+                            mContentRecycler.setBackground(
+                                    getResources().getDrawable(
+                                            R.drawable.background_grey_green_corners_4));
+                        }
+
+                        if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
+
+                        }
+                    }
+                }
+
+            });
+        }
+
+        mContentResAdapter = new ContentResAdapter(getActivity(), mPhotos, mAudios);
         mContentRecycler.setLayoutManager(mGridManager);
-        mContentRecycler.addItemDecoration(new SpacesItemDecoration(16));
-        mContentRecycler.setAdapter(mContentResAdapter);
-        mContentRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        mContentResAdapter.setOnContentResItemClickListener(new OnContentResItemClickListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                mGridManager.invalidateSpanAssignments();
-                //这行主要解决了当加载更多数据时，底部需要重绘，否则布局可能衔接不上。
+            public void onClick(String url, int flag) {
+                showPopupWindow(url,flag);
             }
         });
+        mContentRecycler.addItemDecoration(new SpacesItemDecoration(16));
+        mContentRecycler.setAdapter(mContentResAdapter);
 
+        //初始化 文本信息
         Glide.with(this).load(mContent.getAvatar())
                 .transform(new GlideCircleTransform(getActivity()))
                 .into(mContentArrow);
         mContentUsername.setText(mContent.getUsername());
         mContentModel.setText(CheckUtils.getModelName(mContent));
         mContentColumn.setText(mContent.getColumnName());
+
+        //更新评论
+        updateReward(mContentFollow);
     }
 
-    class ContentResAdapter extends RecyclerView.Adapter {
+    @Override
+    void updateComments(List<CommentBean> commentBeans) {
+        if (mCommentAdapter == null) {
+            mCommentAdapter = new CommentAdapter(commentBeans, getActivity());
+            mCommentRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+            mCommentRecycler.setAdapter(mCommentAdapter);
+        } else {
+            mCommentAdapter.setCommentBeans(commentBeans);
+            mCommentAdapter.notifyDataSetChanged();
+        }
+    }
+
+    public static class ContentResAdapter extends RecyclerView.Adapter {
 
         private boolean isFlag = false;
+        private Context context;
+        private String[] mPhotos;
+        private String[] mAudios;
+        private OnContentResItemClickListener onContentResItemClickListener;
+
+        public ContentResAdapter(Context context, String[] Photos, String[] Audios) {
+            this.context = context;
+            this.mAudios = Audios;
+            this.mPhotos = Photos;
+        }
 
         public void setFlag(boolean flag) {
             isFlag = flag;
         }
 
+        public void setOnContentResItemClickListener(OnContentResItemClickListener onContentResItemClickListener) {
+            this.onContentResItemClickListener = onContentResItemClickListener;
+        }
+
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             ResViewHolder mResView = new ResViewHolder(
-                    LayoutInflater.from(getActivity())
-                            .inflate(R.layout.item_view_details_res, parent, false));
+                    LayoutInflater.from(context)
+                            .inflate(R.layout.item_view_details_res, parent, false), context);
             return mResView;
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
             ResViewHolder resView = (ResViewHolder) holder;
             if (position < mPhotos.length) {
                 if (!isFlag)
@@ -168,53 +265,72 @@ public class ContentDetailsSysFragment extends Fragment {
             } else {
                 resView.setResUrl(mAudios[position]);
             }
+
+            resView.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (onContentResItemClickListener != null) {
+                        if (position < mPhotos.length) {
+                            onContentResItemClickListener.onClick(mPhotos[position], 1);
+                        } else {
+                            onContentResItemClickListener.onClick(mAudios[position], 2);
+                        }
+                    }
+                }
+            });
         }
 
         @Override
         public int getItemCount() {
             return mPhotos.length + mAudios.length;
         }
+
+
     }
 
-    class ResViewHolder extends RecyclerView.ViewHolder {
+    public interface OnContentResItemClickListener {
+        void onClick(String url, int flag);
+    }
+
+    static class ResViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.item_view_details_image)
         ImageView mDetailsImage;
         @BindView(R.id.item_view_details_play)
         ImageView mDetailsPlay;
 
+        private Context context;
+
         private String mResUrl;
 
-        public ResViewHolder(View itemView) {
+        public ResViewHolder(View itemView, Context context) {
             super(itemView);
+            this.context = context;
             ButterKnife.bind(this, itemView);
         }
 
         public void setImage(String url) {
-            Glide.with(ContentDetailsSysFragment.this).load(url).into(mDetailsImage);
+            setLayoutParams();
+            Glide.with(context).load(url).placeholder(R.drawable.ic_banner_default).into(mDetailsImage);
+        }
+
+        private void setLayoutParams() {
+            mDetailsImage.setScaleType(ImageView.ScaleType.FIT_XY);
+            ViewGroup.LayoutParams layoutParams = mDetailsImage.getLayoutParams();
+            layoutParams.width = DisplayUtils.dp2px(context, 96);
+            mDetailsImage.setLayoutParams(layoutParams);
+
         }
 
         public void setImageUrl(String url) {
-            Glide.with(ContentDetailsSysFragment.this).load(url).asBitmap().into(new SimpleTarget<Bitmap>() {
-
-                @Override
-                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                    int size = resource.getByteCount();
-                    int imageWidth = resource.getWidth();
-                    int imageHeight = resource.getHeight();
-                    int height = mDetailsImage.getWidth() * imageHeight / imageWidth;
-                    ViewGroup.LayoutParams para = mDetailsImage.getLayoutParams();
-                    para.height = height;
-                    para.width = mDetailsImage.getWidth();
-                    mDetailsImage.setImageBitmap(resource);
-                }
-            });
+            Glide.with(context).load(url).asBitmap().placeholder(R.drawable.ic_banner_default).into(mDetailsImage);
         }
 
         public void setDetailsImage(Bitmap bitmap) {
             mDetailsImage.setImageBitmap(bitmap);
         }
 
+        @SuppressLint("WrongConstant")
         public void setResUrl(String mResUrl) {
             mDetailsPlay.setVisibility(View.VISIBLE);
             this.mResUrl = mResUrl;
@@ -224,30 +340,62 @@ public class ContentDetailsSysFragment extends Fragment {
     //文章作者
     @OnClick({R.id.view_content_details_arrow, R.id.view_content_details_bottom_name})
     public void onUsername(View v) {
-
+        if (getActivity() instanceof onContentDetailsListener)
+            ((onContentDetailsListener) getActivity()).onUsername();
     }
 
     //栏目
     @OnClick(R.id.view_content_details_bottom_column)
     public void onColumn(View v) {
-
+        if (getActivity() instanceof onContentDetailsListener)
+            ((onContentDetailsListener) getActivity()).onColumn();
     }
 
     //模块
     @OnClick(R.id.view_content_details_bottom_model)
     public void onModel(View v) {
-
+        if (getActivity() instanceof onContentDetailsListener)
+            ((onContentDetailsListener) getActivity()).onModel();
     }
 
     //关注
     @OnClick(R.id.view_content_details_bottom_follow)
     public void onFollow(View v) {
-
+        if (getActivity() instanceof onContentDetailsListener)
+            ((onContentDetailsListener) getActivity()).onFollow();
     }
 
     //打赏
     @OnClick(R.id.view_content_details_bottom_reward)
     public void onReward(View v) {
-
+        if (getActivity() instanceof onContentDetailsListener)
+            ((onContentDetailsListener) getActivity()).onReward();
+        updateReward(mContentFollow);
     }
+
+    @SuppressLint("ResourceAsColor")
+    private void updateReward(TextView textView) {
+        if (Boolean.valueOf(mContent.getIsAtten())) {
+            textView.setBackground(getActivity().getDrawable(R.drawable.background_un_interest_module));
+            textView.setText("取关");
+            textView.setTextColor(R.color.mainTopColor);
+        } else {
+            textView.setBackground(getActivity().getDrawable(R.drawable.background_interest_module));
+            textView.setText("关注");
+            textView.setTextColor(R.color.white);
+        }
+    }
+
+    public boolean isViewVisible(View view) {
+        boolean cover;
+        Rect rect = new Rect();
+        cover = view.getGlobalVisibleRect(rect);
+        if (cover) {
+            if (rect.width() == 0 || rect.height() == 0) {
+                return !cover;
+            }
+        }
+        return cover;
+    }
+
 }

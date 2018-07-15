@@ -1,5 +1,6 @@
 package enlightenment.com.module;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -20,18 +21,25 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.load.model.ModelLoader;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import enlightenment.com.base.R;
-import enlightenment.com.main.FoundFragment;
+import enlightenment.com.main.found.FoundFragment;
 import enlightenment.com.main.MainActivity;
 
 /**
  * Created by lw on 2017/8/22.
+ * 栏目选择
  */
 
 public class ModulesSelectFragment extends Fragment {
+    
+    public final static int MOEDELES_FLAG_LEARN = 1;        //学习
+    public final static int MOEDELES_FLAG_CREATE = 2;       //创造
+    public final static int MOEDELES_FLAG_QUESETION = 3;    //提问
 
     private ExpandableListView moduleView;
     private ImageView topLeft;
@@ -39,6 +47,7 @@ public class ModulesSelectFragment extends Fragment {
     private TextView topRight;
     private View view;
     private static ModulesSelectFragment mModulesSelectFragment;
+    private int currentFlag = MOEDELES_FLAG_LEARN;
 
     public static ModulesSelectFragment getInstance() {
         if (mModulesSelectFragment==null){
@@ -54,9 +63,9 @@ public class ModulesSelectFragment extends Fragment {
 
         initView();
 
-        List<List<ModuleBean>> childsModules = new ArrayList<>();
+        List<List<ModuleBean>> childModules = new ArrayList<>();
         List<ModuleBean> fatherModules = new ArrayList<>();
-        ModulesSelectAdapter modulesSelectAdapter = new ModulesSelectAdapter(getActivity(), childsModules, fatherModules);
+        ModulesSelectAdapter modulesSelectAdapter = new ModulesSelectAdapter(getActivity(), childModules, fatherModules);
         moduleView.setAdapter(modulesSelectAdapter);
         return view;
     }
@@ -81,12 +90,12 @@ public class ModulesSelectFragment extends Fragment {
 
     class ModulesSelectAdapter extends BaseExpandableListAdapter {
         Context context;
-        List<List<ModuleBean>> childsModules = new ArrayList<>();
+        List<List<ModuleBean>> childModules = new ArrayList<>();
         List<ModuleBean> fatherModules = new ArrayList<>();
 
-        public ModulesSelectAdapter(Context context, List<List<ModuleBean>> childsModules, List<ModuleBean> fatherModules) {
+        public ModulesSelectAdapter(Context context, List<List<ModuleBean>> childModules, List<ModuleBean> fatherModules) {
             this.context = context;
-            this.childsModules = childsModules;
+            this.childModules = childModules;
             this.fatherModules = fatherModules;
         }
 
@@ -108,7 +117,7 @@ public class ModulesSelectFragment extends Fragment {
 
         @Override
         public Object getChild(int i, int i1) {
-            return childsModules.get(i).get(i1);
+            return childModules.get(i).get(i1);
         }
 
         @Override
@@ -126,6 +135,7 @@ public class ModulesSelectFragment extends Fragment {
             return false;
         }
 
+        @SuppressLint("ResourceType")
         @Override
         public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup) {
 
@@ -147,10 +157,10 @@ public class ModulesSelectFragment extends Fragment {
             moduleImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(context,"image",Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(getActivity(),ModulesActivity.class));
                 }
             });
-            moduleImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_found_extended));
+            moduleImage.setImageDrawable(getResources().getDrawable(R.drawable.ic_module_move));
             RelativeLayout.LayoutParams textParams = new RelativeLayout.LayoutParams
                     (ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             textParams.addRule(RelativeLayout.LEFT_OF, moduleImage.getId());
@@ -175,7 +185,7 @@ public class ModulesSelectFragment extends Fragment {
             gridView.setHorizontalSpacing(2);
             gridView.setVerticalSpacing(8);
             gridView.setLayoutParams(params);
-            ChildsModulesAdapter modulesAdapter = new ChildsModulesAdapter(null, context);
+            childModulesAdapter modulesAdapter = new childModulesAdapter(null, context);
             gridView.setAdapter(modulesAdapter);
             return gridView;
         }
@@ -186,13 +196,13 @@ public class ModulesSelectFragment extends Fragment {
         }
     }
 
-    class ChildsModulesAdapter extends BaseAdapter {
+    class childModulesAdapter extends BaseAdapter {
 
-        private List<ModuleBean> moduleBeens;
+        private List<ModuleBean> moduleBeans;
         private Context context;
 
-        public ChildsModulesAdapter(List<ModuleBean> moduleBeen, Context context) {
-            this.moduleBeens = moduleBeen;
+        public childModulesAdapter(List<ModuleBean> moduleBeans, Context context) {
+            this.moduleBeans = moduleBeans;
             this.context = context;
         }
 
@@ -203,7 +213,7 @@ public class ModulesSelectFragment extends Fragment {
 
         @Override
         public Object getItem(int i) {
-            return moduleBeens.get(i);
+            return moduleBeans.get(i);
         }
 
         @Override

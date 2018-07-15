@@ -1,5 +1,6 @@
 package enlightenment.com.view;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -26,6 +27,7 @@ import enlightenment.com.base.R;
  * 圆形，文字，padding
  */
 
+@SuppressLint("AppCompatCustomView")
 public class ImageSphericView extends ImageView {
 
     private Context mContext;

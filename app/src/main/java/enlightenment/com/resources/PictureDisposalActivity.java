@@ -19,7 +19,7 @@ import butterknife.BindView;
 import enlightenment.com.base.AppActivity;
 import enlightenment.com.base.EnlightenmentApplication;
 import enlightenment.com.base.R;
-import enlightenment.com.base.RegisteredActivity;
+import enlightenment.com.base.registered.RegisteredActivity;
 import enlightenment.com.contents.FileUrls;
 import enlightenment.com.tool.File.FileUtils;
 import enlightenment.com.view.ClipImageLayout;
@@ -32,7 +32,7 @@ import enlightenment.com.view.ClipImageLayout;
 public class PictureDisposalActivity extends AppActivity implements View.OnClickListener {
 
     @BindView(R.id.top_left_image)
-    ImageView leftimage;
+    ImageView leftImage;
     @BindView(R.id.top_center_text)
     TextView centerText;
     @BindView(R.id.top_right_text)
@@ -59,16 +59,24 @@ public class PictureDisposalActivity extends AppActivity implements View.OnClick
             .getHandlerThread().getLooper());
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_clip_image);
+    protected int getLayoutId() {
+        return R.layout.activity_clip_image;
+    }
+
+    @Override
+    protected void init() {
         ButterKnife.bind(this);
         rightText.setText("剪切");
         rightText.setOnClickListener(this);
         centerText.setText("剪切图片");
-        leftimage.setOnClickListener(this);
+        leftImage.setOnClickListener(this);
         Glide.with(this).load(new File(getIntent().getExtras().getString(RegisteredActivity.START_PHOTO_URL)))
                 .into(clipImageLayout.getZoomImageView());
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     @Override

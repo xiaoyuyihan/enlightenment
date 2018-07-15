@@ -2,8 +2,90 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="wrap_content"
+    android:padding="6dp"
+    android:layout_marginLeft="6dp"
+    android:layout_marginRight="6dp"
     android:background="@drawable/background_item">
+
+    <include
+        android:id="@+id/item_learn_top"
+        layout="@layout/item_learn_view" />
+
+    <RelativeLayout
+        android:id="@+id/item_learn_image_top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item_learn_top"
+        android:layout_toStartOf="@+id/imageView">
+
+        <enlightenment.com.view.ImageSphericView
+            android:id="@+id/item_learn_image_avatar"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="6dp"
+            android:src="@mipmap/logo" />
+
+        <TextView
+            android:id="@+id/item_learn_image_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/item_learn_image_avatar"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_toEndOf="@+id/item_learn_image_avatar"
+            android:layout_toRightOf="@+id/item_learn_image_avatar"
+            android:text="李俊毅"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/item_learn_image_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/item_learn_image_username"
+            android:layout_below="@+id/item_learn_image_username"
+            android:layout_marginTop="6dp"
+            app:srcCompat="@drawable/ic_item_learn" />
+
+        <enlightenment.com.view.FlowLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/item_learn_image_top"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="-2dp"
+            android:layout_toEndOf="@+id/item_learn_image_top">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:background="@drawable/background_item_learn"
+                android:paddingBottom="2dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:paddingTop="2dp"
+                android:text="艺术"
+                android:textColor="@color/white"
+                android:textSize="6sp" />
+
+        </enlightenment.com.view.FlowLayout>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/item_learn_image_text_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:text="@string/action_sign_in_short"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_below="@+id/item_learn_image_top_layout"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/imageView" />
 
     <TextView
         android:text="@string/large_text"
@@ -11,24 +93,19 @@
         android:layout_height="wrap_content"
         android:maxLines="6"
         android:textSize="12sp"
-        android:padding="10dp"
-        android:layout_below="@+id/item_learn_top"
+        android:padding="12dp"
+        android:layout_below="@+id/item_learn_image_text_top"
         android:layout_toStartOf="@+id/imageView" />
 
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        app:srcCompat="@mipmap/logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/ic_test_1"
         android:layout_alignParentEnd="true"
         android:id="@+id/imageView"
         android:layout_marginTop="16dp"
         android:layout_marginRight="8dp"
+        android:layout_marginBottom="16dp"
         android:layout_below="@+id/item_learn_top" />
-
-    <include
-        android:id="@+id/item_learn_top"
-        layout="@layout/item_learn_view"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

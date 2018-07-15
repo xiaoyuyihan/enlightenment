@@ -1,10 +1,20 @@
 package enlightenment.com.main;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.Spanned;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,6 +24,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import enlightenment.com.base.R;
 import enlightenment.com.tool.Image.MediaPlayerUtil;
+import enlightenment.com.tool.device.CheckUtils;
+import enlightenment.com.tool.device.DisplayUtils;
 import enlightenment.com.view.Dialog.ImageShowDialog;
 import enlightenment.com.view.NineGridLayout.ItemNineGridLayout;
 
@@ -58,13 +70,13 @@ public class ItemViewHolder {
             this.onContentItemListener = onContentItemListener;
         }
 
-        private boolean isloadAudio = false;
+        private boolean isLoadAudio = false;
 
         private ArrayList<String> mAudioList = new ArrayList<>();
 
         public TextViewHolder(View itemView) {
             super(itemView);
-            this.itemView=itemView;
+            this.itemView = itemView;
             ButterKnife.bind(this, itemView);
         }
 
@@ -77,6 +89,8 @@ public class ItemViewHolder {
                 typeView.setText("学习");
             } else if (type.equals("1")) {
                 typeView.setText("创造");
+            }else if (type.equals("2")){
+                typeView.setText("问题");
             }
         }
 
@@ -87,8 +101,8 @@ public class ItemViewHolder {
             playImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (!isloadAudio) {
-                        isloadAudio = !isloadAudio;
+                    if (!isLoadAudio) {
+                        isLoadAudio = !isLoadAudio;
                         MediaPlayerUtil.getInstance().setUrls(mAudioList)
                                 .setOnNextListener(onNextAudioListener);
                     }
@@ -112,6 +126,7 @@ public class ItemViewHolder {
             itemNineGridLayout.setOnClickImageListener(onClickImageListener);
         }
 
+
         public void setNumberView(String number) {
             this.numberView.setText("评论 " + number);
         }
@@ -120,10 +135,18 @@ public class ItemViewHolder {
             this.liveView.setText("赞 " + live);
         }
 
+        @SuppressLint("WrongConstant")
         public void setContent(String content) {
             if (content != null && !content.equals("")) {
                 contentView.setVisibility(View.VISIBLE);
                 contentView.setText(content);
+            }
+        }
+
+        public void setWebContent(String content){
+            if (content != null && !content.equals("")) {
+                contentView.setVisibility(View.VISIBLE);
+                contentView.setText(Html.fromHtml(content));
             }
         }
 
@@ -148,27 +171,85 @@ public class ItemViewHolder {
         }
 
         @OnClick(R.id.item_content_top_avatar)
-        public void onAvatarClick(View view){
-            onContentItemListener.onAvatarClick();
+        public void onAvatarClick(View view) {
+            onContentItemListener.onAvatarClick("");
         }
 
         @OnClick(R.id.item_content_top_model_name)
-        public void onModelClick(View view){
-            onContentItemListener.onModelClick();
+        public void onModelClick(View view) {
+            onContentItemListener.onModelClick(1, 1);
+        }
+
+        public void setHtmlContent(String html) {
+            if (html != null && !html.equals("")) {
+                contentView.setVisibility(View.VISIBLE);
+                contentView.setText(Html.fromHtml(html));
+            }
         }
     }
 
-    public static class ImageViewHolder extends RecyclerView.ViewHolder {
-
-        public ImageViewHolder(View itemView) {
+    public static class BaseViewHolder extends RecyclerView.ViewHolder {
+        public BaseViewHolder(View itemView) {
             super(itemView);
         }
     }
 
-    public static class LoadViewHolder extends RecyclerView.ViewHolder {
+    public static class MyselfToolTextView extends RecyclerView.ViewHolder {
 
-        public LoadViewHolder(View itemView) {
-            super(itemView);
+        @BindView(R.id.item_myself_tool_name)
+        TextView mToolName;
+        @BindView(R.id.item_myself_tool_message)
+        TextView mToolMessage;
+        @BindView(R.id.item_myself_tool_image)
+        ImageView mToolImage;
+
+        Context context;
+
+        public MyselfToolTextView(View view, Context context) {
+            super(view);
+            this.context = context;
+            ButterKnife.bind(this, view);
         }
+
+        public void setToolMessage(String message) {
+            mToolMessage.setText(message);
+        }
+
+        public void setToolName(String name) {
+            mToolName.setText(name);
+        }
+
+        public void setToolMessageVisibility(int visibility) {
+            mToolMessage.setVisibility(visibility);
+        }
+
+        public void setToolImageVisibility(int visibility) {
+            mToolImage.setVisibility(visibility);
+        }
+
+        public void setToolImageDrawable(Drawable drawable) {
+            mToolImage.setImageDrawable(drawable);
+        }
+
+        public void setToolImageString(String string) {
+            Glide.with(context).load(string).into(mToolImage);
+        }
+    }
+
+    public static TextView createTextView(Context context, int height, int width) {
+        TextView textView = new TextView(context);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                width, height);
+        textView.setLayoutParams(layoutParams);
+        textView.setGravity(Gravity.CENTER_VERTICAL);
+        textView.setPadding(24, 0, 0, 0);
+        textView.setTextSize(14);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            textView.setTextColor(context.getColor(R.color.text_color));
+        } else {
+            textView.setTextColor(context.getResources().getColor(R.color.text_color));
+        }
+        textView.setBackgroundResource(R.color.view_background);
+        return textView;
     }
 }

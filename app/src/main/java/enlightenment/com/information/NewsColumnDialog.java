@@ -1,7 +1,6 @@
 package enlightenment.com.information;
 
 import android.app.Dialog;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -14,7 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
+import com.google.gson.JsonSyntaxException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,8 +22,7 @@ import enlightenment.com.base.EnlightenmentApplication;
 import enlightenment.com.base.R;
 import enlightenment.com.contents.Constants;
 import enlightenment.com.contents.HttpUrls;
-import enlightenment.com.module.ModuleBean;
-import enlightenment.com.module.ModuleChildBean;
+import enlightenment.com.operationBean.ColumnBean;
 import enlightenment.com.tool.gson.GsonUtils;
 import enlightenment.com.tool.gson.TransformationUtils;
 import enlightenment.com.tool.okhttp.ModelUtil;
@@ -127,7 +126,8 @@ public class NewsColumnDialog extends DialogFragment implements View.OnClickList
                     public void onResponse(String response, int id) {
                         try {
                             JSONObject jsonObject = new JSONObject(response).getJSONObject("data");
-                            final ColumnBean.ColumnChildBean columnBean= GsonUtils.parseJsonWithToBean(jsonObject.toString(),ColumnBean.ColumnChildBean.class);
+                            final ColumnBean.ColumnChildBean columnBean=
+                                    GsonUtils.parseJsonWithToBean(jsonObject.toString(),ColumnBean.ColumnChildBean.class);
                             mHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -137,6 +137,8 @@ public class NewsColumnDialog extends DialogFragment implements View.OnClickList
                             });
                         } catch (JSONException e) {
                             e.printStackTrace();
+                        } catch (JsonSyntaxException e){
+
                         }
                     }
                 });
@@ -160,6 +162,8 @@ public class NewsColumnDialog extends DialogFragment implements View.OnClickList
                             });
                         } catch (JSONException e) {
                             e.printStackTrace();
+                        } catch (JsonSyntaxException e){
+
                         }
                     }
                 });

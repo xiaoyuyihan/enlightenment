@@ -73,6 +73,25 @@ public class FileUtils {
         return true;
     }
 
+    public static boolean writeContentHtmlFile(String fileName, String data){
+        if (isFileNews(fileName)){
+            File file = new File(fileName);
+            try {
+                FileOutputStream inputStream = new FileOutputStream(file);
+                inputStream.write(data.getBytes());
+                inputStream.flush();
+                inputStream.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static<T> List<T> readFileObject(String fileName) {
         File file = new File(fileName);
         if (file.exists()) {
@@ -117,6 +136,14 @@ public class FileUtils {
         } catch (IOException e) {
             e.printStackTrace();
             return false;
+        }
+        return true;
+    }
+
+    public static boolean removeFile(String fileName) {
+        if (isFileNews(fileName)) {
+            File file = new File(fileName);
+            file.delete();
         }
         return true;
     }

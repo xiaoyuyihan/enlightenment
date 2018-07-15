@@ -22,6 +22,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.edit.custom.CustomViewHolder;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.edit.automatic.AutomaticFragment;
 import com.edit.custom.CustomEditFragment;
@@ -48,11 +49,14 @@ import butterknife.OnClick;
 public class EditActivity extends BaseActivity implements CustomEditFragment.AudioPlayClick,
         OnBroadcastReceiverListener {
 
-    public static final String ACTIVITY_EDIT_TYPE="ACTIVITY_EDIT_TYPE";
-    public static final String ACTIVITY_EDIT_TEXT="ACTIVITY_EDIT_TEXT";
-    public static final int ACTIVITY_EDIT_TYPE_CREATE=0;
-    public static final int ACTIVITY_EDIT_TYPE_CUSTOM=1;
-    public static final int ACTIVITY_EDIT_TYPE_AUTOMTIC=2;
+    public static final String ACTIVITY_MODEL_TYPE = "ACTIVITY_MODEL_TYPE";
+    public static final int ACTIVITY_MODEL_TYPE_CREATE = 2;
+    public static final int ACTIVITY_MODEL_TYPE_LEARN = 1;
+    public static final String ACTIVITY_EDIT_TYPE = "ACTIVITY_EDIT_TYPE";
+    public static final String ACTIVITY_EDIT_TEXT = "ACTIVITY_EDIT_TEXT";
+    public static final int ACTIVITY_EDIT_TYPE_CREATE = 0;
+    public static final int ACTIVITY_EDIT_TYPE_CUSTOM = 1;
+    public static final int ACTIVITY_EDIT_TYPE_AUTOMATIC = 2;
 
     @BindView(R2.id.layout_edit_common)
     RelativeLayout mMainView;
@@ -87,7 +91,8 @@ public class EditActivity extends BaseActivity implements CustomEditFragment.Aud
     private FragmentManager fragmentManager;
     private Fragment currentFragment;
 
-    private int mType;
+    private int mModelType;
+    private int mEditType;
 
     private ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -113,19 +118,21 @@ public class EditActivity extends BaseActivity implements CustomEditFragment.Aud
     }
 
     private void init() {
-        mType = getIntent().getExtras().getInt(EditActivity.ACTIVITY_EDIT_TYPE,0);
-        if (mType==EditActivity.ACTIVITY_EDIT_TYPE_CREATE
-                ||mType==EditActivity.ACTIVITY_EDIT_TYPE_CUSTOM){
+        mEditType = getIntent().getExtras()
+                .getInt(EditActivity.ACTIVITY_EDIT_TYPE, 0);
+        mModelType = getIntent().getExtras()
+                .getInt(EditActivity.ACTIVITY_MODEL_TYPE, EditActivity.ACTIVITY_MODEL_TYPE_LEARN);
+        if (mEditType == EditActivity.ACTIVITY_EDIT_TYPE_CREATE
+                || mEditType == EditActivity.ACTIVITY_EDIT_TYPE_CUSTOM) {
             mCustom.performClick();
-        }else {
+        } else {
             mAutomatic.performClick();
         }
-        IntentBean.getInstance().clear();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onStart() {
+        super.onStart();
         onStartService();
         IntentFilter intentFilter = new IntentFilter();
         //设置接收广播的类型
@@ -135,10 +142,15 @@ public class EditActivity extends BaseActivity implements CustomEditFragment.Aud
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
+        stopMediaPlay();
         unbindService(connection);
         unregisterReceiver(broadcastReceiver);
+    }
+
+    private void stopMediaPlay() {
+        mediaService.onCloseAudio();
     }
 
     @Override
@@ -166,11 +178,11 @@ public class EditActivity extends BaseActivity implements CustomEditFragment.Aud
     }
 
     private Bundle newBundle() {
-        Bundle bundle=new Bundle();
-        bundle.putInt(EditActivity.ACTIVITY_EDIT_TYPE,mType);
-        if (mType==EditActivity.ACTIVITY_EDIT_TYPE_AUTOMTIC){
-            String text=getIntent().getExtras().getString(EditActivity.ACTIVITY_EDIT_TEXT,"");
-            bundle.putString(EditActivity.ACTIVITY_EDIT_TEXT,text);
+        Bundle bundle = new Bundle();
+        bundle.putInt(EditActivity.ACTIVITY_EDIT_TYPE, mEditType);
+        if (mEditType == EditActivity.ACTIVITY_EDIT_TYPE_AUTOMATIC) {
+            String text = getIntent().getExtras().getString(EditActivity.ACTIVITY_EDIT_TEXT, "");
+            bundle.putString(EditActivity.ACTIVITY_EDIT_TEXT, text);
         }
         return bundle;
     }
@@ -192,14 +204,15 @@ public class EditActivity extends BaseActivity implements CustomEditFragment.Aud
     @OnClick(R2.id.edit_common_top_next)
     public void onNextActivity(View v) {
         Intent intent = new Intent("com.information.INFORMATION");
-        boolean falg=true;
-        if (currentFragment instanceof OnFragmentResultListener)
-            falg=((OnFragmentResultListener) currentFragment).onSubject(intent);
-        if (falg){
-            startActivity(intent);
-            finish();
-        }else {
-            Toast.makeText(this,"文本或资源不能为空",Toast.LENGTH_SHORT).show();
+        intent.putExtra(EditActivity.ACTIVITY_MODEL_TYPE, mModelType);
+        boolean flag = true;
+        if (currentFragment instanceof OnFragmentResultListener) {
+            if (((OnFragmentResultListener) currentFragment).onSubject(intent)) {
+                startActivity(intent);
+                finish();
+            } else {
+                Toast.makeText(this, "文本或资源不能为空", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -208,7 +221,7 @@ public class EditActivity extends BaseActivity implements CustomEditFragment.Aud
         Intent intent = null;
         int i = v.getId();
         if (i == R.id.edit_common_menu_audio) {
-            intent = new Intent("com.provider.ACTION_PROVIDER");
+            intent = new Intent("com.audio.ACTION_START_AUDIO");
             intent.putExtra(ProviderActivity.TYPE_KEY, ContentProviderUtils.TYPE_AUDIO);
 
         } else if (i == R.id.edit_common_menu_photo) {
@@ -274,14 +287,14 @@ public class EditActivity extends BaseActivity implements CustomEditFragment.Aud
 
     @Override
     public void onClick(RecyclerView.ViewHolder holder, String path) {
-        if (holder instanceof CustomEditFragment.AudioViewHolder) {
-            mViewHolderBar = ((CustomEditFragment.AudioViewHolder) holder).getSeekBar();
-            mAudioTextView = ((CustomEditFragment.AudioViewHolder) holder).getCurrentTime();
+        if (holder instanceof CustomViewHolder.AudioViewHolder) {
+            mViewHolderBar = ((CustomViewHolder.AudioViewHolder) holder).getSeekBar();
+            mAudioTextView = ((CustomViewHolder.AudioViewHolder) holder).getCurrentTime();
         }
         mediaService.setMediaDataSource(path);
     }
 
-    class DurationBroadcastReceiver extends BroadcastReceiver {
+    public static class DurationBroadcastReceiver extends BroadcastReceiver {
 
         private OnBroadcastReceiverListener onBroadcastReceiverListener;
 

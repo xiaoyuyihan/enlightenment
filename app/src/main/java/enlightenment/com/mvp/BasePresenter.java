@@ -8,6 +8,7 @@ import java.util.Map;
 
 import enlightenment.com.base.EnlightenmentApplication;
 import enlightenment.com.contents.Constants;
+import enlightenment.com.details.DetailsView;
 import enlightenment.com.tool.okhttp.ModelUtil;
 
 /**
@@ -31,12 +32,10 @@ public abstract class BasePresenter<T extends BaseView> {
      * 解除引用
      */
     public void unBindView(BaseView baseView) {
-        if (mView.equals(baseView)) {
+        if (mView !=null && mView.equals(baseView)) {
             mView = null;
         }
     }
-
-    ;
 
     public void onCreate(Bundle savedInstanceState) {
     }

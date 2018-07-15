@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.webeditproject.R;
@@ -19,6 +20,7 @@ import butterknife.OnClick;
 
 /**
  * Created by lw on 2018/1/4.
+ * 删除提示
  */
 
 public class MessageDialogFragment extends DialogFragment {
@@ -29,7 +31,8 @@ public class MessageDialogFragment extends DialogFragment {
     Button mCancelBut;
     @BindView(R2.id.dialog_message_sure)
     Button mSureBut;
-
+    @BindView(R2.id.dialog_message_image)
+    ImageView toastImage;
     String msg;
 
     public OnMsgDialogClickListener onMsgDialogClickListener;
@@ -70,6 +73,10 @@ public class MessageDialogFragment extends DialogFragment {
 
     public void setMessage(String msg){
         this.msg=msg;
+    }
+
+    public void setMessageImageVisibility(int visibility){
+        //toastImage.setVisibility(visibility);
     }
 
     public interface OnMsgDialogClickListener{

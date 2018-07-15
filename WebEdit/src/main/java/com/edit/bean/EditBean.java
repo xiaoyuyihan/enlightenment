@@ -1,5 +1,6 @@
 package com.edit.bean;
 
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -12,42 +13,54 @@ import java.util.ArrayList;
  * Created by lw on 2018/1/2.
  */
 
-public class EditBean implements Parcelable{
+public class EditBean implements Parcelable {
     public static final int TYPE_TEXT = 0;
     public static final int TYPE_AUDIO = 1;
     public static final int TYPE_PHOTO = 2;
     public static final int TYPE_VIDEO = 3;
 
     private int mType;
+    private int mViewType = 0;
 
-    private String mHTML5;
-    private ArrayList<HtmlTextBean> htmlTextBeanArrayList=new ArrayList<>();
-    private ArrayList<Integer> enumArrayList=new ArrayList<>();
+    private String mHTML5 =null;
+    private ArrayList<HtmlTextBean> htmlTextBeanArrayList = new ArrayList<>();
+    private ArrayList<Integer> enumArrayList = new ArrayList<>();
     private int htmlTextSize;
     private String gravity;
 
     private String mProviderName;          //标题
-    private String mTime;               //时长
+    private String mTime = "0";               //时长
 
     private String mPath;   //存放文件路径
     private String mBackgroundPath;
     private String mHttpPath;   //网络文件路径
 
-    public EditBean(){
+    public EditBean() {
 
     }
+
+    public EditBean(int type){
+        this.mType = type;
+    }
+
+    public static EditBean newInstance() {
+
+        return new EditBean();
+    }
+
     protected EditBean(Parcel in) {
         mType = in.readInt();
+        mViewType = in.readInt();
         mHTML5 = in.readString();
         htmlTextBeanArrayList = in.createTypedArrayList(HtmlTextBean.CREATOR);
-        enumArrayList= TypeConverUtil.intToList(in);
-        htmlTextSize=in.readInt();
-        gravity=in.readString();
+        enumArrayList = TypeConverUtil.intToList(in);
+        htmlTextSize = in.readInt();
+        gravity = in.readString();
         mProviderName = in.readString();
         mTime = in.readString();
         mPath = in.readString();
         mBackgroundPath = in.readString();
-        mHttpPath=in.readString();
+        mHttpPath = in.readString();
     }
 
     public static final Creator<EditBean> CREATOR = new Creator<EditBean>() {
@@ -69,6 +82,14 @@ public class EditBean implements Parcelable{
     public EditBean setType(int mType) {
         this.mType = mType;
         return this;
+    }
+
+    public int getViewType() {
+        return mViewType;
+    }
+
+    public void setViewType(int mViewType) {
+        this.mViewType = mViewType;
     }
 
     public String getHTML5() {
@@ -167,6 +188,7 @@ public class EditBean implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(mType);
+        dest.writeInt(mViewType);
         dest.writeString(mHTML5);
         dest.writeTypedList(htmlTextBeanArrayList);
         dest.writeInt(enumArrayList.size());

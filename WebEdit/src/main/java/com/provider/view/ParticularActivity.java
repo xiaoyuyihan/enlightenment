@@ -244,7 +244,6 @@ public class ParticularActivity extends BaseActivity implements View.OnClickList
 
         } else if (i == R.id.provider_top_back) {
             mVideoView.pause();
-
             setResult();
 
         } else if (i == R.id.view_dialog_provider_image_back) {

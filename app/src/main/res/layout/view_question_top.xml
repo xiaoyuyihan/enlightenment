@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/view_question_top_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="写下你的问题"
+        android:backgroundTint="@color/mainTopColor"
+        android:layout_marginTop="6dp"
+        android:padding="6dp"
+        android:textSize="24sp" />
+
+    <RelativeLayout
+        android:id="@+id/view_question_top_column"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/view_question_top_name">
+
+        <TextView
+            android:id="@+id/view_question_top_current_column"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="6dp"
+            android:text="所属类别：" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/view_question_top_current_column"
+            android:padding="2dp"
+            android:id="@+id/view_question_top_select_layout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="6dp"
+                android:background="@drawable/background_green_corners_6"
+                android:text="问题"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <enlightenment.com.view.FlowLayout
+            android:id="@+id/view_question_top_flow_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view_question_top_select_layout"
+            android:padding="6dp"
+            android:layout_marginTop="6dp"
+            android:layout_toEndOf="@+id/view_question_top_current_column">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="6dp"
+                android:layout_marginBottom="6dp"
+                android:background="@drawable/background_main_corners_4"
+                android:text="问题"
+                android:textColor="@color/white" />
+            
+        </enlightenment.com.view.FlowLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="4dp"
+            android:gravity="center_vertical"
+            android:text="所有类别："
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/view_question_top_flow_name"/>
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -20,14 +20,14 @@
             android:layout_centerVertical="true"
             android:layout_alignParentStart="true"
             android:layout_marginStart="23dp"
-            android:id="@+id/imageView" />
+            android:id="@+id/dialog_message_image" />
 
         <TextView
             android:text="您确定要删除该段落吗，不可恢复性操作！"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/imageView"
+            android:layout_toEndOf="@+id/dialog_message_image"
             android:layout_marginLeft="4dp"
             android:padding="18dp"
             android:textSize="16sp"

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="96dp"
+    android:layout_height="64dp"
+    android:padding="6dp"
+    android:layout_margin="4dp"
+    android:background="@color/view_background"
+    android:orientation="vertical">
+
+    <enlightenment.com.view.ImageSphericView
+        android:id="@+id/item_myself_tool_image"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/ic_test_myself"
+        android:layout_below="@+id/item_myself_tool_name"
+        android:visibility="gone"
+        android:layout_alignParentEnd="true" />
+    <TextView
+        android:id="@+id/item_myself_tool_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_color"/>
+
+    <TextView
+        android:id="@+id/item_myself_tool_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:textColor="@color/text_color"
+        android:drawableLeft="@drawable/ic_spot_current"
+        android:layout_alignParentBottom="true"
+        android:textSize="10sp"
+        android:visibility="gone"/>
+</RelativeLayout>

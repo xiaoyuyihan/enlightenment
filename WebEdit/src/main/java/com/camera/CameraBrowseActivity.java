@@ -24,6 +24,7 @@ import butterknife.OnClick;
 
 /**
  * Created by lw on 2018/1/12.
+ * 拍摄后浏览
  */
 
 public class CameraBrowseActivity extends AppCompatActivity {

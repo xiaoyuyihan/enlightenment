@@ -115,26 +115,26 @@ public class OkHttpUtils {
         requestCall.getCall().enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, final IOException e) {
-                sendFailResultCallback(call, e, finalCallback, id);
+                sendFailResultCallback(call, e, finalCallback, id, 0);
             }
 
             @Override
             public void onResponse(final Call call, final Response response) {
                 try {
                     if (call.isCanceled()) {
-                        sendFailResultCallback(call, new IOException("Canceled!"), finalCallback, id);
+                        sendFailResultCallback(call, new IOException("Canceled!"), finalCallback, id,response.code());
                         return;
                     }
 
                     if (!finalCallback.validateReponse(response, id)) {
-                        sendFailResultCallback(call, new IOException("request failed , reponse's code is : " + response.code()), finalCallback, id);
+                        sendFailResultCallback(call, new IOException("request failed , reponse's code is : " + response.code()), finalCallback, id,response.code());
                         return;
                     }
 
                     Object o = finalCallback.parseNetworkResponse(response, id);
                     sendSuccessResultCallback(o, finalCallback, id);
                 } catch (Exception e) {
-                    sendFailResultCallback(call, e, finalCallback, id);
+                    sendFailResultCallback(call, e, finalCallback, id, response.code());
                 } finally {
                     if (response.body() != null)
                         response.body().close();
@@ -145,13 +145,13 @@ public class OkHttpUtils {
     }
 
 
-    public void sendFailResultCallback(final Call call, final Exception e, final Callback callback, final int id) {
+    public void sendFailResultCallback(final Call call, final Exception e, final Callback callback, final int id, final int code) {
         if (callback == null) return;
 
         mPlatform.execute(new Runnable() {
             @Override
             public void run() {
-                callback.onError(call, e, id);
+                callback.onError(call, e, id,code);
                 callback.onAfter(id);
             }
         });

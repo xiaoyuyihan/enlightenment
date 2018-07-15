@@ -12,15 +12,16 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
 
     <application
         android:name=".EnlightenmentApplication"
@@ -28,8 +29,8 @@
         android:icon="@mipmap/logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        tools:replace="android:icon, android:theme"
-        android:theme="@style/AppTheme.NoActionBar">
+        android:theme="@style/AppTheme.NoActionBar"
+        tools:replace="android:icon, android:theme">
         <activity android:name=".StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,22 +43,22 @@
             android:name=".LoginActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
-            android:name=".RegisteredActivity"
+            android:name=".registered.RegisteredActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity android:name="enlightenment.com.main.MainActivity" />
-        <activity android:name=".InterestActivity" />
+        <activity android:name=".registered.InterestActivity" />
         <activity
-            android:name=".InterestDetailsActivity"
+            android:name=".registered.InterestDetailsActivity"
             android:theme="@style/Translucent" />
         <activity android:name=".ResetPasswordActivity" />
         <activity
             android:name="enlightenment.com.module.ModulesActivity"
             android:label="@string/title_activity_modules"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name="enlightenment.com.search.SearchActivity"/>
-        <activity android:name="enlightenment.com.resources.PictureActivity"/>
-        <activity android:name="enlightenment.com.resources.AlbumActivity"/>
-        <activity android:name="enlightenment.com.resources.PictureDisposalActivity"/>
+        <activity android:name="enlightenment.com.search.SearchActivity" />
+        <activity android:name="enlightenment.com.resources.PictureActivity" />
+        <activity android:name="enlightenment.com.resources.AlbumActivity" />
+        <activity android:name="enlightenment.com.resources.PictureDisposalActivity" />
 
         <activity android:name="enlightenment.com.information.InformationActivity">
             <intent-filter>
@@ -66,19 +67,25 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="enlightenment.com.details.ContentDetailsActivity"/>
+        <activity android:name="enlightenment.com.details.ContentDetailsActivity" />
 
-        <service android:name="enlightenment.com.service.DownloadService"/>
+        <activity
+            android:name="enlightenment.com.question.QuestionActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+
+        <activity android:name="enlightenment.com.user.SettingActivity" />
+
+        <service android:name="enlightenment.com.service.SerMessageService" />
         <service android:name="enlightenment.com.service.UploadService">
             <intent-filter>
-                <action android:name="com.enlightenment.UPLOAD_SERVICE"/>
+                <action android:name="com.enlightenment.UPLOAD_SERVICE" />
             </intent-filter>
         </service>
 
 
-        <receiver android:name="enlightenment.com.broadcast.NetworkReceiver">
+        <receiver android:name="enlightenment.com.recevicer.NetworkReceiver">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
     </application>

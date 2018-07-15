@@ -409,7 +409,7 @@ public class HWebEditView extends LinearLayout implements View.OnClickListener ,
     }
 
     private String getCreateHtmlTop() {
-        String str = "<div style=\"text-align:" + this.HWebTextGravity + " font-size:" + this.HWebTextSize + "px\"><font color=\"" + this.HWebTextColor + "\">";
+        String str = "<div style=\"text-align:" + this.HWebTextGravity + " font-size:" + this.HWebTextSize + "px\"><font color=\"" + this.HWebTextColor + "\"  size=\""+this.HWebTextSize+"\">";
         Iterator localIterator = this.HWebTextEnum.iterator();
         while (localIterator.hasNext())
             switch (((Integer) localIterator.next()).intValue()) {

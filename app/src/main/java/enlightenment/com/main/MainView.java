@@ -9,5 +9,5 @@ import enlightenment.com.mvp.BaseView;
  */
 
 public interface MainView extends BaseView{
-    void swipeRefresh(SwipeRefreshLayout swipeRefreshLayout);
+
 }

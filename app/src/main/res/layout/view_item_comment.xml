@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:padding="4dp">
+
+    <ImageView
+        android:id="@+id/view_item_comment_avatar"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginLeft="12dp"
+        app:srcCompat="@drawable/ic_audio"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:id="@+id/view_item_comment_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/view_item_comment_avatar"
+        android:layout_alignTop="@id/view_item_comment_avatar"
+        android:layout_marginLeft="12dp"
+        android:minHeight="48dp"
+        android:textSize="12sp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/view_item_comment_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="TextView"
+        android:layout_below="@+id/view_item_comment_avatar"
+        android:layout_toRightOf="@id/view_item_comment_avatar"
+        android:layout_marginRight="12dp"
+        android:padding="4dp"
+        android:layout_above="@id/view_item_comment_time"/>
+
+    <TextView
+        android:id="@+id/view_item_comment_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2017年11月16日 12:00:99"
+        android:textSize="10sp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

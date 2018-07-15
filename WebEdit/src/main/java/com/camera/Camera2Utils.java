@@ -35,8 +35,8 @@ import android.util.SparseIntArray;
 import android.view.Surface;
 import android.widget.Toast;
 
-import com.camera.utils.FileUtils;
-import com.camera.utils.PermissionsUtils;
+import com.utils.FileUtils;
+import com.utils.PermissionsUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -577,6 +577,8 @@ public class Camera2Utils {
             e.printStackTrace();
         } catch (InterruptedException e) {
             throw new RuntimeException("Interrupted while trying to lock camera opening.", e);
+        } catch (SecurityException e) {
+
         }
     }
 
@@ -908,8 +910,8 @@ public class Camera2Utils {
             ByteBuffer buffer = mImage.getPlanes()[0].getBuffer();
             byte[] bytes = new byte[buffer.remaining()];
             buffer.get(bytes);
-            if (mCameraFacing == CameraCharacteristics.LENS_FACING_FRONT){
-                Bitmap bitmap=BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            if (mCameraFacing == CameraCharacteristics.LENS_FACING_FRONT) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 Matrix m = new Matrix();
                 m.postScale(-1, 1); // 镜像水平翻转
                 bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, true);

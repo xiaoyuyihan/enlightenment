@@ -106,4 +106,8 @@
         completions."
     </string>
     <string name="title_activity_modules">ModulesActivity</string>
+
+    <item name="tag_bean_flag" type="id"></item>
+    <item name="tag_list_flag" type="id"></item>
+
 </resources>

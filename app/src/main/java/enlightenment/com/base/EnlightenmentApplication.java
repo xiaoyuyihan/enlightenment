@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.HandlerThread;
+import android.support.v7.app.AppCompatDelegate;
 
 import java.util.List;
 
@@ -28,7 +29,24 @@ public class EnlightenmentApplication extends Application {
         super.onCreate();
         app=this;
         getHandlerThread();
+        isDefaultNightMode();
         mHttpUtils = OkHttpUtils.getInstance();
+    }
+
+    private void isDefaultNightMode() {
+        if (!getSetSharedPreferences(Constants.Set.SET_NIGHT_MODE,false)){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }
+    }
+
+    public void updateDefaultNightMode(){
+        isDefaultNightMode();
+    }
+
+    public boolean getSetSharedPreferences(String key,boolean flag){
+        return getSharedPreferences().getBoolean(key,flag);
     }
 
     public OkHttpUtils getHttpUtils() {
@@ -40,6 +58,7 @@ public class EnlightenmentApplication extends Application {
     public static EnlightenmentApplication getInstance(){
         return app;
     }
+
     public SharedPreferences getSharedPreferences(){
         return getSharedPreferences(Constants.Set.SET, Context.MODE_PRIVATE);
     }

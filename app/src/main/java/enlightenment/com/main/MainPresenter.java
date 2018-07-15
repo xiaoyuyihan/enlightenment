@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,6 +16,9 @@ import java.util.List;
 import enlightenment.com.base.EnlightenmentApplication;
 import enlightenment.com.contents.Constants;
 import enlightenment.com.contents.HttpUrls;
+import enlightenment.com.main.found.FoundDynamicFragment;
+import enlightenment.com.main.home.HomeDynamicFragment;
+import enlightenment.com.operationBean.ContentBean;
 import enlightenment.com.tool.okhttp.ModelUtil;
 import enlightenment.com.mvp.BasePresenter;
 import enlightenment.com.mvp.BaseView;
@@ -60,6 +64,7 @@ public class MainPresenter<T extends MainView> extends BasePresenter {
     public void unBindView(BaseView baseView) {
         super.unBindView(baseView);
         mView = null;
+        basePresenter = null;
     }
 
     public void upRefresh(Fragment fragment, SwipeRefreshLayout swipeRefreshLayout, RecyclerView.Adapter baseAdapter) {
@@ -86,19 +91,26 @@ public class MainPresenter<T extends MainView> extends BasePresenter {
                         if (result != null)
                             try {
                                 JSONArray jsonArray = new JSONObject(result).getJSONArray("data");
-                                final List list = GsonUtils.parseJsonArrayWithGson(jsonArray.toString(), ContentBean[].class);
+                                final ArrayList data = new ArrayList();
+                                List list = GsonUtils.parseJsonArrayWithGson(jsonArray.toString(), ContentBean[].class);
+                                data.addAll(list);
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        addDataList(list, type, Flag,baseAdapter);
+                                        addDataList(data, type, Flag, baseAdapter);
                                         baseAdapter.notifyDataSetChanged();
                                         if (swipeRefreshLayout != null)
                                             swipeRefreshLayout.setRefreshing(false);
                                     }
                                 });
+
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                            } catch (Exception e) {
+                                Log.d("MainPresenter", e.getMessage());
+
                             }
+
                     }
 
                     @Override
@@ -160,7 +172,7 @@ public class MainPresenter<T extends MainView> extends BasePresenter {
                 url = HttpUrls.HTTP_URL_FOUND_MYSELF + "?page=" + startNumber;
                 break;
         }
-        return url+"&token="+ EnlightenmentApplication.getInstance().getString(Constants.Set.SET_USER_TOKEN);
+        return url + "&token=" + EnlightenmentApplication.getInstance().getString(Constants.Set.SET_USER_TOKEN);
     }
 
     //记住item的ID

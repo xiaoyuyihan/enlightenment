@@ -4,4 +4,5 @@
     android:id="@+id/fragment_home_viewpager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_recycler"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"/>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:background="@drawable/background_corners_4"
+    android:layout_margin="12dp">
+    <ImageView
+        android:id="@+id/item_message_plan_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="18dp"
+        app:srcCompat="@drawable/ic_main_found"
+        android:layout_centerVertical="true" />
+
+    <TextView
+        android:id="@+id/item_message_plan_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:layout_marginTop="12dp"
+        android:text="八月未央"
+        android:textColor="@color/text_color"
+        android:layout_toEndOf="@+id/item_message_plan_icon"
+        android:layout_toStartOf="@+id/item_message_plan_tool"/>
+
+    <TextView
+        android:id="@+id/item_message_plan_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="她从一出生开始，就生长在茂盛的莲花里。"
+        android:textSize="10sp"
+        android:textColor="@color/text_color"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="6dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignBottom="@+id/item_message_plan_icon"
+        android:layout_alignStart="@+id/item_message_plan_name"
+        android:layout_toStartOf="@+id/item_message_plan_tool"
+        android:layout_alignEnd="@+id/item_message_plan_name"
+        android:layout_below="@+id/item_message_plan_name" />
+
+    <TextView
+        android:id="@+id/item_message_plan_tool"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:padding="8dp"
+        android:textColor="@color/text_color"
+        android:layout_marginRight="12dp"
+        android:text="修改"
+        android:textSize="14sp"/>
+</RelativeLayout>

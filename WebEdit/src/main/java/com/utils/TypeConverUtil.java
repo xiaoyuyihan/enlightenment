@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * Created by lw on 2018/1/4.
+ * 类型转换
  */
 
 public class TypeConverUtil {

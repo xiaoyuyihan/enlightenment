@@ -22,8 +22,8 @@ import enlightenment.com.base.R;
 public class CircularLayout extends ViewGroup {
     private boolean initFalg = false;
     //private int viewRadius = 0;                     //view 半径
-    private int childfirstViewRadius = 100;                  //child1半径
-    private int childtwoViewRadius = 80;                  //child2半径
+    private int childfirstViewRadius = 80;                  //child1半径
+    private int childtwoViewRadius = 60;                  //child2半径
     private int initfirstAngle = 0;                    //一级初始角度
     private int inittwoAngle = 0;                 //二级初始角度
     private int firstLevelAngle;                 //一级分隔角度
@@ -33,15 +33,15 @@ public class CircularLayout extends ViewGroup {
     private int referenceX = 0;                   //参照坐标
     private int referenceY = 0;
     private int padding = 24;
-    private int fristRingSize=8;
+    private int firstRingSize=8;
     private BaseAdapter mAdapter;
-    private Handler mHander=new Handler(){
+    private Handler mHandler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
             initfirstAngle=(initfirstAngle+1)%360;
             inittwoAngle=(inittwoAngle+1)%360;
             CircularLayout.this.requestLayout();
-            mHander.sendEmptyMessageDelayed(0,4000);
+            mHandler.sendEmptyMessageDelayed(0,4000);
         }
     };
     private LayoutInflater mInflater;
@@ -69,7 +69,7 @@ public class CircularLayout extends ViewGroup {
         childfirstViewRadius=(int)array.getDimension(R.styleable.CircularLayout_firstRadius,100);
         childtwoViewRadius=(int)array.getDimension(R.styleable.CircularLayout_twoRadius,80);
         padding=(int)array.getDimension(R.styleable.CircularLayout_circularPadding,16);
-        fristRingSize=(int)array.getDimension(R.styleable.CircularLayout_ringSize,8);
+        firstRingSize=(int)array.getDimension(R.styleable.CircularLayout_ringSize,8);
         array.recycle();
     }
 
@@ -96,7 +96,7 @@ public class CircularLayout extends ViewGroup {
             initFalg = !initFalg;
         }
         for (int i = 0; i < getChildCount(); i++) {
-            if (i < fristRingSize) {
+            if (i < firstRingSize) {
                 getAnglesToCoordinate((i*firstLevelAngle)+initfirstAngle,getChildAt(i),true);
             } else {
                 getAnglesToCoordinate(((i-7)*twoLevelAngle)+inittwoAngle,getChildAt(i),false);
@@ -104,7 +104,7 @@ public class CircularLayout extends ViewGroup {
         }
         //initfirstAngle = (initfirstAngle + firstLevelAngle) % 360;
         //inittwoAngle = (inittwoAngle + twoLevelAngle) % 360;
-        //mHander.sendEmptyMessageDelayed(1,1000);
+        //mHandler.sendEmptyMessageDelayed(1,1000);
     }
 
     private void init() {
@@ -113,12 +113,12 @@ public class CircularLayout extends ViewGroup {
         referenceX = getWidth() - padding - childfirstViewRadius;
         referenceY = viewCenterY;
         int cont = getChildCount();
-        if (cont < fristRingSize+1) {
+        if (cont < firstRingSize+1) {
             firstLevelAngle = 360 / cont;
             twoLevelAngle = 0;
         } else {
-            firstLevelAngle = 360 / fristRingSize;
-            twoLevelAngle = 360 / (cont - fristRingSize);
+            firstLevelAngle = 360 / firstRingSize;
+            twoLevelAngle = 360 / (cont - firstRingSize);
         }
 
     }
@@ -149,7 +149,7 @@ public class CircularLayout extends ViewGroup {
         this.padding = padding;
     }
 
-    public void setFristRingSize(int fristRingSize) {
-        this.fristRingSize = fristRingSize;
+    public void setfirstRingSize(int firstRingSize) {
+        this.firstRingSize = firstRingSize;
     }
 }

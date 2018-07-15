@@ -15,6 +15,7 @@ import java.util.Map;
 
 /**
  * Created by lw on 2017/11/30.
+ * 资源获取
  */
 
 public class ContentProviderUtils {

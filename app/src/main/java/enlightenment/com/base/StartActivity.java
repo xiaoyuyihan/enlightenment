@@ -8,18 +8,11 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import butterknife.ButterKnife;
 import butterknife.BindView;
 import enlightenment.com.contents.Constants;
-import enlightenment.com.contents.HttpUrls;
 import enlightenment.com.main.MainActivity;
-import enlightenment.com.service.DownloadService;
-import enlightenment.com.tool.okhttp.ModelUtil;
-import enlightenment.com.tool.gson.TransformationUtils;
-import okhttp3.Call;
+import enlightenment.com.service.SerMessageService;
 
 /**
  * Created by admin on 2017/7/20.
@@ -35,12 +28,32 @@ public class StartActivity extends AppActivity {
     private boolean isLogin;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start);
+    protected int getLayoutId() {
+        return R.layout.activity_start;
+    }
+
+    @Override
+    protected void initData() {
+        isLogin = EnlightenmentApplication.getInstance().getSharedPreferences()
+                .getBoolean(Constants.Set.SET_USER_IS, false);
+        /*String phone = EnlightenmentApplication.getInstance().getSharedPreferences()
+                .getString(Constants.Set.SET_USER_NAME, null);
+        String password = EnlightenmentApplication.getInstance().getSharedPreferences()
+                .getString(Constants.Set.SET_USER_PASSWORD, null);
+        if (phone == null || password == null)
+            isLogin = false;
+        if (isLogin) {
+            Intent intent = new Intent(this, SerMessageService.class);
+            intent.putExtra(SerMessageService.SERVICE_DATA_EXTRA, SerMessageService.ACTION_DETECT_REQUEST_TOKEN);
+            intent.putExtra(SerMessageService.SERVICE_REQUEST_TOKEN_PHONE, phone);
+            intent.putExtra(SerMessageService.SERVICE_REQUEST_TOKEN_PASSWORD, password);
+            startService(intent);
+        }*/
+    }
+
+    protected void init() {
         ButterKnife.bind(this);
         startMessageService();
-        init();
         mStartView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -65,30 +78,9 @@ public class StartActivity extends AppActivity {
         mHandler.sendEmptyMessage(1);
     }
 
-    /***
-     * 每次获取token
-     */
-    private void init() {
-        isLogin=EnlightenmentApplication.getInstance().getSharedPreferences()
-                .getBoolean(Constants.Set.SET_USER_IS, false);
-        String phone=EnlightenmentApplication.getInstance().getSharedPreferences()
-                .getString(Constants.Set.SET_USER_NAME,null);
-        String password=EnlightenmentApplication.getInstance().getSharedPreferences()
-                .getString(Constants.Set.SET_USER_PASSWORD,null);
-        if (phone==null||password==null)
-            isLogin=false;
-        if (isLogin){
-            Intent intent=new Intent(this, DownloadService.class);
-            intent.putExtra(DownloadService.SERVICE_DATA_EXTRA, DownloadService.ACTION_DETECT_REQUEST_TOKEN);
-            intent.putExtra(DownloadService.SERVICE_REQUEST_TOKEN_PHONE,phone);
-            intent.putExtra(DownloadService.SERVICE_REQUEST_TOKEN_PASSWORD,password);
-            startService(intent);
-        }
-    }
-
     private void startMessageService() {
-        Intent intent=new Intent(this, DownloadService.class);
-        intent.putExtra(DownloadService.SERVICE_DATA_EXTRA, DownloadService.ACTION_DETECT_MODULE_NEW);
+        Intent intent = new Intent(this, SerMessageService.class);
+        intent.putExtra(SerMessageService.SERVICE_DATA_EXTRA, SerMessageService.ACTION_DETECT_MODULE_NEW);
         startService(intent);
     }
 

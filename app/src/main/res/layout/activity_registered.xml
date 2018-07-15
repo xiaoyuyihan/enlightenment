@@ -81,7 +81,7 @@
         </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 
-    <com.dd.CircularProgressButton
+    <enlightenment.com.view.CircularProgressButton.CircularProgressButton
         android:id="@+id/registered"
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -92,7 +92,7 @@
         android:background="@drawable/background_corners_4"
         android:gravity="center"
         android:textColor="@color/white"
-        android:textSize="48px"
+        android:textSize="16sp"
         app:cpb_textComplete="登录"
         app:cpb_textError="错误"
         app:cpb_textIdle="登录"

@@ -35,6 +35,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+/**
+ * 拍摄
+ */
 public class CameraActivity extends AppCompatActivity implements
         Camera2Utils.CameraCompleteCallback {
 
@@ -90,6 +93,11 @@ public class CameraActivity extends AppCompatActivity implements
         mMainLayout = (RelativeLayout) findViewById(R.id.camera_layout);
         mMainHandler = new Handler();
         mType = getIntent().getExtras().getInt(CAMERA_OPEN_TYPE);
+        if (mType == ContentProviderUtils.TYPE_VIDEO){
+            mProviderView.setImageDrawable(getDrawable(R.drawable.ic_image_set));
+        }else {
+            mProviderView.setImageDrawable(getDrawable(R.drawable.ic_photo_set));
+        }
     }
 
     private void drawFocal(float x, float y) {

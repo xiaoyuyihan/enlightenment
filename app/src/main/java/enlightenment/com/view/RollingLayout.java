@@ -68,7 +68,7 @@ public class RollingLayout extends ViewGroup {
                 imageViewLocation = ++imageViewLocation > imageViews.size() - 1 ? 0 : imageViewLocation;
                 imageLocation = ++imageLocation > bitmaps.size() - 1 ? 0 : imageLocation;
                 clockwiseRotatingView(1500);
-                updataImageLocation();
+                updateImageLocation();
             }
             mHandler.sendEmptyMessageDelayed(CLOCKWISE_VIEW_ROOLLING, imageRollTime);
         }
@@ -103,7 +103,7 @@ public class RollingLayout extends ViewGroup {
         this.context=context;
         addImageView(context);
         mScroller = new Scroller(context);
-        //updataImageLocation();
+        //updateImageLocation();
        // mHandler.sendEmptyMessageDelayed(CLOCKWISE_VIEW_ROOLLING, tounchRollInterval);
     }
 
@@ -141,12 +141,14 @@ public class RollingLayout extends ViewGroup {
     /***
      * 更新Image位置
      */
-    private void updataImageLocation() {
+    private void updateImageLocation() {
         //3个ImageView 的位置设置；
         imageViewNextNull = imageViewLocation >= imageViews.size() - 1;
         imageViewLastNull = imageViewLocation == 0;
-        nextImageView = imageViewNextNull ? imageViews.get(0) : imageViews.get(imageViewLocation + 1);
-        lastImageView = imageViewLastNull ? imageViews.get(imageViews.size() - 1) : imageViews.get(imageViewLocation - 1);
+        nextImageView = imageViewNextNull ? imageViews.get(0) :
+                imageViews.get(imageViewLocation + 1);
+        lastImageView = imageViewLastNull ? imageViews.get(imageViews.size() - 1) :
+                imageViews.get(imageViewLocation - 1);
         nowImageView = imageViews.get(imageViewLocation);
         if (bitmaps.size() > 0) {
             //对3个虚位置设置图片
@@ -158,6 +160,7 @@ public class RollingLayout extends ViewGroup {
             Glide.with(context).load(nextBitmap).into(nextImageView);
             Glide.with(context).load(bitmaps.get(imageLocation)).into(nowImageView);
             Glide.with(context).load(lastBitmap).into(lastImageView);
+            Log.d(RollingLayout.class.getName(),bitmaps.get(imageLocation));
             /*nextImageView.setImageBitmap(nextBitmap);
             nowImageView.setImageBitmap(bitmaps.get(imageLocation));
             lastImageView.setImageBitmap(lastBitmap);*/
@@ -207,6 +210,6 @@ public class RollingLayout extends ViewGroup {
 
     public void setBitmaps(List<String> bitmaps) {
         this.bitmaps = bitmaps;
-        updataImageLocation();
+        updateImageLocation();
     }
 }

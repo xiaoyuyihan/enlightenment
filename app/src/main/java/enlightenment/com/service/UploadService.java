@@ -1,11 +1,10 @@
 package enlightenment.com.service;
 
-import android.app.Notification;
+import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -16,6 +15,7 @@ import android.util.ArrayMap;
 
 import com.edit.bean.EditBean;
 import com.provider.utils.IntentBean;
+import com.utils.TypeConverUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,13 +23,15 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 
-import enlightenment.com.base.EnlightenmentApplication;
 import enlightenment.com.base.R;
-import enlightenment.com.contents.Constants;
 import enlightenment.com.contents.HttpUrls;
-import enlightenment.com.information.InformationBean;
+import enlightenment.com.operationBean.InformationBean;
+import com.edit.bean.WebContentBean;
+import enlightenment.com.tool.HTMLTemplate;
+import enlightenment.com.tool.gson.GsonUtils;
 import enlightenment.com.tool.gson.TransformationUtils;
 import enlightenment.com.tool.okhttp.ModelUtil;
 import enlightenment.com.tool.okhttp.callback.StringCallback;
@@ -87,6 +89,7 @@ public class UploadService extends Service {
         mUploadData.add(map);
     }
 
+    @SuppressLint("WrongConstant")
     public void showNotification() {
         //NotificationManager 是通知管理类，它是一个系统服务。调用 NotificationManager 的 notify() 方法可以向系统发送通知。
         mNotifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
@@ -121,7 +124,7 @@ public class UploadService extends Service {
             if (informationBean.getContent().equals("")) {
                 //H5
                 onSaveEditBean(beanArrayList, informationBean.getToken());
-                onSubject(informationBean, beanArrayList);
+                onSubject(bean,informationBean, beanArrayList,false);
             } else {
                 //普通
                 onSubject(bean, informationBean, beanArrayList);
@@ -129,8 +132,36 @@ public class UploadService extends Service {
         }
     }
 
-    private void onSubject(InformationBean informationBean, ArrayList<EditBean> beanArrayList) {
-        informationBean.setContent(createH5(beanArrayList));
+    private void onSubject(final Map map,final InformationBean informationBean, final ArrayList<EditBean> beanArrayList,boolean falg) {
+        informationBean.setContent(createJsonH5(beanArrayList));
+        ModelUtil.getInstance()
+                .postFileProgress(HttpUrls.HTTP_URL_UPLOAD_CONTENT,
+                        TransformationUtils.beanToMap(informationBean), new StringCallback() {
+                            @Override
+                            public void onError(Call call, Exception e, int id,int code) {
+                                super.onError(call,e,id,code);
+                                onSubject(map, informationBean, beanArrayList,false);
+                            }
+
+                            @Override
+                            public void onResponse(String response, int id) {
+                                try {
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    if (jsonObject.getBoolean("Flag")) {
+                                        mUploadData.remove(map);
+                                        mMainHandler.post(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                checkNotification();
+                                            }
+                                        });
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    onSubject(map, informationBean, beanArrayList);
+                                }
+                            }
+                        });
     }
 
     private String createH5(ArrayList<EditBean> beanArrayList) {
@@ -138,18 +169,100 @@ public class UploadService extends Service {
         for (EditBean bean : beanArrayList) {
             switch (bean.getType()) {
                 case EditBean.TYPE_AUDIO:
+                    content+=HTMLTemplate.getHTML_Template_audio_1(bean.getHttpPath(),
+                            TypeConverUtil.TimeMSToMin(bean.getTime()));
                     break;
                 case EditBean.TYPE_PHOTO:
+                    content+=HTMLTemplate.getHTML_Template_photo_1(bean.getHttpPath());
                     break;
                 case EditBean.TYPE_TEXT:
+                    content+=HTMLTemplate.getHTML_Template_text_1(bean.getHTML5());
                     break;
                 case EditBean.TYPE_VIDEO:
                     break;
             }
         }
-        return content;
+        return HTMLTemplate.HTML_TEMPLATE_CSS+content+HTMLTemplate.HTML_TEMPLATE_SCRIPT;
     }
 
+    private String createJsonH5(ArrayList<EditBean> beanArrayList) {
+        ArrayList<WebContentBean> content=new ArrayList<>();
+        for (EditBean bean : beanArrayList) {
+            switch (bean.getType()) {
+                case EditBean.TYPE_AUDIO:
+                    content.add(new WebContentBean(bean.getProviderName(),bean.getHttpPath(),
+                            EditBean.TYPE_AUDIO,0,Integer.valueOf(bean.getTime())));
+                    break;
+                case EditBean.TYPE_PHOTO:
+                    content.add(new WebContentBean(bean.getProviderName(),bean.getHttpPath(),
+                            EditBean.TYPE_PHOTO,0,Integer.valueOf(bean.getTime())));
+                    break;
+                case EditBean.TYPE_TEXT:
+                    content.add(new WebContentBean(bean.getProviderName(),bean.getHTML5(),
+                            EditBean.TYPE_TEXT,0,Integer.valueOf(bean.getTime())));
+                    break;
+                case EditBean.TYPE_VIDEO:
+                    content.add(new WebContentBean(bean.getProviderName(),bean.getHttpPath(),
+                            EditBean.TYPE_VIDEO,0,Integer.valueOf(bean.getTime())));
+                    break;
+            }
+        }
+        return GsonUtils.parseBeanToJson(content);
+    }
+
+    /**
+     * 根据 类型加载不同的js和css
+     * @param beanArrayList
+     * @return
+     */
+    private String createTypeH5(ArrayList<EditBean> beanArrayList) {
+        String content="";
+        Map<String ,String> includeMap=new ArrayMap<>();
+        for (EditBean bean : beanArrayList) {
+            switch (bean.getType()) {
+                case EditBean.TYPE_AUDIO:
+                    if (!includeMap.containsKey(String.valueOf(EditBean.TYPE_AUDIO)))
+                        includeMap.put(String.valueOf(EditBean.TYPE_AUDIO), HTMLTemplate.HTML_TEMPLATE_AUDIO_1);
+                    content+=HTMLTemplate.getHTML_Template_audio_1(bean.getHttpPath(),
+                            TypeConverUtil.TimeMSToMin(bean.getTime()));
+                    break;
+                case EditBean.TYPE_PHOTO:
+                    if (!includeMap.containsKey(String.valueOf(EditBean.TYPE_PHOTO)))
+                        includeMap.put(String.valueOf(EditBean.TYPE_AUDIO), HTMLTemplate.HTML_TEMPLATE_PHOTO_1);
+                    content+=HTMLTemplate.getHTML_Template_photo_1(bean.getHttpPath());
+                    break;
+                case EditBean.TYPE_TEXT:
+                    if (!includeMap.containsKey(String.valueOf(EditBean.TYPE_TEXT)))
+                        includeMap.put(String.valueOf(EditBean.TYPE_AUDIO), HTMLTemplate.HTML_TEMPLATE_TEXT_1);
+                    content+=HTMLTemplate.getHTML_Template_text_1(bean.getHTML5());
+                    break;
+                case EditBean.TYPE_VIDEO:
+                    break;
+            }
+        }
+        return addContentInclude(content,includeMap);
+    }
+
+    /***
+     * 讲不通的js和css 加入
+     * @param content
+     * @param includeMap
+     * @return
+     */
+    private String addContentInclude(String content, Map<String, String> includeMap) {
+        String Html="<div>";
+        Iterator<String> includes = includeMap.keySet().iterator();
+        while (includes.hasNext()){
+            Html+=includeMap.get(includes.next());
+        }
+        return Html+content+"</div>";
+    }
+
+    /**
+     *
+     * @param beanArrayList
+     * @param token
+     */
     private void onSaveEditBean(ArrayList<EditBean> beanArrayList, String token) {
         synchronized (this) {
             int i = 0;
@@ -206,7 +319,8 @@ public class UploadService extends Service {
                         getAutomaticFile(beanArrayList),
                         TransformationUtils.beanToMap(informationBean), new StringCallback() {
                             @Override
-                            public void onError(Call call, Exception e, int id) {
+                            public void onError(Call call, Exception e, int id,int code) {
+                                super.onError(call,e,id,code);
                                 onSubject(map, informationBean, beanArrayList);
                             }
 

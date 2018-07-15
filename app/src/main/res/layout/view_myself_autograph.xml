@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/myself_autograph_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/view_background"
+    android:paddingTop="18dp"
+    android:paddingBottom="6dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="6dp"
+        android:text="对自己说点什么吧"
+        android:textSize="10sp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/myself_autograph_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:padding="4dp">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:padding="4dp">
+
+        <EditText
+            android:id="@+id/myself_autograph_edit"
+            android:layout_width="280dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:paddingLeft="16dp"
+            android:textColor="@color/text_color"
+            android:background="@drawable/background_autograph_edit" />
+
+        <ImageView
+            android:id="@+id/myself_autograph_send"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="12"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_myself_autograph_btn" />
+    </LinearLayout>
+
+</LinearLayout>

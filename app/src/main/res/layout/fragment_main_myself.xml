@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/view_background">
+
+    <include
+        android:id="@+id/fragment_myself_stub"
+        layout="@layout/view_myself_autograph"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <RelativeLayout
+        android:id="@+id/fragment_myself_top"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/fragment_myself_stub"
+        android:background="@drawable/background_myself_top"
+        android:paddingTop="18dp">
+
+        <ImageView
+            android:id="@+id/fragment_myself_autograph_btn"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:padding="6dp"
+            app:srcCompat="@drawable/ic_myself_autograph_edit_btn" />
+
+        <TextView
+            android:id="@+id/fragment_myself_autograph_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/background_autograph"
+            android:maxLines="1"
+            android:textColor="@color/text_color"
+            android:paddingBottom="6dp"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
+            android:paddingTop="6dp"
+            android:text="那些未完成的梦，让我去旅行"
+            android:textSize="10sp" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/fragment_myself_head_portrait"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_alignStart="@+id/fragment_myself_top"
+        android:layout_below="@+id/fragment_myself_top"
+        android:layout_marginTop="-24dp"
+        android:scaleType="centerInside"
+        app:srcCompat="@drawable/ic_test_myself" />
+
+    <TextView
+        android:id="@+id/fragment_myself_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/fragment_myself_head_portrait"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="12dp"
+        android:textColor="@color/text_color"
+        android:layout_toEndOf="@+id/fragment_myself_head_portrait"
+        android:text="李雪原"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/fragment_myself_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/fragment_myself_username"
+        android:layout_alignBottom="@+id/fragment_myself_username"
+        android:layout_marginLeft="12dp"
+        android:layout_toEndOf="@+id/fragment_myself_username"
+        android:textColor="@color/text_color"
+        android:text="北京"
+        android:textSize="10sp" />
+
+    <LinearLayout
+        android:id="@+id/myself_info_linear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragment_myself_head_portrait"
+        android:layout_marginRight="56dp"
+        android:layout_marginTop="12dp"
+        android:layout_toEndOf="@+id/fragment_myself_head_portrait"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="4dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/fragment_myself_info_follow_number"
+                style="@style/MyselfInformationNumberStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/text_color"
+                android:text="16" />
+
+            <TextView
+                style="@style/MyselfInformationFlagStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="@color/text_color"
+                android:text="关注" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_myself_info_line_horizontal" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/fragment_myself_info_concern_number"
+                style="@style/MyselfInformationNumberStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+                android:text="1.2k" />
+
+            <TextView
+                style="@style/MyselfInformationFlagStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+                android:text="被关注" />
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_myself_info_line_horizontal" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/fragment_myself_info_day_number"
+                style="@style/MyselfInformationNumberStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+                android:text="122" />
+
+            <TextView
+                style="@style/MyselfInformationFlagStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
+                android:text="坚持天数" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/fragment_myself_line_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/myself_info_linear"
+        android:layout_marginTop="6dp"
+        android:layout_toEndOf="@+id/fragment_myself_head_portrait"
+        android:src="@drawable/ic_myself_info_line_vertical" />
+
+    <LinearLayout
+        android:id="@+id/fragment_myself_info_linear"
+        android:layout_width="120dp"
+        android:layout_height="36dp"
+        android:layout_alignStart="@+id/fragment_myself_line_view"
+        android:layout_below="@+id/fragment_myself_line_view"
+        android:layout_marginTop="20dp"
+        android:layout_toStartOf="@+id/fragment_myself_content_tool"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/fragment_myself_content_item_tool"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            app:srcCompat="@drawable/ic_myself_item" />
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/fragment_myself_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="56dp"
+            android:background="@color/view_background"
+            app:layout_scrollFlags="exitUntilCollapsed"
+            app:tabBackground="@color/view_background"
+            app:tabGravity="center"
+            app:tabIndicatorColor="@null"
+            app:tabSelectedTextColor="@color/black"
+            app:tabTextColor="@color/black_50" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/fragment_myself_content_tool"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_alignBottom="@+id/fragment_myself_info_linear"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="12dp"
+        android:padding="12dp"
+        app:srcCompat="@drawable/ic_myself_more" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/fragment_myself_content_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="360dp"
+        android:layout_alignStart="@+id/fragment_myself_info_linear"
+        android:layout_below="@+id/fragment_myself_info_linear" />
+
+    <ImageView
+        android:id="@+id/fragment_myself_tool"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/fragment_myself_info_linear"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="64dp"
+        android:paddingTop="6dp"
+        app:srcCompat="@drawable/ic_myself_tool" />
+</RelativeLayout>

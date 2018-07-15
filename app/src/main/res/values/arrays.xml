@@ -6,9 +6,68 @@
         <item>喜爱</item>
     </array>
     <array name="main_found_top">
-        <item>知识屋</item>
-        <item>DIY室</item>
-        <item>求助厅</item>
-        <item>my小屋</item>
+        <item>学习</item>
+        <item>创造</item>
+        <item>问题</item>
+    </array>
+    <array name="main_myself_tool">
+        <item>资料</item>
+        <item>钱包</item>
+        <item>草稿</item>
+        <item>收藏</item>
+        <item>建议</item>
+        <item>设置</item>
+    </array>
+    <array name="main_myself_type_tool">
+        <item>新建栏目</item>
+        <item>批量删除</item>
+        <item>批量隐藏</item>
+    </array>
+    <array name="main_myself_column_tool">
+        <item>新建内容</item>
+        <item>删除栏目</item>
+        <item>隐藏栏目</item>
+        <item>更改栏目</item>
+    </array>
+    <array name="user_setting_message">
+        <item>消息震动</item>
+        <item>消息声音</item>
+        <item>操作声音</item>
+        <item>点赞通知</item>
+        <item>计划通知</item>
+        <item>收藏通知</item>
+        <item>打赏通知</item>
+    </array>
+    <array name="user_setting_system">
+        <item>智能无图模式</item>
+        <item>安利觉他</item>
+        <item>夜间模式</item>
+        <item>清除缓存</item>
+        <item>更改手机号</item>
+        <item>检查新版本</item>
+        <item>退出账号</item>
+    </array>
+    <array name="myself_test">
+        <item>彼岸花</item>
+        <item>吉祥一生</item>
+        <item>八月未央</item>
+        <item>欧美之路</item>
+        <item>万物之声</item>
+        <item>小城维尼</item>
+        <item>彼岸花</item>
+        <item>吉祥一生</item>
+        <item>八月未央</item>
+        <item>欧美之路</item>
+        <item>万物之声</item>
+        <item>小城维尼</item>
+    </array>
+    <array name="myself_auto_test">
+        <item>叶底藏花一度，梦里踏雪几回。</item>
+        <item>走到今天，我从来没想过放弃</item>
+        <item>坚持都是留给那些有毅力的人的</item>
+    </array>
+    <array name="message_test">
+        <item>日常计划</item>
+        <item>消息通知</item>
     </array>
 </resources>

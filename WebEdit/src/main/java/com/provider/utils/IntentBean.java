@@ -59,6 +59,11 @@ public class IntentBean<T extends Parcelable> {
         return bean;
     }
 
+    public IntentBean addAllCheck(ArrayList mChecks){
+        mChecks.addAll(mChecks);
+        return bean;
+    }
+
     public void clear(){
         mData.clear();
         mChecks.clear();

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:background="@color/view_background">
+
+    <TextView
+        android:id="@+id/item_message_plan_top_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="我的计划( 2 )"
+        android:textColor="@color/text_color"
+        android:textStyle="bold"
+        android:layout_marginLeft="24dp"
+        android:layout_centerVertical="true"/>
+
+    <ImageView
+        android:id="@+id/item_message_plan_top_icon"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        app:srcCompat="@drawable/ic_message_icon"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="16dp" />
+
+    <TextView
+        android:id="@+id/item_message_plan_top_tool"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="24dp"
+        android:layout_toStartOf="@+id/item_message_plan_top_icon"
+        android:drawableLeft="@drawable/icon_add"
+        android:drawablePadding="12dp"
+        android:textColor="@color/text_color"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:text="新建计划" />
+</RelativeLayout>

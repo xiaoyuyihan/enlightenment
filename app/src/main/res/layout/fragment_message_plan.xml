@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/view_background">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/fragment_message_plan_time_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/view_background"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/fragment_message_plan_time"
+                android:layout_width="72dp"
+                android:layout_height="match_parent"
+                android:layout_alignBottom="@+id/calendarLayout"
+                android:layout_alignTop="@+id/calendarLayout"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="20"
+                    android:textSize="24sp"
+                    android:textColor="@color/text_color"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="2月"
+                    android:textColor="@color/text_color"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="48dp"
+                    android:text="1项任务"
+                    android:textColor="@color/text_color"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <com.haibin.calendarview.CalendarLayout
+                android:id="@+id/calendarLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/fragment_message_plan_time"
+                android:background="@color/view_background"
+                android:paddingBottom="12dp"
+                android:paddingTop="6dp"
+                android:orientation="vertical"
+                app:default_status="shrink"
+                app:calendar_content_view_id="@+id/recyclerView">
+
+                <com.haibin.calendarview.CalendarView
+                    android:id="@+id/calendarView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginRight="12dp"
+                    android:layout_weight="1"
+                    android:background="@color/view_background"
+                    app:current_month_lunar_text_color="#CFCFCF"
+                    app:current_month_text_color="#333333"
+                    app:max_year="2020"
+                    app:min_year="2004"
+                    app:month_view="enlightenment.com.view.custom.CustomMonthView"
+                    app:month_view_show_mode="mode_fix"
+                    app:other_month_lunar_text_color="#e1e1e1"
+                    app:other_month_text_color="#e1e1e1"
+                    app:scheme_text="假"
+                    app:scheme_text_color="#333"
+                    app:scheme_theme_color="#128c4b"
+                    app:selected_lunar_text_color="#fff"
+                    app:selected_text_color="#fff"
+                    app:selected_theme_color="#046cea"
+                    app:week_background="#fff"
+                    app:week_start_with="mon"
+                    app:week_text_color="#e1e1e1"
+                    app:week_view="enlightenment.com.view.custom.CustomWeekView"
+                    app:year_view_day_text_color="#333333"
+                    app:year_view_day_text_size="8sp"
+                    app:year_view_month_text_color="#ff0000"
+                    app:year_view_month_text_size="16sp"
+                    app:year_view_scheme_color="#f17706"
+                    app:calendar_height="36dp"
+                    app:lunar_text_size="8sp"
+                    app:day_text_size="8sp"/>
+
+            </com.haibin.calendarview.CalendarLayout>
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_message_current_plan_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/fragment_message_plan_time_layout" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fragment_message_plan_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/fragment_message_current_plan_recycler" />
+    </RelativeLayout>
+
+</android.support.v4.widget.NestedScrollView>

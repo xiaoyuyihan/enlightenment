@@ -111,4 +111,5 @@ public class ViewHolder {
             mTime.setText(TypeConverUtil.TimeMSToMin(time));
         }
     }
+
 }

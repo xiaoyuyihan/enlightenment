@@ -11,6 +11,7 @@ import android.view.View;
 import java.util.ArrayList;
 
 import enlightenment.com.base.R;
+import enlightenment.com.tool.device.DisplayUtils;
 
 /**
  * Created by lw on 2017/7/24.
@@ -137,7 +138,7 @@ public class CircularTextView extends View {
             int textWidth = mTextList.get(0).length() * mtextPaint;
             int textHeight = mTextList.size() * mtextPaint;
             int startWidth = viewWidth - textWidth / 2;
-            int startHeight = viewHeight - textHeight / 2;
+            int startHeight = viewHeight - textHeight / 2- DisplayUtils.px2dp(getContext(),8);
             for (int i = 0; i < mTextList.size(); i++) {
                 canvas.drawText(mTextList.get(i), startWidth, startHeight + (i + 1) * mtextPaint, textPaint);
             }

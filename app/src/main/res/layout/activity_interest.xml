@@ -4,18 +4,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="enlightenment.com.base.InterestActivity">
+    tools:context="enlightenment.com.base.registered.InterestActivity">
 
     <include
         android:id="@+id/interest_view_top"
         layout="@layout/view_top" />
-    <enlightenment.com.view.CircularLayout
-        android:id="@+id/interest_circular"
+
+    <TabHost
+        android:id="@android:id/tabhost"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="48dp"
-        android:layout_gravity="center_horizontal"
-        android:visibility="gone"/>
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TabWidget
+                android:id="@android:id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <FrameLayout
+                android:id="@android:id/tabcontent"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/tab1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <enlightenment.com.view.CircularLayout
+                        android:id="@+id/interest_circular_study"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="48dp"
+                        android:layout_gravity="center_horizontal"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/tab2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <enlightenment.com.view.CircularLayout
+                        android:id="@+id/interest_circular_create"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="48dp"
+                        android:layout_gravity="center_horizontal"
+                        android:visibility="gone"/>
+                </LinearLayout>
+            </FrameLayout>
+        </LinearLayout>
+    </TabHost>
     <include
         android:id="@+id/interest_view_loading"
         layout="@layout/view_loading"/>

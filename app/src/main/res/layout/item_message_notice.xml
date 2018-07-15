@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="96dp"
+    android:background="@drawable/background_corners_4"
+    android:layout_margin="12dp"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/item_message_notice_head_portrait"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="16dp"
+        app:srcCompat="@drawable/c_touxiang5" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@+id/item_message_notice_head_portrait"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="-8dp"
+        android:layout_marginBottom="8dp"
+        android:padding="4dp"
+        android:layout_toEndOf="@+id/item_message_notice_head_portrait"
+        android:layout_toStartOf="@+id/item_message_notice_time"
+        android:orientation="vertical"
+        android:id="@+id/linearLayout">
+
+        <TextView
+            android:id="@+id/item_message_notice_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text="麦克" />
+
+        <TextView
+            android:id="@+id/item_message_notice_notice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="10sp"
+            android:text="赞了你的《八月未央》" />
+        <TextView
+            android:id="@+id/item_message_notice_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:textSize="12sp"
+            android:text="这篇文章真棒。" />
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/item_message_notice_tool"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:padding="6dp"
+        android:layout_marginRight="18dp"
+        android:layout_marginTop="18dp"
+        android:layout_alignParentRight="true"
+        app:srcCompat="@drawable/ic_message_icon" />
+
+    <TextView
+        android:id="@+id/item_message_notice_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="11：30"
+        android:textSize="10sp"
+        android:layout_marginTop="18dp"
+        android:layout_marginRight="20dp"
+        android:layout_below="@+id/item_message_notice_tool"
+        android:layout_alignParentEnd="true" />
+</RelativeLayout>

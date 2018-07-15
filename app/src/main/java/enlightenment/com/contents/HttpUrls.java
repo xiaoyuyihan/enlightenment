@@ -6,6 +6,7 @@ package enlightenment.com.contents;
 
 public class HttpUrls {
     public static final String HTTP_URL="http://101.37.151.91:5000/api/";
+    //public static final String HTTP_URL="http://192.168.1.106:5000/api/";
     public static final String HTTP_URL_LOGIN=HTTP_URL+"login";
     public static final String HTTP_URL_SEND_PHONE=HTTP_URL+"getVerification";
     public static final String HTTP_URL_REGISTERED=HTTP_URL+"registered";
@@ -31,4 +32,10 @@ public class HttpUrls {
     public static final String HTTP_URL_SAVE_PHOTO=HTTP_URL+"savePhotoFile";
     public static final String HTTP_URL_SAVE_AUDIO=HTTP_URL+"saveAudioFile";
     public static final String HTTP_URL_SAVE_VIDEO=HTTP_URL+"saveVideoFile";
+
+    /*******************************Details****************************/
+    public static final String HTTP_URL_GET_COMMENTS=HTTP_URL+"getComments";
+    public static final String HTTP_URL_SET_COMMENTS=HTTP_URL+"setComments";
+    public static final String HTTP_URL_UPDATE_USER_ATTENTION=HTTP_URL+"updateUserAttention";
+    public static final String HTTP_URL_UPDATE_USER_LIKE=HTTP_URL+"updateUserLive";
 }

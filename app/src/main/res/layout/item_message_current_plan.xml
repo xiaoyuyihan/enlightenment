@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="84dp"
+    android:background="@drawable/background_corners_4"
+    android:layout_margin="12dp">
+
+    <LinearLayout
+        android:id="@+id/item_message_current_plan_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:padding="8dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/item_message_current_plan_top_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:padding="6dp"
+            android:text="今天(1)" />
+
+        <TextView
+            android:id="@+id/item_message_current_plan_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="6dp"
+            android:textSize="10sp"
+            android:text="pm  4:00" />
+    </LinearLayout>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignRight="@+id/item_message_current_plan_top"
+        android:src="@drawable/ic_myself_info_line_horizontal"
+        android:id="@+id/item_message_current_plan_lin" />
+
+    <ImageView
+        android:id="@+id/item_message_current_plan_icon"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="18dp"
+        app:srcCompat="@drawable/ic_main_found"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/item_message_current_plan_lin" />
+
+    <TextView
+        android:id="@+id/item_message_current_plan_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:text="八月未央"
+        android:layout_above="@+id/item_message_current_plan_icon"
+        android:layout_toEndOf="@+id/item_message_current_plan_icon"
+        android:layout_toStartOf="@+id/item_message_current_plan_draw"/>
+
+    <TextView
+        android:id="@+id/item_message_current_plan_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="她从一出生开始，就生长在茂盛的莲花里。"
+        android:textSize="10sp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignBottom="@+id/item_message_current_plan_icon"
+        android:layout_alignStart="@+id/item_message_current_plan_name"
+        android:layout_toStartOf="@+id/item_message_current_plan_draw"
+        android:layout_alignEnd="@+id/item_message_current_plan_name"
+        android:layout_below="@+id/item_message_current_plan_name" />
+    <ImageView
+        android:id="@+id/item_message_current_plan_draw"
+        android:layout_width="56dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="12dp"
+        app:srcCompat="@drawable/ic_test_1" />
+</RelativeLayout>

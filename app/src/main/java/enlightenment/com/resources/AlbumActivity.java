@@ -1,10 +1,13 @@
 package enlightenment.com.resources;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -31,7 +34,7 @@ import butterknife.BindView;
 import enlightenment.com.base.AppActivity;
 import enlightenment.com.base.EnlightenmentApplication;
 import enlightenment.com.base.R;
-import enlightenment.com.base.RegisteredActivity;
+import enlightenment.com.base.registered.RegisteredActivity;
 
 /**
  * Created by lw on 2017/9/13.
@@ -41,6 +44,7 @@ import enlightenment.com.base.RegisteredActivity;
 public class AlbumActivity extends AppActivity implements GeneralAdapter.GeneralAdapterHelp{
 
     public static final int FLAG_PICTURE=1;
+    private static final int REQUEST_PERMISSION_CAMERA_CODE = 2;
     public static final String EXTRA_DATA="extra_data";
 
     @BindView(R.id.album_recycler)
@@ -55,14 +59,17 @@ public class AlbumActivity extends AppActivity implements GeneralAdapter.General
     TextView rightText;
 
     private Handler mThreadHandler;
-    private Handler mHanlder;
+    private Handler mHandler;
     private ArrayList<AlbumBean> mData=new ArrayList();
     private GeneralAdapter<AlbumViewHolder> adapter;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_album);
+    protected int getLayoutId() {
+        return R.layout.activity_album;
+    }
+
+    @Override
+    protected void init() {
         ButterKnife.bind(this);
         rightText.setTextColor(getResources().getColor(R.color.mainTopColor));
         leftImage.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +83,7 @@ public class AlbumActivity extends AppActivity implements GeneralAdapter.General
 
         centerText.setText("相册");
         mThreadHandler=new Handler(EnlightenmentApplication.getInstance().getHandlerThread().getLooper());
-        mHanlder=new Handler(Looper.getMainLooper());
+        mHandler=new Handler(Looper.getMainLooper());
         adapter=new GeneralAdapter<>(
                 AlbumViewHolder.class,this,R.layout.item_album_view,mData,this);
         //线性布局管理器
@@ -84,15 +91,49 @@ public class AlbumActivity extends AppActivity implements GeneralAdapter.General
         //设置布局管理器
         recyclerView.setLayoutManager(recyclerViewLayoutManager);
         recyclerView.setAdapter(adapter);
-        loadingAlbumCreate();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!(checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+                requestCameraPermission();
+            }else {
+                loadingAlbumCreate();
+            }
+        }else {
+            loadingAlbumCreate();
+        }
+
+    }
+
+    @Override
+    protected void initData() {
+
+    }
+
+
+    private void requestCameraPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_PERMISSION_CAMERA_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_PERMISSION_CAMERA_CODE) {
+            int grantResult = grantResults[0];
+            boolean granted = grantResult == PackageManager.PERMISSION_GRANTED;
+            if (granted){
+                loadingAlbumCreate();
+            }
+        }
     }
 
     private void loadingAlbumCreate() {
+        recyclerView.setVisibility(View.GONE);
+        progressLayout.setVisibility(View.VISIBLE);
         mThreadHandler.post(new Runnable() {
             @Override
             public void run() {
-                recyclerView.setVisibility(View.GONE);
-                progressLayout.setVisibility(View.VISIBLE);
+
                 loadingAlbum();
             }
         });
@@ -123,7 +164,7 @@ public class AlbumActivity extends AppActivity implements GeneralAdapter.General
             String parentName = new File(path).getParentFile().getName();
 
 
-            //根据父路径名将图片放入到mGruopMap中
+            //根据父路径名将图片放入到mGroupMap中
             if (!mAlbumData.containsKey(parentName)) {
                 List<String> chileList = new ArrayList<>();
                 chileList.add(path);
@@ -141,7 +182,7 @@ public class AlbumActivity extends AppActivity implements GeneralAdapter.General
      * 加载完成
      */
     private void loadingConduct() {
-        mHanlder.post(new Runnable() {
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
                 recyclerView.setVisibility(View.VISIBLE);
