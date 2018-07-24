@@ -2,6 +2,8 @@ package enlightenment.com.user;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -49,7 +51,7 @@ public class SettingActivity extends AppActivity {
     }
 
     @Override
-    protected void init() {
+    protected void init(@Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this);
         mContentText.setText("设置");
         mTopRight.setTextColor(getResources().getColor(R.color.mainTopColor));
@@ -71,7 +73,7 @@ public class SettingActivity extends AppActivity {
                 } else {
                     holder = new ItemViewHolder.BaseViewHolder(
                             ItemViewHolder.createTextView(SettingActivity.this,
-                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.WRAP_CONTENT,
                                     ViewGroup.LayoutParams.WRAP_CONTENT));
                 }
                 return holder;
@@ -110,6 +112,11 @@ public class SettingActivity extends AppActivity {
                 return mMessageSet.length + mSystemSet.length + 2;
             }
         });
+    }
+
+    @Override
+    protected void clearData() {
+
     }
 
     private void setSwitchOpen(SettingViewHolder viewHolder) {

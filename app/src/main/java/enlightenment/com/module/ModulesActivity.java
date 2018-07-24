@@ -1,5 +1,7 @@
 package enlightenment.com.module;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
@@ -31,8 +33,7 @@ public class ModulesActivity extends AppActivity {
     }
 
     @Override
-    protected void init() {
-
+    protected void init(@Nullable Bundle savedInstanceState) {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -48,6 +49,11 @@ public class ModulesActivity extends AppActivity {
 
     @Override
     protected void initData() {
+
+    }
+
+    @Override
+    protected void clearData() {
 
     }
 

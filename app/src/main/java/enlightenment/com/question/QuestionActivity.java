@@ -4,8 +4,10 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -101,7 +103,7 @@ public class QuestionActivity extends AppActivity implements OnBroadcastReceiver
     }
 
     @Override
-    protected void init() {
+    protected void init(@Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this);
         linearLayoutManager = new LinearLayoutManager(this);
         mEditAdapter = new EditAdapter(this, mContent);
@@ -139,6 +141,11 @@ public class QuestionActivity extends AppActivity implements OnBroadcastReceiver
         mContent.add(new EditBean(EditBean.TYPE_TEXT));
         moduleBeans.addAll(EnlightenmentApplication.getInstance().getMajorBeen());
         addFlowLayout();
+    }
+
+    @Override
+    protected void clearData() {
+
     }
 
     private void addFlowLayout() {

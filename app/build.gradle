@@ -57,6 +57,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.8.1'
     compile 'com.haibin:calendarview:3.2.9'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
 
     compile 'ch.ielse:switchbutton:1.0.1'
     compile project(':WebEdit')

@@ -84,7 +84,7 @@ public class FoundDynamicFragment extends Fragment implements MainView {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mainPresenter.upRefresh(FoundDynamicFragment.this, refreshLayout, adapter);
+                mainPresenter.downRefresh(getTypeFragment(), refreshLayout,adapter);
             }
         });
         adapter = new FoundAdapter(getActivity());
@@ -97,7 +97,7 @@ public class FoundDynamicFragment extends Fragment implements MainView {
         mRecyclerView.addOnScrollListener(new OnRecyclerScrollListener(recyclerViewLayoutManager, new OnRecyclerScrollListener.OnRefreshListener() {
             @Override
             public void Refresh() {
-                mainPresenter.downRefresh(FoundDynamicFragment.this, adapter);
+                mainPresenter.upRefresh(getTypeFragment(), adapter);
             }
         }));
         return view;
@@ -118,7 +118,7 @@ public class FoundDynamicFragment extends Fragment implements MainView {
 
     public void Refresh() {
         refreshLayout.setRefreshing(true);
-        mainPresenter.upRefresh(this, refreshLayout, adapter);
+        mainPresenter.downRefresh(getTypeFragment(), refreshLayout, adapter);
     }
 
     @Override
@@ -130,6 +130,7 @@ public class FoundDynamicFragment extends Fragment implements MainView {
     public Object getObj() {
         return null;
     }
+
 
     public class FoundAdapter extends RecyclerView.Adapter{
 

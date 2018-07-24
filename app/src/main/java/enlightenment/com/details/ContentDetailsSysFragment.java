@@ -91,12 +91,8 @@ public class ContentDetailsSysFragment extends ContentDetailsFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mContentView = inflater.inflate(R.layout.view_content_details_sys, container, false);
         ButterKnife.bind(this, mContentView);
-        mContent = getArguments().getParcelable(ContentDetailsActivity.CONTENT_EXTRA_DATA);
-        mGridManager = new GridLayoutManager(getContext(), 3);
-        //mGridManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
         init();
         initHor();
-
         return mContentView;
     }
 
@@ -114,18 +110,24 @@ public class ContentDetailsSysFragment extends ContentDetailsFragment {
         mContentHorAdapter.setOnContentResItemClickListener(new OnContentResItemClickListener() {
             @Override
             public void onClick(String url, int flag) {
-                showPopupWindow(url,flag);
+                showPopupWindow(url, flag);
             }
         });
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    protected void clearData() {
+
+    }
+
+    @Override
+    protected void initData() {
+        mContent = getArguments().getParcelable(ContentDetailsActivity.CONTENT_EXTRA_DATA);
+        mGridManager = new GridLayoutManager(getContext(), 3);
+        //mGridManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
     }
 
     private void showPopupWindow(String url, int flag) {
-
         popupWindow = new ContentShrinkPopupWindow(getActivity(), url, flag);
         int[] location = new int[2];
         mCoordinator.getLocationOnScreen(location);
@@ -194,7 +196,7 @@ public class ContentDetailsSysFragment extends ContentDetailsFragment {
         mContentResAdapter.setOnContentResItemClickListener(new OnContentResItemClickListener() {
             @Override
             public void onClick(String url, int flag) {
-                showPopupWindow(url,flag);
+                showPopupWindow(url, flag);
             }
         });
         mContentRecycler.addItemDecoration(new SpacesItemDecoration(16));
@@ -222,6 +224,68 @@ public class ContentDetailsSysFragment extends ContentDetailsFragment {
             mCommentAdapter.setCommentBeans(commentBeans);
             mCommentAdapter.notifyDataSetChanged();
         }
+    }
+
+
+    //文章作者
+    @OnClick({R.id.view_content_details_arrow, R.id.view_content_details_bottom_name})
+    public void onUsername(View v) {
+        if (getActivity() instanceof onContentDetailsListener)
+            ((onContentDetailsListener) getActivity()).onUsername();
+    }
+
+    //栏目
+    @OnClick(R.id.view_content_details_bottom_column)
+    public void onColumn(View v) {
+        if (getActivity() instanceof onContentDetailsListener)
+            ((onContentDetailsListener) getActivity()).onColumn();
+    }
+
+    //模块
+    @OnClick(R.id.view_content_details_bottom_model)
+    public void onModel(View v) {
+        if (getActivity() instanceof onContentDetailsListener)
+            ((onContentDetailsListener) getActivity()).onModel();
+    }
+
+    //关注
+    @OnClick(R.id.view_content_details_bottom_follow)
+    public void onFollow(View v) {
+        if (getActivity() instanceof onContentDetailsListener)
+            ((onContentDetailsListener) getActivity()).onFollow();
+    }
+
+    //打赏
+    @OnClick(R.id.view_content_details_bottom_reward)
+    public void onReward(View v) {
+        if (getActivity() instanceof onContentDetailsListener)
+            ((onContentDetailsListener) getActivity()).onReward();
+        updateReward(mContentFollow);
+    }
+
+    @SuppressLint("ResourceAsColor")
+    private void updateReward(TextView textView) {
+        if (Boolean.valueOf(mContent.getIsAtten())) {
+            textView.setBackground(getActivity().getDrawable(R.drawable.background_un_interest_module));
+            textView.setText("取关");
+            textView.setTextColor(R.color.mainTopColor);
+        } else {
+            textView.setBackground(getActivity().getDrawable(R.drawable.background_interest_module));
+            textView.setText("关注");
+            textView.setTextColor(R.color.white);
+        }
+    }
+
+    public boolean isViewVisible(View view) {
+        boolean cover;
+        Rect rect = new Rect();
+        cover = view.getGlobalVisibleRect(rect);
+        if (cover) {
+            if (rect.width() == 0 || rect.height() == 0) {
+                return !cover;
+            }
+        }
+        return cover;
     }
 
     public static class ContentResAdapter extends RecyclerView.Adapter {
@@ -336,66 +400,4 @@ public class ContentDetailsSysFragment extends ContentDetailsFragment {
             this.mResUrl = mResUrl;
         }
     }
-
-    //文章作者
-    @OnClick({R.id.view_content_details_arrow, R.id.view_content_details_bottom_name})
-    public void onUsername(View v) {
-        if (getActivity() instanceof onContentDetailsListener)
-            ((onContentDetailsListener) getActivity()).onUsername();
-    }
-
-    //栏目
-    @OnClick(R.id.view_content_details_bottom_column)
-    public void onColumn(View v) {
-        if (getActivity() instanceof onContentDetailsListener)
-            ((onContentDetailsListener) getActivity()).onColumn();
-    }
-
-    //模块
-    @OnClick(R.id.view_content_details_bottom_model)
-    public void onModel(View v) {
-        if (getActivity() instanceof onContentDetailsListener)
-            ((onContentDetailsListener) getActivity()).onModel();
-    }
-
-    //关注
-    @OnClick(R.id.view_content_details_bottom_follow)
-    public void onFollow(View v) {
-        if (getActivity() instanceof onContentDetailsListener)
-            ((onContentDetailsListener) getActivity()).onFollow();
-    }
-
-    //打赏
-    @OnClick(R.id.view_content_details_bottom_reward)
-    public void onReward(View v) {
-        if (getActivity() instanceof onContentDetailsListener)
-            ((onContentDetailsListener) getActivity()).onReward();
-        updateReward(mContentFollow);
-    }
-
-    @SuppressLint("ResourceAsColor")
-    private void updateReward(TextView textView) {
-        if (Boolean.valueOf(mContent.getIsAtten())) {
-            textView.setBackground(getActivity().getDrawable(R.drawable.background_un_interest_module));
-            textView.setText("取关");
-            textView.setTextColor(R.color.mainTopColor);
-        } else {
-            textView.setBackground(getActivity().getDrawable(R.drawable.background_interest_module));
-            textView.setText("关注");
-            textView.setTextColor(R.color.white);
-        }
-    }
-
-    public boolean isViewVisible(View view) {
-        boolean cover;
-        Rect rect = new Rect();
-        cover = view.getGlobalVisibleRect(rect);
-        if (cover) {
-            if (rect.width() == 0 || rect.height() == 0) {
-                return !cover;
-            }
-        }
-        return cover;
-    }
-
 }

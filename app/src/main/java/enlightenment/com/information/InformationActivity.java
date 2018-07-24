@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -51,8 +52,8 @@ import enlightenment.com.tool.device.SystemState;
 
 public class InformationActivity extends AppActivity implements InformationView,
         View.OnClickListener, TypeCheckDialog.OnClickTypeCheck,
-        ModelCheckDialog.OnClickModelCheck, OnItemClickListener ,
-        MessageDialogFragment.OnMsgDialogClickListener{
+        ModelCheckDialog.OnClickModelCheck, OnItemClickListener,
+        MessageDialogFragment.OnMsgDialogClickListener {
     public static final int ACTIVITY_INFORMATION_FLAG = 1;
 
     @BindView(R.id.top_center_text)
@@ -118,7 +119,7 @@ public class InformationActivity extends AppActivity implements InformationView,
     }
 
     @Override
-    protected void init() {
+    protected void init(@Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this);
         mType = getIntent().getExtras().getInt(EditActivity.ACTIVITY_EDIT_TYPE);
         mTextData = getIntent().getExtras().getString(EditActivity.ACTIVITY_EDIT_TEXT, "");
@@ -134,23 +135,17 @@ public class InformationActivity extends AppActivity implements InformationView,
 
     @Override
     protected void initData() {
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         informationPresenter = InformationPresenter.getInstance();
         informationPresenter.BindView(this);
         informationPresenter.onStart();
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void clearData() {
+        columnAdapter = null;
         informationPresenter.unBindView(this);
         informationPresenter.onStop();
-
+        informationPresenter = null;
     }
 
     @OnClick(R.id.top_left_image)
@@ -175,13 +170,13 @@ public class InformationActivity extends AppActivity implements InformationView,
             messageDialogFragment.setMessageImageVisibility(View.GONE);
             messageDialogFragment.setOnMsgDialogClickListener(this);
             messageDialogFragment.show(getSupportFragmentManager(), "MessageDialogFragment");
-        }else {
+        } else {
             subjectContent();
         }
-        showCustomToast("通知开启："+manager.areNotificationsEnabled());
+        showCustomToast("通知开启：" + manager.areNotificationsEnabled());
     }
 
-    private void subjectContent(){
+    private void subjectContent() {
         if (SystemState.isNetworkState()) {
             createInformationBean();
             onBindService();
@@ -359,11 +354,13 @@ public class InformationActivity extends AppActivity implements InformationView,
             @Override
             public void Back() {
                 newsProjectModelDialog.dismiss();
+                newsProjectModelDialog = null;
             }
 
             @Override
             public void onNewsColumnCall(boolean isChild, ColumnBean columnBean) {
                 newsProjectModelDialog.dismiss();
+                newsProjectModelDialog = null;
                 mColumnView.setText(columnBean.getName());
                 columnID = columnBean.getId();
                 showLoadingView("文本上传中···");
@@ -372,6 +369,7 @@ public class InformationActivity extends AppActivity implements InformationView,
             @Override
             public void onNewsChildColumnCall(boolean isChild, ColumnBean.ColumnChildBean child) {
                 newsProjectModelDialog.dismiss();
+                newsProjectModelDialog = null;
                 if (isChild) {
                     //如果是选择栏目中新建子栏目
                     if (mColumnClickType == 1) {
@@ -436,7 +434,6 @@ public class InformationActivity extends AppActivity implements InformationView,
     }
 
 
-
     private void loadingModule() {
         showLoadingView(null);
         informationPresenter.loadModel(mInformationType);
@@ -451,6 +448,7 @@ public class InformationActivity extends AppActivity implements InformationView,
             mTypeView.setText("学习笔记");
         }
         typeCheckDialog.dismiss();
+        typeCheckDialog = null;
     }
 
     @Override
@@ -459,6 +457,7 @@ public class InformationActivity extends AppActivity implements InformationView,
         mModelView.setText(currentBean.getName() + "—" + currentBean.getChildBeen().get(childPosition).getName());
         mModelID = currentBean.getChildBeen().get(childPosition).getIdentity();
         modelCheckDialog.dismiss();
+        modelCheckDialog = null;
     }
 
     /**
@@ -490,19 +489,19 @@ public class InformationActivity extends AppActivity implements InformationView,
         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         Uri uri = Uri.fromParts("package", getPackageName(), null);
         intent.setData(uri);
-        startActivityForResult(intent,ACTIVITY_INFORMATION_FLAG);
+        startActivityForResult(intent, ACTIVITY_INFORMATION_FLAG);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == ACTIVITY_INFORMATION_FLAG) {
             NotificationManagerCompat manager = NotificationManagerCompat.from(this);
-            if (manager.areNotificationsEnabled()&&messageDialogFragment!=null) {
+            if (manager.areNotificationsEnabled() && messageDialogFragment != null) {
                 messageDialogFragment.dismiss();
-                messageDialogFragment =null;
+                messageDialogFragment = null;
                 subjectContent();
             }
-        }else {
+        } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
@@ -511,7 +510,7 @@ public class InformationActivity extends AppActivity implements InformationView,
     @Override
     public void onCancel() {
         messageDialogFragment.dismiss();
-        messageDialogFragment =null;
+        messageDialogFragment = null;
         subjectContent();
     }
 

@@ -64,7 +64,7 @@ public class PictureDisposalActivity extends AppActivity implements View.OnClick
     }
 
     @Override
-    protected void init() {
+    protected void init(@Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this);
         rightText.setText("剪切");
         rightText.setOnClickListener(this);
@@ -76,6 +76,11 @@ public class PictureDisposalActivity extends AppActivity implements View.OnClick
 
     @Override
     protected void initData() {
+
+    }
+
+    @Override
+    protected void clearData() {
 
     }
 
@@ -101,7 +106,7 @@ public class PictureDisposalActivity extends AppActivity implements View.OnClick
                         @Override
                         public void run() {
                             String url=FileUrls.PATH_PHOTO+System.currentTimeMillis()+".jpg";
-                            FileUtils.writeFileBitmap(url,bitmap);
+                            FileUtils.writeFileBitmap(url,bitmap,100);
                             Message msg=mHandler.obtainMessage();
                             msg.obj=url;
                             mHandler.sendMessage(msg);

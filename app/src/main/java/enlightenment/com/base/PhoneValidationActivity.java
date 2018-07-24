@@ -30,11 +30,11 @@ import enlightenment.com.tool.device.CheckUtils;
  * 验证码获取
  */
 
-public class PhoneValidationActivity extends AppActivity implements  baseView,View.OnClickListener{
-    private static final int TIME_RETURN=1;
-    public static final int TYPE_REGISTER=2;
-    public static final int TYPE_FOTGET=3;
-    public static final String TYPE_EXTES="TYPE";
+public class PhoneValidationActivity extends AppActivity implements baseView, View.OnClickListener {
+    private static final int TIME_RETURN = 1;
+    public static final int TYPE_REGISTER = 2;
+    public static final int TYPE_FOTGET = 3;
+    public static final String TYPE_EXTES = "TYPE";
 
     @BindView(R.id.registered_obtain)
     public TextView mObtain;
@@ -52,46 +52,18 @@ public class PhoneValidationActivity extends AppActivity implements  baseView,Vi
     private basePresenter mPresenter;
     public int activityType;
 
-    public Handler mHandler= new Handler(Looper.getMainLooper()){
-        private int time=60;
-        @Override
-        public void handleMessage(Message msg) {
-
-            switch (msg.what){
-                case TIME_RETURN:
-                    time--;
-                    if(time<=0){
-                        time=60;
-                        mObtain.setClickable(true);
-                        mObtain.setText("获取验证码");
-                    }else {
-                        mObtain.setText(time+"秒后");
-                        mHandler.sendEmptyMessageDelayed(TIME_RETURN,1000);
-                    }
-                    break;
-            }
-        }
-    };
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mPresenter = basePresenter.getInstance();
-        mPresenter.onStart();
-        mPresenter.BindView(this);
-    }
-
+    public Handler mHandler;
     @Override
     protected int getLayoutId() {
         return R.layout.activity_phone_vaildation;
     }
 
     @Override
-    protected void init(){
+    protected void init(@Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this);
-        activityType=getIntent().getExtras().getInt(PhoneValidationActivity.TYPE_EXTES);
+        activityType = getIntent().getExtras().getInt(PhoneValidationActivity.TYPE_EXTES);
         topRightText.setTextColor(getResources().getColor(R.color.mainTopColor));
-        if (activityType==TYPE_REGISTER)
+        if (activityType == TYPE_REGISTER)
             topCenterText.setText("注册帐号");
         else
             topCenterText.setText("找回密码");
@@ -106,8 +78,8 @@ public class PhoneValidationActivity extends AppActivity implements  baseView,Vi
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 //输入文字中的状态，count是一次性输入字符数
-                if (charSequence.length()==6){
-                    mPresenter.equalsCode(mPhone.getText().toString(),charSequence.toString());
+                if (charSequence.length() == 6) {
+                    mPresenter.equalsCode(mPhone.getText().toString(), charSequence.toString());
                 }
             }
 
@@ -121,18 +93,45 @@ public class PhoneValidationActivity extends AppActivity implements  baseView,Vi
 
     @Override
     protected void initData() {
+        mPresenter = basePresenter.getInstance();
+        mPresenter.BindView(this);
+        mPresenter.onStart();
+        mHandler = new Handler(Looper.getMainLooper()) {
+            private int time = 60;
+
+            @Override
+            public void handleMessage(Message msg) {
+
+                switch (msg.what) {
+                    case TIME_RETURN:
+                        time--;
+                        if (time <= 0) {
+                            time = 60;
+                            mObtain.setClickable(true);
+                            mObtain.setText("获取验证码");
+                        } else {
+                            mObtain.setText(time + "秒后");
+                            mHandler.sendEmptyMessageDelayed(TIME_RETURN, 1000);
+                        }
+                        break;
+                }
+            }
+        };
 
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void clearData() {
+        mHandler.removeMessages(TIME_RETURN);
+        mHandler =null;
+        mPresenter.onStop();
         mPresenter.unBindView(this);
+        mPresenter = null;
     }
 
     @Override
     public void showToast(String message) {
-        Toast.makeText(PhoneValidationActivity.this,message,Toast.LENGTH_SHORT).show();
+        Toast.makeText(PhoneValidationActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -154,17 +153,17 @@ public class PhoneValidationActivity extends AppActivity implements  baseView,Vi
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.top_left_image:
                 startNextActivity(LoginActivity.class);
                 break;
             case R.id.registered_obtain:
                 mHandler.sendEmptyMessage(TIME_RETURN);
-                Constants.phoneCode=mPhone.getText().toString();
-                if (CheckUtils.isPhone(Constants.phoneCode)){
+                Constants.phoneCode = mPhone.getText().toString();
+                if (CheckUtils.isPhone(Constants.phoneCode)) {
                     mPresenter.sendPhoneCode(Constants.phoneCode);
                     mObtain.setClickable(false);
-                }else {
+                } else {
                     showToast("手机格式错误");
                 }
                 break;

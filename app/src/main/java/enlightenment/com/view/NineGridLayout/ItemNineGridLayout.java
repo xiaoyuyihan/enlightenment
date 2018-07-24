@@ -44,17 +44,17 @@ public class ItemNineGridLayout extends NineGridLayout {
     @Override
     protected boolean displayOneImage(final RatioImageView imageView, String url, int parentWidth) {
         if (isShow|| SystemState.isWIFIState()){
-            Glide.with(context).load(url).asBitmap().thumbnail(0.2f).into(new SimpleTarget<Bitmap>() {
+            Glide.with(context).load(url).asBitmap().thumbnail(0.4f).into(new SimpleTarget<Bitmap>() {
 
                 @Override
                 public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                    int size=resource.getByteCount();
                     int imageWidth = resource.getWidth();
                     int imageHeight = resource.getHeight();
                     int height = imageView.getWidth() * imageHeight / imageWidth;
                     ViewGroup.LayoutParams para = imageView.getLayoutParams();
-                    para.height = height;
-                    para.width = imageView.getWidth();
+                    if (para==null)
+                        para=new LayoutParams(resource.getWidth(),resource.getHeight());
+                    imageView.setLayoutParams(para);
                     imageView.setImageBitmap(resource);
                 }
             });

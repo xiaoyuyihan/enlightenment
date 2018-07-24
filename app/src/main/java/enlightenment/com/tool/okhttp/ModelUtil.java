@@ -1,5 +1,7 @@
 package enlightenment.com.tool.okhttp;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -165,6 +167,11 @@ public class ModelUtil implements BaseModel {
 
     public Response postSynchFile(String url, String key, File file,String token) throws IOException {
         return OkHttpUtils.post().url(url).addFile(key,file).addParams("token",token).build().execute();
+    }
+
+    public Bitmap getSynchBitmap(String url) throws IOException {
+        Response response = OkHttpUtils.get().url(url).build().execute();
+        return BitmapFactory.decodeStream(response.body().byteStream());
     }
 
     public void postForm(String url, Map<String, ArrayList<File>> file, Map params, final CallBack m) {

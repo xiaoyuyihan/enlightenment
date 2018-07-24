@@ -30,6 +30,8 @@ public class ClipImageBorderView extends View {
      */
     private int mBorderWidth = 1;
 
+    private float mViewProportion=1;
+
     private Paint mPaint;
 
     public ClipImageBorderView(Context context) {
@@ -58,7 +60,7 @@ public class ClipImageBorderView extends View {
         super.onDraw(canvas);
         if (mVerticalPadding == 0) {
             //计算矩形区域的宽度
-            int mWidth = getWidth() - 2 * mHorizontalPadding;
+            int mWidth = (int)((getWidth() - 2 * mHorizontalPadding)*mViewProportion);
             //计算距离屏幕垂直边界 的边距
             mVerticalPadding = (getHeight() - mWidth) / 2;
         }
@@ -86,5 +88,9 @@ public class ClipImageBorderView extends View {
 
     public void setHorizontalPadding(int mHorizontalPadding) {
         this.mHorizontalPadding = mHorizontalPadding;
+    }
+
+    public void setViewProportion(float mViewProportion) {
+        this.mViewProportion = mViewProportion;
     }
 }

@@ -92,15 +92,31 @@ public abstract class NineGridLayout extends ViewGroup {
     }
 
     public void setUrlList(List<String> urlList) {
-        if (getListSize(urlList) == 0) {
+        mUrlList.clear();
+        mUrlList.addAll(urlList);
+        show();
+    }
+
+    public NineGridLayout crate(){
+        mUrlList.clear();
+        return this;
+    }
+
+    public void clear(){
+        mUrlList.clear();
+    }
+
+    public NineGridLayout addUrl(String url){
+        mUrlList.add(url);
+        return this;
+    }
+
+    public void show(){
+        if (getListSize(mUrlList) == 0) {
             setVisibility(GONE);
             return;
         }
         setVisibility(VISIBLE);
-
-        mUrlList.clear();
-        mUrlList.addAll(urlList);
-
         if (!mIsFirst) {
             notifyDataSetChanged();
         }

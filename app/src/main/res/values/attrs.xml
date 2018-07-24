@@ -40,6 +40,7 @@
     <declare-styleable name="ClipImageLayout" >
         <attr name="clipDrawable" format="reference"/>
         <attr name="clipPadding" format="dimension"/>
+        <attr name="clipProportion" format="float"/>
     </declare-styleable>
     <declare-styleable name="ArticleView">
         <attr name="articleHeight" format="dimension"/>

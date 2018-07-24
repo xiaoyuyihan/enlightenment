@@ -53,7 +53,7 @@ public class ResetPasswordActivity extends AppActivity implements baseView, View
     }
 
     @Override
-    protected void init() {
+    protected void init(@Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this);
         topLeft.setOnClickListener(this);
         topCenter.setText("重置密码");
@@ -68,14 +68,14 @@ public class ResetPasswordActivity extends AppActivity implements baseView, View
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 String info = CheckUtils.checkPassword(charSequence.toString());
-                if (info.equals("弱")){
+                if (info.equals("弱")) {
                     inputPasswordHint.setTextColor(getResources().getColor(R.color.cpb_red));
-                }else if (info.equals("中")){
+                } else if (info.equals("中")) {
                     inputPasswordHint.setTextColor(getResources().getColor(R.color.colorAccent));
-                }else {
+                } else {
                     inputPasswordHint.setTextColor(getResources().getColor(R.color.colorLogin));
                 }
-                inputPasswordHint.setText("密码强度："+info);
+                inputPasswordHint.setText("密码强度：" + info);
             }
 
             @Override
@@ -88,15 +88,16 @@ public class ResetPasswordActivity extends AppActivity implements baseView, View
 
     @Override
     protected void initData() {
-
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         mPresenter = basePresenter.getInstance();
         mPresenter.BindView(this);
+        mPresenter.onStart();
+    }
+
+    @Override
+    protected void clearData() {
+        mPresenter.onStop();
+        mPresenter.unBindView(this);
+        mPresenter = null;
     }
 
     @Override
@@ -150,9 +151,4 @@ public class ResetPasswordActivity extends AppActivity implements baseView, View
         showToast("请求不到数据，请检测一下网络信号");
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mPresenter.unBindView(this);
-    }
 }

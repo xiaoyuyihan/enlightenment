@@ -3,12 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:orientation="vertical"
+    android:background="@color/white"
     android:gravity="center">
     <LinearLayout
+        android:id="@+id/footer_loading_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:visibility="gone"
         android:gravity="center">
 
         <ProgressBar
@@ -26,17 +27,20 @@
             android:id="@+id/textView5" />
     </LinearLayout>
     <TextView
+        android:id="@+id/footer_end_layout"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center"
         android:visibility="gone"
-        android:text="已经到头了"/>
+        android:text="我是有底线的!"/>
     <TextView
+        android:id="@+id/footer_error_layout"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:drawableLeft="@drawable/ic_item_learn"
         android:drawablePadding="8dp"
+        android:visibility="gone"
         android:gravity="center"
-        android:text="网络出了点状况"/>
+        android:text="网络出了点状况?"/>
 
 </LinearLayout>

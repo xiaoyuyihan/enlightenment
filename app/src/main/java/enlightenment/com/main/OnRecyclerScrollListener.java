@@ -16,28 +16,34 @@ public class OnRecyclerScrollListener extends RecyclerView.OnScrollListener {
         this.refresh = refresh;
     }
 
-    public OnRecyclerScrollListener(RecyclerView.LayoutManager l,OnRefreshListener r){
-        this.mLayoutManager=l;
-        this.refresh=r;
+    public OnRecyclerScrollListener(RecyclerView.LayoutManager l, OnRefreshListener r) {
+        this.mLayoutManager = l;
+        this.refresh = r;
     }
 
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
-        isScrollBottom();
+        if (dy > 0)
+            isScrollBottom();
     }
 
     /**
-     *  view is scroll bottom
+     * view is scroll bottom
+     *
      * @return
      */
     private boolean isScrollBottom() {
-        if (mLayoutManager instanceof LinearLayoutManager){
-            LinearLayoutManager l=(LinearLayoutManager)mLayoutManager;
+        if (mLayoutManager instanceof LinearLayoutManager) {
+            LinearLayoutManager mLinearLayoutManager = (LinearLayoutManager) mLayoutManager;
             //获取最后一个可见view的位置
-            int lastItemPosition = l.findLastVisibleItemPosition();
-            if (lastItemPosition>l.getChildCount()-2){
-                if (refresh!=null)
+            int lastItemPosition = mLinearLayoutManager.findLastVisibleItemPosition();
+            int visibleItemCount = mLinearLayoutManager.getChildCount();
+            int totalItemCount = mLinearLayoutManager.getItemCount();
+            int pastVisiblesItems = mLinearLayoutManager.findFirstVisibleItemPosition();
+
+            if (lastItemPosition > mLinearLayoutManager.getChildCount() - 5) {
+                if (refresh != null)
                     refresh.Refresh();
                 return true;
             }
@@ -48,7 +54,7 @@ public class OnRecyclerScrollListener extends RecyclerView.OnScrollListener {
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
         super.onScrollStateChanged(recyclerView, newState);
-        switch (newState){
+        switch (newState) {
             //不处于滑动状态
             case RecyclerView.SCROLL_STATE_IDLE:
                 break;
@@ -57,7 +63,8 @@ public class OnRecyclerScrollListener extends RecyclerView.OnScrollListener {
                 break;
         }
     }
-    public interface OnRefreshListener{
+
+    public interface OnRefreshListener {
         void Refresh();
     }
 }

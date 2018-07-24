@@ -1,6 +1,7 @@
 package enlightenment.com.tool.File;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import java.io.File;
@@ -8,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
@@ -54,12 +56,28 @@ public class FileUtils {
         }
     }
 
-    public static boolean writeFileBitmap(String fileName, Bitmap data){
+    public static void writeByteToFile(String fileName ,Byte b){
+        if (isFileNews(fileName)){
+            File file =new File(fileName);
+            try {
+                FileOutputStream outputStream = new FileOutputStream(file);
+                outputStream.write(b);
+                outputStream.flush();
+                outputStream.close();
+            }catch (FileNotFoundException e){
+
+            }catch (IOException e){
+
+            }
+        }
+    }
+
+    public static boolean writeFileBitmap(String fileName, Bitmap data,int quality){
         if (isFileNews(fileName)){
             File file = new File(fileName);
             try {
                 FileOutputStream inputStream = new FileOutputStream(file);
-                data.compress(Bitmap.CompressFormat.JPEG,100,inputStream);
+                data.compress(Bitmap.CompressFormat.JPEG,quality,inputStream);
                 inputStream.flush();
                 inputStream.close();
             } catch (FileNotFoundException e) {
@@ -71,6 +89,16 @@ public class FileUtils {
             }
         }
         return true;
+    }
+
+    public static Bitmap readFileBitmap(String url) {
+        try {
+            InputStream inputStream = new FileInputStream(url);
+            return BitmapFactory.decodeStream(inputStream);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static boolean writeContentHtmlFile(String fileName, String data){

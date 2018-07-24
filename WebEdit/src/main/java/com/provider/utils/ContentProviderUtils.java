@@ -121,6 +121,7 @@ public class ContentProviderUtils {
             }
         }
         localCursor.close();
+        localCursor = null;
         mImageUrls.size();
     }
 

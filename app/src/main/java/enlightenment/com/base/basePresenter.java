@@ -71,6 +71,7 @@ public class basePresenter<T extends baseView> extends BasePresenter {
      * @param <T>
      */
     public <T> void executeLogin(final LoginActivity.LoginBean loginBean) {
+
         mModel.post(HttpUrls.HTTP_URL_LOGIN, TransformationUtils.beanToMap(loginBean),
                 new ModelUtil.CallBack() {
                     @Override

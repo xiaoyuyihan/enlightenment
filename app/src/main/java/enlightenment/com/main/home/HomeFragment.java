@@ -37,7 +37,7 @@ import enlightenment.com.view.CarouselView;
  * Created by lw on 2017/7/26.
  */
 
-public class HomeFragment extends Fragment implements MainView {
+public class HomeFragment extends Fragment {
     private static HomeFragment messageFragment;
 
     public static Fragment getInstanceFragment() {
@@ -63,8 +63,6 @@ public class HomeFragment extends Fragment implements MainView {
     @BindView(R.id.fragment_main_toolbar_layout)
     CollapsingToolbarLayout mToolBarLayout;
 
-    private MainPresenter mainPresenter;
-
     private Unbinder unbinder;
 
     @Nullable
@@ -73,8 +71,6 @@ public class HomeFragment extends Fragment implements MainView {
         view = inflater.inflate(R.layout.fragment_main_home, container, false);
         unbinder = ButterKnife.bind(this, view);
         initView();
-        mainPresenter = MainPresenter.getInstance();
-        mainPresenter.BindView(this);
         return view;
     }
 
@@ -134,17 +130,6 @@ public class HomeFragment extends Fragment implements MainView {
     public void onCreateQuestion(View view) {
         Intent intent = new Intent(getActivity(), QuestionActivity.class);
         startActivity(intent);
-    }
-
-
-    @Override
-    public void showToast(String message) {
-        getAppActivity().showCustomToast(message);
-    }
-
-    @Override
-    public Object getObj() {
-        return null;
     }
 
     public static class MessageFragmentPagerAdapter extends FragmentPagerAdapter {

@@ -115,7 +115,10 @@ public class ProviderActivity extends BaseActivity implements View.OnClickListen
                 }
         );
         if (isAllGranted) {
-            ContentProviderUtils.getInstance(this).setRecentSize(mTypeNumber).setReadListener(this).subjectType(mType);
+            ContentProviderUtils.getInstance(this)
+                    .setRecentSize(mTypeNumber)
+                    .setReadListener(this)
+                    .subjectType(mType);
             return;
         }
         ActivityCompat.requestPermissions(
@@ -226,7 +229,10 @@ public class ProviderActivity extends BaseActivity implements View.OnClickListen
                 }
             }
             if (isAllGranted) {
-                ContentProviderUtils.getInstance(this).setRecentSize(mTypeNumber).setReadListener(this).subjectType(mType);
+                ContentProviderUtils.getInstance(this)
+                        .setRecentSize(mTypeNumber)
+                        .setReadListener(this)
+                        .subjectType(mType);
             } else {
                 // 弹出对话框告诉用户需要权限的原因, 并引导用户去应用权限管理中手动打开权限按钮
                 openAppDetails();
@@ -239,7 +245,7 @@ public class ProviderActivity extends BaseActivity implements View.OnClickListen
      */
     private void openAppDetails() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("备份通讯录需要访问 “外部存储器”，请到 “应用信息 -> 权限” 中授予！");
+        builder.setMessage("设置头像需要访问 “外部存储器”，请到 “应用信息 -> 权限” 中授予！");
         builder.setPositiveButton("去手动授权", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
@@ -45,8 +46,31 @@ public class ContentDetailsActivity extends AppActivity implements onContentDeta
     private ContentDetailsPresenter contentDetailsPresenter;
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected int getLayoutId() {
+        return R.layout.activity_content_details;
+    }
+
+    @Override
+    protected void init(@Nullable Bundle savedInstanceState) {
+        ButterKnife.bind(this);
+        mContentBean = getIntent().getParcelableExtra(CONTENT_EXTRA_DATA);
+        mTopContentName.setText(mContentBean.getColumnName());
+        mTopComment.setText(mContentBean.getNumber());
+        if (mContentBean.getViewType() == EditActivity.ACTIVITY_EDIT_TYPE_AUTOMATIC) {
+            mFragment = new ContentDetailsSysFragment();
+        } else {
+            mFragment = new ContentDetailsWebFragment();
+        }
+        Bundle b = new Bundle();
+        b.putParcelable(CONTENT_EXTRA_DATA, mContentBean);
+        mFragment.setArguments(b);
+        FragmentTransaction f = getSupportFragmentManager().beginTransaction();
+        f.add(R.id.content_details_fragment, mFragment).commit();
+    }
+
+    @Override
+    protected void initData() {
+        updateDrawable();
         contentDetailsPresenter = ContentDetailsPresenter.getInstance();
         contentDetailsPresenter.BindView(this);
         contentDetailsPresenter.onStart();
@@ -60,31 +84,10 @@ public class ContentDetailsActivity extends AppActivity implements onContentDeta
     }
 
     @Override
-    protected int getLayoutId() {
-        return R.layout.activity_content_details;
-    }
-
-    @Override
-    protected void init() {
-        ButterKnife.bind(this);
-        mContentBean = getIntent().getParcelableExtra(CONTENT_EXTRA_DATA);
-        mTopContentName.setText(mContentBean.getColumnName());
-        mTopComment.setText(mContentBean.getNumber());
-        if (mContentBean.getViewType()== EditActivity.ACTIVITY_EDIT_TYPE_AUTOMATIC){
-            mFragment = new ContentDetailsSysFragment();
-        }else {
-            mFragment = new ContentDetailsWebFragment();
-        }
-        Bundle b = new Bundle();
-        b.putParcelable(CONTENT_EXTRA_DATA, mContentBean);
-        mFragment.setArguments(b);
-        FragmentTransaction f = getSupportFragmentManager().beginTransaction();
-        f.add(R.id.content_details_fragment, mFragment).commit();
-    }
-
-    @Override
-    protected void initData() {
-        updateDrawable();
+    protected void clearData() {
+        contentDetailsPresenter.onStop();
+        contentDetailsPresenter.unBindView(this);
+        contentDetailsPresenter = null;
     }
 
 
@@ -97,16 +100,16 @@ public class ContentDetailsActivity extends AppActivity implements onContentDeta
     //评论
     @OnClick({R.id.view_content_top_comment, R.id.view_content_details_comment})
     public void onComment(View view) {
-        if (mPopupWindow==null){
+        if (mPopupWindow == null) {
             mPopupWindow = new CommentPopupWindow(this);
             mPopupWindow.setOnCommentClickListener(new CommentPopupWindow.OnCommentClickListener() {
                 @Override
                 public void onSubject(String comment) {
                     contentDetailsPresenter.onComment(comment);
                     mTopComment.setText(String.valueOf(
-                            Integer.valueOf(mContentBean.getNumber())+1));
+                            Integer.valueOf(mContentBean.getNumber()) + 1));
                     mPopupWindow.dismiss();
-                    mPopupWindow=null;
+                    mPopupWindow = null;
                 }
             });
         }
@@ -122,11 +125,11 @@ public class ContentDetailsActivity extends AppActivity implements onContentDeta
         if (isLive) {
             contentDetailsPresenter.onUnLive();
             mContentBean.setNumber(String.valueOf(
-                    Integer.valueOf(mContentBean.getNumber())-1));
+                    Integer.valueOf(mContentBean.getNumber()) - 1));
         } else {
             contentDetailsPresenter.onLive();
             mContentBean.setNumber(String.valueOf(
-                    Integer.valueOf(mContentBean.getNumber())-1));
+                    Integer.valueOf(mContentBean.getNumber()) - 1));
         }
         mContentBean.setIsLive(String.valueOf(!isLive));
         updateDrawable();
@@ -140,7 +143,7 @@ public class ContentDetailsActivity extends AppActivity implements onContentDeta
             drawable = getDrawable(R.drawable.ic_live_no);
         }
         mTopLive.setText(mContentBean.getLive());
-        drawable.setBounds(0,0,38,38);
+        drawable.setBounds(0, 0, 38, 38);
         mTopLive.setCompoundDrawables(drawable, null, null, null);
     }
 
@@ -160,7 +163,7 @@ public class ContentDetailsActivity extends AppActivity implements onContentDeta
     @Override
     public void onUsername() {
         Intent intent = new Intent(this, ContentUserActivity.class);
-        intent.putExtra(ContentUserActivity.CONTENT_USER_INFO,mContentBean.getUsername());
+        intent.putExtra(ContentUserActivity.CONTENT_USER_INFO, mContentBean.getUsername());
         startActivity(intent);
     }
 

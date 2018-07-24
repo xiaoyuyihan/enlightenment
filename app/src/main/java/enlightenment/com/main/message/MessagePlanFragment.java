@@ -1,17 +1,17 @@
 package enlightenment.com.main.message;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import enlightenment.com.base.R;
 import enlightenment.com.main.ItemViewHolder;
-import enlightenment.com.main.myself.MyselfFragment;
+import enlightenment.com.operationBean.PlanBean;
 
 /**
  * Created by admin on 2018/5/27.
@@ -41,11 +41,12 @@ public class MessagePlanFragment extends Fragment implements CalendarView.OnDate
     CalendarView mCalendarView;
     @BindView(R.id.fragment_message_plan_recycler)
     RecyclerView mPlanRecycler;
-    @BindView(R.id.fragment_message_current_plan_recycler)
-    RecyclerView mPlanCurrentRecycler;
+    @BindView(R.id.fragment_message_current_plan_linear)
+    LinearLayout mPlanCurrentLinear;
 
     RecyclerView.Adapter mPlanAdapter;
-    RecyclerView.Adapter mCurrentPlanAdapter;
+
+    private ArrayList<PlanBean> mCurrentPlanBean = new ArrayList<>();
 
     @Nullable
     @Override
@@ -55,14 +56,33 @@ public class MessagePlanFragment extends Fragment implements CalendarView.OnDate
         mCalendarView.setOnDateSelectedListener(this);
         mCalendarView.setOnYearChangeListener(this);
         init();
+        initLinear();
         initRecycler();
         return view;
     }
 
+    private void initLinear() {
+        mCurrentPlanBean.add(new PlanBean());
+
+        if (mCurrentPlanBean != null && mCurrentPlanBean.size() > 0) {
+            TextView textView = ItemViewHolder.createTextView(getActivity(),
+                    56, ViewGroup.LayoutParams.MATCH_PARENT);
+            textView.setText("当前计划");
+            textView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+            mPlanCurrentLinear.addView(textView);
+        }
+
+        for (PlanBean planBean : mCurrentPlanBean) {
+            View view = LayoutInflater.from(getActivity())
+                    .inflate(R.layout.item_message_current_plan, mPlanCurrentLinear,false);
+            mPlanCurrentLinear.addView(view);
+        }
+
+    }
+
     private void initRecycler() {
-        mPlanRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mPlanCurrentRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mPlanAdapter = new RecyclerView.Adapter() {
+
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -94,44 +114,8 @@ public class MessagePlanFragment extends Fragment implements CalendarView.OnDate
                 return 2;
             }
         };
-        mCurrentPlanAdapter = new RecyclerView.Adapter() {
-
-            @Override
-            public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                RecyclerView.ViewHolder holder;
-                if (viewType == 0) {
-                    holder = new ItemViewHolder.BaseViewHolder(
-                            ItemViewHolder.createTextView(getActivity(),
-                                    ViewGroup.LayoutParams.MATCH_PARENT, 48));
-                } else {
-                    View view = LayoutInflater.from(getActivity())
-                            .inflate(R.layout.item_message_current_plan, parent, false);
-                    holder = new PlanCurrentViewHolder(view);
-                }
-                return holder;
-            }
-
-            @Override
-            public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
-            }
-
-            @Override
-            public int getItemCount() {
-                return 2;
-            }
-
-            @Override
-            public int getItemViewType(int position) {
-                if (position == 0) {
-                    return 0;
-                } else {
-                    return 1;
-                }
-            }
-        };
+        mPlanRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mPlanRecycler.setAdapter(mPlanAdapter);
-        mPlanCurrentRecycler.setAdapter(mCurrentPlanAdapter);
         //mPlanRecycler.addItemDecoration(divider);
     }
 
@@ -153,7 +137,11 @@ public class MessagePlanFragment extends Fragment implements CalendarView.OnDate
         mCalendarView.setOnDateSelectedListener(new CalendarView.OnDateSelectedListener() {
             @Override
             public void onDateSelected(Calendar calendar, boolean isClick) {
-                Toast.makeText(getActivity(),calendar.getScheme(),Toast.LENGTH_SHORT).show();
+                List<Calendar.Scheme> schemeList = calendar.getSchemes();
+                if (schemeList != null && schemeList.size() > 0)
+                    for (Calendar.Scheme scheme : schemeList)
+                        Toast.makeText(getActivity(), scheme.getScheme() + "------" + scheme.getOther(), Toast.LENGTH_SHORT).show();
+
             }
         });
     }
@@ -165,10 +153,11 @@ public class MessagePlanFragment extends Fragment implements CalendarView.OnDate
         calendar.setDay(day);
         calendar.setSchemeColor(color);//如果单独标记颜色、则会使用这个颜色
         calendar.setScheme(text);
-        calendar.addScheme(new Calendar.Scheme());
+        calendar.addScheme(1, color, text, "json");
         calendar.addScheme(0xFF008800, "假");
         calendar.addScheme(0xFF008800, "节");
-        calendar.addScheme(new Calendar.Scheme());
+        calendar.addScheme(1, color, text, "json");
+        calendar.addScheme(1, color, text, "json");
         return calendar;
     }
 

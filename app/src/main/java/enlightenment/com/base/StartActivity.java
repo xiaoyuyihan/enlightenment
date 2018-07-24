@@ -36,22 +36,14 @@ public class StartActivity extends AppActivity {
     protected void initData() {
         isLogin = EnlightenmentApplication.getInstance().getSharedPreferences()
                 .getBoolean(Constants.Set.SET_USER_IS, false);
-        /*String phone = EnlightenmentApplication.getInstance().getSharedPreferences()
-                .getString(Constants.Set.SET_USER_NAME, null);
-        String password = EnlightenmentApplication.getInstance().getSharedPreferences()
-                .getString(Constants.Set.SET_USER_PASSWORD, null);
-        if (phone == null || password == null)
-            isLogin = false;
-        if (isLogin) {
-            Intent intent = new Intent(this, SerMessageService.class);
-            intent.putExtra(SerMessageService.SERVICE_DATA_EXTRA, SerMessageService.ACTION_DETECT_REQUEST_TOKEN);
-            intent.putExtra(SerMessageService.SERVICE_REQUEST_TOKEN_PHONE, phone);
-            intent.putExtra(SerMessageService.SERVICE_REQUEST_TOKEN_PASSWORD, password);
-            startService(intent);
-        }*/
     }
 
-    protected void init() {
+    @Override
+    protected void clearData() {
+
+    }
+
+    protected void init(@Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this);
         startMessageService();
         mStartView.setOnClickListener(new View.OnClickListener() {

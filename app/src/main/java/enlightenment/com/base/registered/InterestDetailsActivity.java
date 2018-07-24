@@ -49,7 +49,7 @@ public class InterestDetailsActivity extends AppActivity implements View.OnClick
     }
 
     @Override
-    protected void init() {
+    protected void init(@Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -67,6 +67,14 @@ public class InterestDetailsActivity extends AppActivity implements View.OnClick
     protected void initData() {
         moduleChildBeen = getIntent().getExtras().getParcelableArrayList(EXTRA_OBJECT);
         setChildView();
+    }
+
+    @Override
+    protected void clearData() {
+        if (moduleChildBeen != null) {
+            moduleChildBeen.clear();
+            moduleChildBeen = null;
+        }
     }
 
     private void setChildView() {

@@ -23,6 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import enlightenment.com.base.R;
+import enlightenment.com.operationBean.ContentBean;
 import enlightenment.com.tool.Image.MediaPlayerUtil;
 import enlightenment.com.tool.device.CheckUtils;
 import enlightenment.com.tool.device.DisplayUtils;
@@ -34,7 +35,7 @@ import enlightenment.com.view.NineGridLayout.ItemNineGridLayout;
  */
 
 public class ItemViewHolder {
-    public static class TextViewHolder extends RecyclerView.ViewHolder {
+    public static class ItemHomeViewHolder extends RecyclerView.ViewHolder {
 
         View itemView;
         @BindView(R.id.item_content_top_avatar)
@@ -74,13 +75,14 @@ public class ItemViewHolder {
 
         private ArrayList<String> mAudioList = new ArrayList<>();
 
-        public TextViewHolder(View itemView) {
+        public ItemHomeViewHolder(View itemView) {
             super(itemView);
             this.itemView = itemView;
             ButterKnife.bind(this, itemView);
         }
 
-        public View getItemView() {
+        public View getItemView(ContentBean bean) {
+            itemView.setTag(bean);
             return itemView;
         }
 
@@ -126,6 +128,19 @@ public class ItemViewHolder {
             itemNineGridLayout.setOnClickImageListener(onClickImageListener);
         }
 
+        public void clearImage(){
+            itemNineGridLayout.clear();
+        }
+
+        public void addImage(String url){
+            itemNineGridLayout.addUrl(url);
+        }
+        public void showImage(ItemNineGridLayout.OnClickImageListener onClickImageListener){
+            itemNineGridLayout.setIsShowAll(false);
+            itemNineGridLayout.setOnClickImageListener(onClickImageListener);
+            itemNineGridLayout.show();
+        }
+
 
         public void setNumberView(String number) {
             this.numberView.setText("评论 " + number);
@@ -144,7 +159,8 @@ public class ItemViewHolder {
         }
 
         public void setWebContent(String content){
-            if (content != null && !content.equals("")) {
+            if (content != null && !content.equals("")
+                    &&contentView.getText().toString().equals("")) {
                 contentView.setVisibility(View.VISIBLE);
                 contentView.setText(Html.fromHtml(content));
             }
@@ -194,6 +210,54 @@ public class ItemViewHolder {
         }
     }
 
+    public static class BottomViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.footer_loading_layout)
+        public LinearLayout mLoadingLayout;
+        @BindView(R.id.footer_end_layout)
+        public TextView mEndLayout;
+        @BindView(R.id.footer_error_layout)
+        public TextView mErrorLayout;
+
+        public BottomViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this,itemView);
+        }
+
+        public void showRefresh(){
+            mLoadingLayout.setVisibility(View.VISIBLE);
+            mEndLayout.setVisibility(View.GONE);
+            mErrorLayout.setVisibility(View.GONE);
+        }
+        public void showEnd(){
+            mLoadingLayout.setVisibility(View.GONE);
+            mEndLayout.setVisibility(View.VISIBLE);
+            mErrorLayout.setVisibility(View.GONE);
+        }
+        public void showError(){
+            mLoadingLayout.setVisibility(View.GONE);
+            mEndLayout.setVisibility(View.GONE);
+            mErrorLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public static class TextViewHolder extends RecyclerView.ViewHolder {
+        private TextView msgView;
+        public TextViewHolder(View itemView) {
+            super(itemView);
+            msgView= (TextView) itemView;
+            msgView.setGravity(Gravity.CENTER);
+        }
+
+        public TextView getMsgView() {
+            return msgView;
+        }
+
+        public void setMsg(String msg) {
+            this.msgView.setText(msg);
+        }
+    }
+
+
     public static class MyselfToolTextView extends RecyclerView.ViewHolder {
 
         @BindView(R.id.item_myself_tool_name)
@@ -242,7 +306,7 @@ public class ItemViewHolder {
                 width, height);
         textView.setLayoutParams(layoutParams);
         textView.setGravity(Gravity.CENTER_VERTICAL);
-        textView.setPadding(24, 0, 0, 0);
+        textView.setPadding(24, 2, 2, 2);
         textView.setTextSize(14);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             textView.setTextColor(context.getColor(R.color.text_color));

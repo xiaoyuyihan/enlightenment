@@ -2,11 +2,16 @@ package com.utils;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by lw on 2017/12/24.
@@ -14,21 +19,34 @@ import java.io.IOException;
 
 public class FileUtils {
 
+    public static String getFileParent() {
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/enlighten/";
+    }
+
+    public static String getVideoFileParentPath() {
+        return getFileParent() + "video/";
+    }
+
     public static String getVideoFilePath() {
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/data/video/" +
-                System.currentTimeMillis() + ".mp4";
+        String path = getVideoFileParentPath() + System.currentTimeMillis() + ".mp4";
         filePathToFile(path);
         return path;
     }
 
+    public static String getPhotoFileParentPath() {
+        return getFileParent() + "image/";
+    }
+
     public static String getPhotoFilePath() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/data/image/" +
-                System.currentTimeMillis() + ".jpg";
+        return getPhotoFileParentPath() + System.currentTimeMillis() + ".jpg";
+    }
+
+    public static String getAudioFileParentPath() {
+        return getFileParent() + "audio/";
     }
 
     public static String getAudioFilePath() {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/data/audio/" +
-                System.currentTimeMillis() + ".mp3";
+        return getAudioFileParentPath()+ System.currentTimeMillis() + ".mp3";
     }
 
     public static String getAudioParentFilePath() {
@@ -110,4 +128,5 @@ public class FileUtils {
         intent.setData(uri);
         context.sendBroadcast(intent);
     }
+
 }

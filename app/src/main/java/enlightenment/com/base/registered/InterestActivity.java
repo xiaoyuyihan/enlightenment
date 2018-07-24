@@ -70,21 +70,16 @@ public class InterestActivity extends AppActivity implements baseView,
     }
 
     @Override
-    protected void init() {
+    protected void init(@Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this);
         topLeft.setOnClickListener(this);
         topRight.setOnClickListener(this);
         topCenter.setText("选择兴趣点");
     }
 
+
     @Override
     protected void initData() {
-
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         mPresenter = basePresenter.getInstance();
         mPresenter.BindView(this);
         mPresenter.onStart();
@@ -93,6 +88,25 @@ public class InterestActivity extends AppActivity implements baseView,
         mTobTab.addTab(mTobTab.newTabSpec("tab2").setIndicator("创造栏目").setContent(R.id.tab2));
         setStudyInterestView();
         setCreateInterestView();
+    }
+
+    @Override
+    protected void clearData() {
+        mPresenter.onStop();
+        mPresenter.unBindView(this);
+        mPresenter = null;
+        if (moduleFatherBeen != null) {
+            moduleFatherBeen.clear();
+            moduleFatherBeen = null;
+        }
+        if (createFatherBeen != null) {
+            createFatherBeen.clear();
+            createFatherBeen = null;
+        }
+        if (circularAdapter != null)
+            circularAdapter = null;
+        if (createAdapter != null)
+            createAdapter = null;
     }
 
     private void setCreateInterestView() {
@@ -182,7 +196,7 @@ public class InterestActivity extends AppActivity implements baseView,
 
     @Override
     public void showToast(String message) {
-
+        showCustomToast(message);
     }
 
     @Override

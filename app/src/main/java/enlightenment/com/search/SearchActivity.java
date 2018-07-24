@@ -24,7 +24,7 @@ public class SearchActivity extends AppActivity {
     }
 
     @Override
-    protected void init() {
+    protected void init(@Nullable Bundle savedInstanceState) {
         mSearchView = (SearchView) findViewById(R.id.search_view);
         mSearchView.setOnClickBack(new bCallBack() {
             @Override
@@ -42,6 +42,11 @@ public class SearchActivity extends AppActivity {
 
     @Override
     protected void initData() {
+
+    }
+
+    @Override
+    protected void clearData() {
 
     }
 }

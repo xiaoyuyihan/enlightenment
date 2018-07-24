@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.nfc.Tag;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -22,7 +23,7 @@ import enlightenment.com.tool.Image.ImageUtils;
  * 多点触控
  */
 
-public class ZoomImageView extends ImageView {
+public class ZoomImageView extends AppCompatImageView {
 
     private static final String TAG = ZoomImageView.class.getSimpleName();
 
@@ -144,7 +145,8 @@ public class ZoomImageView extends ImageView {
      */
     private float minRatio;
 
-    private Paint bitmapPaint=new Paint();
+    private Paint bitmapPaint = new Paint();
+    private float mViewProportion=1;
 
     /**
      * 记录上次两指之间的距离
@@ -167,8 +169,11 @@ public class ZoomImageView extends ImageView {
             // 分别获取到ZoomImageView的宽度和高度
             width = getWidth();
             height = getHeight();
-            mClipViewWidth = width - 2 * mHorizontalPadding;
-            mVerticalPadding = (height - mClipViewWidth) / 2;
+            mClipViewWidth = (int)((width - 2 * mHorizontalPadding)*mViewProportion);
+            if (mVerticalPadding == 0)
+                mVerticalPadding = (height - mClipViewWidth) / 2;
+            else
+                mVerticalPadding = (height - mVerticalPadding) / 2;
         }
     }
 
@@ -308,10 +313,10 @@ public class ZoomImageView extends ImageView {
     }
 
     private void setMinRatio() {
-        if (currentBitmapHeight>currentBitmapWidth){
-            minRatio=mClipViewWidth/currentBitmapWidth*initRatio;
-        }else {
-            minRatio=mClipViewWidth/currentBitmapHeight*initRatio;
+        if (currentBitmapHeight > currentBitmapWidth) {
+            minRatio = mClipViewWidth / currentBitmapWidth * initRatio;
+        } else {
+            minRatio = mClipViewWidth / currentBitmapHeight * initRatio;
         }
     }
 
@@ -428,17 +433,17 @@ public class ZoomImageView extends ImageView {
      * currentBitmapWidth
      * currentBitmapHeight
      */
-    private void boundaryDetection(){
+    private void boundaryDetection() {
         //X 轴 右滑动 totalTranslateX+movedDistanceX>剪切框
-        if(totalTranslateX+movedDistanceX>mHorizontalPadding){
-            movedDistanceX=mHorizontalPadding-totalTranslateX;
-        }else if (totalTranslateX+currentBitmapWidth+movedDistanceX<(width-mHorizontalPadding)){
-            movedDistanceX=width-mHorizontalPadding-currentBitmapWidth-totalTranslateX;
+        if (totalTranslateX + movedDistanceX > mHorizontalPadding) {
+            movedDistanceX = mHorizontalPadding - totalTranslateX;
+        } else if (totalTranslateX + currentBitmapWidth + movedDistanceX < (width - mHorizontalPadding)) {
+            movedDistanceX = width - mHorizontalPadding - currentBitmapWidth - totalTranslateX;
         }
-        if (totalTranslateY+movedDistanceY>mVerticalPadding){
-            movedDistanceY=mVerticalPadding-totalTranslateY;
-        }else if (totalTranslateY+currentBitmapHeight+movedDistanceY<(height-mVerticalPadding)){
-            movedDistanceY=height-mVerticalPadding-currentBitmapHeight-totalTranslateY;
+        if (totalTranslateY + movedDistanceY > mVerticalPadding) {
+            movedDistanceY = mVerticalPadding - totalTranslateY;
+        } else if (totalTranslateY + currentBitmapHeight + movedDistanceY < (height - mVerticalPadding)) {
+            movedDistanceY = height - mVerticalPadding - currentBitmapHeight - totalTranslateY;
         }
     }
 
@@ -454,10 +459,14 @@ public class ZoomImageView extends ImageView {
         draw(canvas);
         return Bitmap.createBitmap(bitmap, mHorizontalPadding,
                 mVerticalPadding, getWidth() - 2 * mHorizontalPadding,
-                getWidth() - 2 * mHorizontalPadding);
+                getHeight() - 2 * mVerticalPadding);
     }
 
     public void setHorizontalPadding(int mHorizontalPadding) {
         this.mHorizontalPadding = mHorizontalPadding;
+    }
+
+    public void setViewProportion(float mViewProportion) {
+        this.mViewProportion = mViewProportion;
     }
 }

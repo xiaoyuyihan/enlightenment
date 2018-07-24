@@ -1,6 +1,7 @@
 package enlightenment.com.main;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,7 @@ import enlightenment.com.contents.Constants;
 import enlightenment.com.contents.HttpUrls;
 import enlightenment.com.main.found.FoundDynamicFragment;
 import enlightenment.com.main.home.HomeDynamicFragment;
+import enlightenment.com.main.home.HomeFragment;
 import enlightenment.com.operationBean.ContentBean;
 import enlightenment.com.tool.okhttp.ModelUtil;
 import enlightenment.com.mvp.BasePresenter;
@@ -42,10 +44,12 @@ public class MainPresenter<T extends MainView> extends BasePresenter {
     private ArrayList FoundDiyList = new ArrayList();
     private ArrayList FoundHelpList = new ArrayList();
     private ArrayList FoundMyselfList = new ArrayList();
-    private Handler mHandler = new Handler();
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     private int startNumber = 1;
-    private int number = 25;
+    private int number = 5;
+
+    private boolean isRefresh = false;
 
     public static MainPresenter getInstance() {
         if (basePresenter == null) {
@@ -58,6 +62,7 @@ public class MainPresenter<T extends MainView> extends BasePresenter {
     public void BindView(BaseView view) {
         super.BindView(view);
         mView = (T) view;
+        isRefresh=false;
     }
 
     @Override
@@ -67,59 +72,140 @@ public class MainPresenter<T extends MainView> extends BasePresenter {
         basePresenter = null;
     }
 
-    public void upRefresh(Fragment fragment, SwipeRefreshLayout swipeRefreshLayout, RecyclerView.Adapter baseAdapter) {
-
-        if (fragment instanceof HomeDynamicFragment) {
-            Refresh(true, swipeRefreshLayout, ((HomeDynamicFragment) fragment).getTypeFragment(), baseAdapter);
-        } else
-            Refresh(true, swipeRefreshLayout, ((FoundDynamicFragment) fragment).getTypeFragment(), baseAdapter);
+    /**
+     * 向上滑动刷新
+     *
+     * @param type
+     * @param baseAdapter
+     */
+    public void upRefresh(int type, RecyclerView.Adapter baseAdapter) {
+        Refresh(false, null, type, baseAdapter);
     }
 
-    public void downRefresh(Fragment fragment, RecyclerView.Adapter baseAdapter) {
-        if (fragment instanceof HomeDynamicFragment) {
-            Refresh(false, null, ((HomeDynamicFragment) fragment).getTypeFragment(), baseAdapter);
-        } else
-            Refresh(false, null, ((FoundDynamicFragment) fragment).getTypeFragment(), baseAdapter);
-
+    /**
+     * 向下滑动刷新
+     *
+     * @param type
+     * @param swipeRefreshLayout
+     * @param baseAdapter
+     */
+    public void downRefresh(int type, SwipeRefreshLayout swipeRefreshLayout, RecyclerView.Adapter baseAdapter) {
+        Refresh(true, swipeRefreshLayout, type, baseAdapter);
     }
 
-    private void Refresh(final boolean Flag, final SwipeRefreshLayout swipeRefreshLayout, final int type, final RecyclerView.Adapter baseAdapter) {
-        ModelUtil.getInstance().get(getUrl(Flag, type),
+    private void Refresh(final boolean flag, final Object layout,
+                         final int type, final RecyclerView.Adapter baseAdapter) {
+        isRefresh=true;
+        ModelUtil.getInstance().get(getUrl(flag, type),
                 new ModelUtil.CallBack() {
                     @Override
                     public void onResponse(String result, int id) {
                         if (result != null)
                             try {
                                 JSONArray jsonArray = new JSONObject(result).getJSONArray("data");
-                                final ArrayList data = new ArrayList();
-                                List list = GsonUtils.parseJsonArrayWithGson(jsonArray.toString(), ContentBean[].class);
-                                data.addAll(list);
-                                mHandler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        addDataList(data, type, Flag, baseAdapter);
-                                        baseAdapter.notifyDataSetChanged();
-                                        if (swipeRefreshLayout != null)
-                                            swipeRefreshLayout.setRefreshing(false);
-                                    }
-                                });
+                                final List data = GsonUtils.parseJsonArrayWithGson(jsonArray.toString(), ContentBean[].class);
+                                if (flag) {
+                                    onDownDataRefresh(data, flag, (SwipeRefreshLayout) layout, type, baseAdapter);
+                                } else {
+                                    onUpDataRefresh(data, flag, type, baseAdapter);
+                                }
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                                onRefreshError(flag, baseAdapter);
                             } catch (Exception e) {
                                 Log.d("MainPresenter", e.getMessage());
-
+                                onRefreshError(flag, baseAdapter);
                             }
 
                     }
 
                     @Override
                     public void onException(Call call, Exception e, int id) {
-                        if (swipeRefreshLayout != null)
-                            swipeRefreshLayout.setRefreshing(false);
                         super.onException(call, e, id);
+                        if (e.toString().contains("401"))
+                            mHandler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Refresh(flag, layout, type, baseAdapter);
+                                }
+                            },500);
+                        onRefreshError(flag, baseAdapter);
                     }
                 });
+    }
+
+    /**
+     * 刷新错误
+     *
+     * @param flag
+     * @param baseAdapter
+     */
+    private void onRefreshError(final boolean flag, final RecyclerView.Adapter baseAdapter) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                MainItemAdapter itemAdapter = (MainItemAdapter) baseAdapter;
+                if (flag) {
+                    itemAdapter.setHeaderCount("休息中，请再试一下");
+                } else
+                    itemAdapter.updataBottomViewType(MainItemAdapter.ITEM_BOTTOM_TYPE_FLAG_ERROR);
+
+            }
+        });
+    }
+
+    /**
+     * @param data
+     * @param flag
+     * @param type
+     * @param baseAdapter
+     */
+    private void onUpDataRefresh(final List data, final boolean flag,
+                                 final int type, final RecyclerView.Adapter baseAdapter) {
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                isRefresh=false;
+                ((MainItemAdapter) baseAdapter).setHeaderCount(null);
+                //没有数据，代表滑动到底
+                if (data.size() > 0 && addDataList(data, type, flag))
+                    baseAdapter.notifyItemRangeChanged(baseAdapter.getItemCount(), data.size());
+                else {
+                    ((MainItemAdapter) baseAdapter).updataBottomViewType(MainItemAdapter.ITEM_BOTTOM_TYPE_FLAG_END);
+                    baseAdapter.notifyItemChanged(baseAdapter.getItemCount()-1);
+                }
+            }
+        });
+    }
+
+    /**
+     * @param data
+     * @param flag
+     * @param swipeRefreshLayout
+     * @param type
+     * @param baseAdapter
+     */
+    private void onDownDataRefresh(final List data, final boolean flag,
+                                   final SwipeRefreshLayout swipeRefreshLayout, final int type,
+                                   final RecyclerView.Adapter baseAdapter) {
+        //开始刷新，不可能数据为空
+        if (data.size() == 0)
+            onRefreshError(flag, baseAdapter);
+        else {
+
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    isRefresh=false;
+                    ((MainItemAdapter) baseAdapter).setHeaderCount(null);
+                    if (addDataList(data, type, flag))
+                        baseAdapter.notifyItemRangeChanged(0,data.size()-1);
+                    if (swipeRefreshLayout != null)
+                        swipeRefreshLayout.setRefreshing(false);
+                }
+            });
+        }
     }
 
     private String getUrl(boolean flag, int type) {
@@ -176,58 +262,80 @@ public class MainPresenter<T extends MainView> extends BasePresenter {
     }
 
     //记住item的ID
-    private void addDataList(List data, int type, boolean Flag, RecyclerView.Adapter baseAdapter) {
+    private boolean addDataList(List data, int type, boolean Flag) {
         switch (type) {
             case HomeDynamicFragment.FRAGMENT_NEW:
                 if (Flag) {
                     HomeNewList.clear();
                     HomeNewList.addAll(data);
-                } else
+                    return true;
+                } else if (!HomeNewList.containsAll(data)) {
                     HomeNewList.addAll(data);
-                break;
+                    return true;
+                } else
+                    return false;
             case HomeDynamicFragment.FRAGMENT_HOT:
                 if (Flag) {
                     HomeHotList.clear();
                     HomeHotList.addAll(data);
-                } else
+                    return true;
+                } else if (!HomeHotList.containsAll(data)) {
                     HomeHotList.addAll(data);
-                break;
+                    return true;
+                } else
+                    return false;
             case HomeDynamicFragment.FRAGMENT_LIVE:
                 if (Flag) {
                     HomeLoveList.clear();
                     HomeLoveList.addAll(data);
-                } else
+                    return true;
+                } else if (!HomeLoveList.containsAll(data)) {
                     HomeLoveList.addAll(data);
-                break;
+                    return true;
+                } else
+                    return false;
             case FoundDynamicFragment.FRAGMENT_KONWLEDGE:
                 if (Flag) {
                     FoundKnowledgeList.clear();
                     FoundKnowledgeList.addAll(data);
-                } else
+                    return true;
+                } else if (!FoundKnowledgeList.containsAll(data)) {
                     FoundKnowledgeList.addAll(data);
-                break;
+                    return true;
+                } else
+                    return false;
             case FoundDynamicFragment.FRAGMENT_DIY:
                 if (Flag) {
                     FoundDiyList.clear();
                     FoundDiyList.addAll(data);
-                } else
+                    return true;
+                } else if (!FoundDiyList.containsAll(data)) {
                     FoundDiyList.addAll(data);
-                break;
+                    return true;
+                } else
+                    return false;
             case FoundDynamicFragment.FRAGMENT_HELP:
                 if (Flag) {
                     FoundHelpList.clear();
                     FoundHelpList.addAll(data);
-                } else
+                    return true;
+                } else if (!FoundHelpList.containsAll(data)) {
                     FoundHelpList.addAll(data);
-                break;
+                    return true;
+                } else
+                    return false;
             case FoundDynamicFragment.FRAGMENT_MYSELF:
                 if (Flag) {
                     FoundMyselfList.clear();
                     FoundMyselfList.addAll(data);
-                } else
+                    return true;
+                } else if (!FoundMyselfList.containsAll(data)) {
                     FoundMyselfList.addAll(data);
-                break;
+                    return true;
+                } else
+                    return false;
         }
+        return false;
     }
 
     public ArrayList getDataList(int type) {
@@ -238,7 +346,6 @@ public class MainPresenter<T extends MainView> extends BasePresenter {
                 return HomeHotList;
             case HomeDynamicFragment.FRAGMENT_LIVE:
                 return HomeLoveList;
-
             case FoundDynamicFragment.FRAGMENT_KONWLEDGE:
                 return new ArrayList();
             case FoundDynamicFragment.FRAGMENT_DIY:
@@ -249,5 +356,9 @@ public class MainPresenter<T extends MainView> extends BasePresenter {
                 return FoundMyselfList;
         }
         return new ArrayList();
+    }
+
+    public boolean isRefresh() {
+        return isRefresh;
     }
 }

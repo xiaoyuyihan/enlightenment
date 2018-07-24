@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.view.Gravity;
@@ -30,6 +31,7 @@ import enlightenment.com.contents.FileUrls;
 import enlightenment.com.resources.AlbumActivity;
 import enlightenment.com.resources.PictureDisposalActivity;
 import enlightenment.com.tool.File.FileUtils;
+import enlightenment.com.tool.Imagecompression.ImageCompression;
 import enlightenment.com.tool.device.SystemState;
 import enlightenment.com.view.CircularProgressButton.CircularProgressButton;
 import enlightenment.com.view.PopupWindow.HeadPortraitWinPopupWindow;
@@ -77,61 +79,57 @@ public class RegisteredActivity extends AppActivity implements baseView, View.On
     }
 
     @Override
-    protected void init() {
+    protected void init(@Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this);
         mRegistered.setOnClickListener(this);
         mUserImage.setOnClickListener(this);
+        onRestoreState(savedInstanceState);
     }
 
     @Override
     protected void initData() {
-        /*KeyboardChangeListener m = new KeyboardChangeListener(this);
-        m.setKeyBoardListener(new KeyboardChangeListener.KeyBoardListener() {
-            @Override
-            public void onKeyboardChange(boolean isShow, int keyboardHeight) {
-                if (isShow) {
-                    mUserImage.setMaxWidth(64);
-                    mUserImage.setMaxHeight(64);
-                } else {
-                    mUserImage.setMaxWidth(80);
-                    mUserImage.setMaxHeight(80);
-                }
-            }
-        });*/
+        mPresenter = basePresenter.getInstance();
+        mPresenter.BindView(this);
+        mPresenter.onStart();
+    }
+
+    @Override
+    protected void clearData() {
+        mPresenter.onStop();
+        mPresenter.unBindView(this);
+        mPresenter = null;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
         super.onCreate(savedInstanceState, persistentState);
-        if (savedInstanceState != null) {
-            clipPhotoURL = savedInstanceState.getString(IMAGE_URL);
-            if (clipPhotoURL != null && !clipPhotoURL.equals("")) {
-                Glide.with(this).load(new File(clipPhotoURL))
-                        .into(mUserImage);
-            }
-            mUsername.setText(savedInstanceState.getString(USER));
-            mPassword.setText(savedInstanceState.getString(PASSWORD));
-            mPassword.setText(savedInstanceState.getString(PASSWORD_NEXT));
-        }
+        onRestoreState(savedInstanceState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        //状态 判断
+        onRestoreState(savedInstanceState);
         super.onRestoreInstanceState(savedInstanceState);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mPresenter = basePresenter.getInstance();
-        mPresenter.BindView(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mPresenter.unBindView(this);
+    private void onRestoreState(Bundle inState) {
+        if (inState == null)
+            return;
+        String ImageUrl = inState.getString(IMAGE_URL, null);
+        if (ImageUrl != null) {
+            Glide.with(this).load(new File(clipPhotoURL))
+                    .into(mUserImage);
+        }
+        String username = inState.getString(USER, null);
+        if (username != null) {
+            mUsername.setText(username);
+        }
+        String password = inState.getString(PASSWORD, null);
+        if (password != null)
+            mPassword.setText(password);
+        String passwordNext = inState.getString(PASSWORD_NEXT, null);
+        if (passwordNext != null)
+            mPasswordNext.setText(passwordNext);
     }
 
     @Override
@@ -202,9 +200,10 @@ public class RegisteredActivity extends AppActivity implements baseView, View.On
                     .getString(RegisteredActivity.START_PHOTO_URL);
             Glide.with(this).load(new File(clipPhotoURL))
                     .into(mUserImage);
-        } else if (requestCode == START_SELECT_PHOTO) {
-            startClip(data.getExtras()
-                    .getString(RegisteredActivity.START_PHOTO_URL));
+        } else if (requestCode == START_SELECT_PHOTO && data != null) {
+            String url = data.getExtras().getString(RegisteredActivity.START_PHOTO_URL);
+            if (url != null && com.utils.FileUtils.isFile(url))
+                startClip(url);
         } else if (requestCode == START_SHOOT_PHOTO) {
             startClip(photoURL);
         }
@@ -254,11 +253,6 @@ public class RegisteredActivity extends AppActivity implements baseView, View.On
         super.onSaveInstanceState(outState);
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-    }
-
     public class RegisteredBean {
         private String phone;
         private String password;
@@ -274,6 +268,54 @@ public class RegisteredActivity extends AppActivity implements baseView, View.On
             this.username = username;
             this.sourceint = sourceint;
             this.status = status;
+            this.interest = interest;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public void setUsername(String username) {
+            this.username = username;
+        }
+
+        public String getSourceint() {
+            return sourceint;
+        }
+
+        public void setSourceint(String sourceint) {
+            this.sourceint = sourceint;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public String getInterest() {
+            return interest;
+        }
+
+        public void setInterest(String interest) {
             this.interest = interest;
         }
     }

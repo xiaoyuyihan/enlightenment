@@ -65,23 +65,19 @@ public abstract class AppActivity extends AppCompatActivity {
 
     protected abstract int getLayoutId();
 
-    protected abstract void init();
+    protected abstract void init(@Nullable Bundle savedInstanceState);
 
     protected abstract void initData();
+
+    protected abstract void clearData();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initWindow();
         setContentView(getLayoutId());
-        init();
+        init(savedInstanceState);
         initData();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
     }
 
     public SharedPreferences getSharedPreferences() {
@@ -127,6 +123,12 @@ public abstract class AppActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        registerUserReceiver();
+        //initSensor();
+
+    }
+
+    private void registerUserReceiver() {
         mUserTokenReceiver = new UserTokenReceiver() {
             @Override
             public void onLoginErrorCallback(String msg) {
@@ -135,10 +137,11 @@ public abstract class AppActivity extends AppCompatActivity {
         };
         IntentFilter filter = new IntentFilter(UserTokenReceiver.APP_RECEIVER_LOGIN_ERROR);
         registerReceiver(mUserTokenReceiver, filter);
-        initSensor();
-
     }
 
+    /**
+     * 监听光感，自动切换耳机模式
+     */
     protected void initSensor() {
         PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -187,9 +190,16 @@ public abstract class AppActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        super.onStop();
         if (mUserTokenReceiver != null)
             unregisterReceiver(mUserTokenReceiver);
+        mUserTokenReceiver = null;
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        clearData();
+        super.onDestroy();
     }
 
     @Override

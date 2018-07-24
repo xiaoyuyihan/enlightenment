@@ -25,12 +25,15 @@ public class ClipImageLayout extends RelativeLayout {
      */
     private float mHorizontalPadding = 20;
 
+    private float mViewProportion=1/3;
+
     public ClipImageLayout(Context context, AttributeSet attrs)
     {
         super(context, attrs);
 
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.ClipImageLayout);
         mHorizontalPadding=array.getDimension(R.styleable.ClipImageLayout_clipPadding,20);
+        mViewProportion = array.getFloat(R.styleable.ClipImageLayout_clipProportion,1);
         mDrawable=array.getDrawable(R.styleable.ClipImageLayout_clipDrawable);
         array.recycle();
 
@@ -55,7 +58,9 @@ public class ClipImageLayout extends RelativeLayout {
                 TypedValue.COMPLEX_UNIT_DIP, mHorizontalPadding, getResources()
                         .getDisplayMetrics());
         mZoomImageView.setHorizontalPadding((int)mHorizontalPadding);
+        mZoomImageView.setViewProportion(mViewProportion);
         mClipImageView.setHorizontalPadding((int)mHorizontalPadding);
+        mClipImageView.setViewProportion(mViewProportion);
     }
 
     /**

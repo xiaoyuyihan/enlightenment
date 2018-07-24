@@ -103,15 +103,17 @@
             </com.haibin.calendarview.CalendarLayout>
         </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/fragment_message_current_plan_recycler"
+        <LinearLayout
+            android:id="@+id/fragment_message_current_plan_linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_marginTop="36dp"
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/fragment_message_plan_time_layout" />
+            android:layout_below="@+id/fragment_message_plan_time_layout" >
+        </LinearLayout>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/fragment_message_plan_recycler"
             android:layout_width="match_parent"
@@ -120,7 +122,7 @@
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
             android:layout_alignParentStart="true"
-            android:layout_below="@+id/fragment_message_current_plan_recycler" />
+            android:layout_below="@+id/fragment_message_current_plan_linear" />
     </RelativeLayout>
 
 </android.support.v4.widget.NestedScrollView>

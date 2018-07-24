@@ -42,6 +42,7 @@ public class OkHttpUtils {
         mOkHttpClient = mOkHttpClient.newBuilder()
                 .readTimeout(READ_TIME_OUT, TimeUnit.SECONDS)
                 .writeTimeout(WRITE_TIME_OUT, TimeUnit.SECONDS)
+                .retryOnConnectionFailure(true)
                 .cookieJar(new CookieJarImpl(new MemoryCookieStore()))
                 .build();
 
@@ -74,19 +75,19 @@ public class OkHttpUtils {
     }
 
     public static GetBuilder get() {
-        return new GetBuilder();
+        return new GetBuilder().addHeader("Connection","close");
     }
 
     public static PostStringBuilder postString() {
-        return new PostStringBuilder();
+        return new PostStringBuilder().addHeader("Connection","close");
     }
 
     public static PostFileBuilder postFile() {
-        return new PostFileBuilder();
+        return new PostFileBuilder().addHeader("Connection","close");
     }
 
     public static PostFormBuilder post() {
-        return new PostFormBuilder();
+        return new PostFormBuilder().addHeader("Connection","close");
     }
 
     public static OtherRequestBuilder put() {

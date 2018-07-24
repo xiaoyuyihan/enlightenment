@@ -94,40 +94,26 @@ public class ContentDetailsWebFragment extends ContentDetailsFragment implements
     private ContentBean mContent;
     private ContentEditAdapter mAdapter;
 
-    private Timer mTimer = new Timer();
+    private Timer mTimer;
 
     private MediaService mediaService;
-    private EditActivity.DurationBroadcastReceiver broadcastReceiver = new EditActivity.DurationBroadcastReceiver(this);
+    private EditActivity.DurationBroadcastReceiver broadcastReceiver;
 
     private SeekBar mViewHolderBar;
     private TextView mAudioTextView;
-    private Handler mMainHandler = new Handler();
-    private ServiceConnection connection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mediaService = ((MediaService.MediaBinder) service).getService();
-            //if (mediaService.getMediaPlayer().isPlaying())
-            //mediaService.sendDurationBroad(mediaService.getMediaPlayer().getDuration());
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mediaService = null;
-        }
-    };
-
+    private Handler mMainHandler;
+    private ServiceConnection connection;
     private List<WebContentBean> mDate;
 
     private MessageDialogFragment messageDialogFragment;
 
-    TimerTask mTimerTask = null;
+    private TimerTask mTimerTask = null;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mContentView = inflater.inflate(R.layout.view_content_details_web, container, false);
         ButterKnife.bind(this, mContentView);
-        mContent = getArguments().getParcelable(ContentDetailsActivity.CONTENT_EXTRA_DATA);
         init();
         updateReward(mContentFollow);
         return mContentView;
@@ -137,7 +123,6 @@ public class ContentDetailsWebFragment extends ContentDetailsFragment implements
         Glide.with(this).load(mContent.getAvatar())
                 .transform(new GlideCircleTransform(getActivity()))
                 .into(mContentArrow);
-        createShowData();
         mAdapter = new ContentEditAdapter(getActivity(),
                 mDate,
                 mContent.getName());
@@ -171,9 +156,38 @@ public class ContentDetailsWebFragment extends ContentDetailsFragment implements
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    protected void clearData() {
 
+    }
+
+    @Override
+    protected void initData() {
+        initObject();
+    }
+
+    private void initObject() {
+        if (mTimer == null)
+            mTimer = new Timer();
+        if (mMainHandler == null)
+            mMainHandler = new Handler();
+        if (connection == null)
+            connection = new ServiceConnection() {
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    mediaService = ((MediaService.MediaBinder) service).getService();
+                    //if (mediaService.getMediaPlayer().isPlaying())
+                    //mediaService.sendDurationBroad(mediaService.getMediaPlayer().getDuration());
+                }
+
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                    mediaService = null;
+                }
+            };
+        if (broadcastReceiver == null)
+            broadcastReceiver = new EditActivity.DurationBroadcastReceiver(this);
+        mContent = getArguments().getParcelable(ContentDetailsActivity.CONTENT_EXTRA_DATA);
+        createShowData();
     }
 
     public void onStartService() {

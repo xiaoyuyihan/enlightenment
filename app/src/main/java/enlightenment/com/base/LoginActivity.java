@@ -2,6 +2,7 @@ package enlightenment.com.base;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -42,17 +43,6 @@ public class LoginActivity extends AppActivity implements View.OnClickListener, 
 
     private boolean isLogin;
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mPresenter = basePresenter.getInstance();
-        mPresenter.BindView(this);
-        mPresenter.onStart();
-        String phone = getSharedPreferences().getString(Constants.Set.SET_USER_NAME, null);
-        if (phone != null) {
-            mUsername.setText(phone);
-        }
-    }
 
     @Override
     protected int getLayoutId() {
@@ -60,7 +50,7 @@ public class LoginActivity extends AppActivity implements View.OnClickListener, 
     }
 
     @Override
-    protected void init() {
+    protected void init(@Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this);
         mRegistered.setOnClickListener(this);
         mLogin.setIndeterminateProgressMode(true);
@@ -73,10 +63,12 @@ public class LoginActivity extends AppActivity implements View.OnClickListener, 
 
     @Override
     protected void initData() {
+        mPresenter = basePresenter.getInstance();
+        mPresenter.BindView(this);
+        mPresenter.onStart();
+        String phone = getSharedPreferences().getString(Constants.Set.SET_USER_NAME, null);
         isLogin = EnlightenmentApplication.getInstance().getSharedPreferences()
                 .getBoolean(Constants.Set.SET_USER_IS, false);
-        String phone = EnlightenmentApplication.getInstance().getSharedPreferences()
-                .getString(Constants.Set.SET_USER_NAME, null);
         String password = EnlightenmentApplication.getInstance().getSharedPreferences()
                 .getString(Constants.Set.SET_USER_PASSWORD, null);
         if (phone == null || password == null)
@@ -85,6 +77,13 @@ public class LoginActivity extends AppActivity implements View.OnClickListener, 
             mUsername.setText(phone);
             mPassword.setText(password);
         }
+    }
+
+    @Override
+    protected void clearData() {
+        mPresenter.onStop();
+        mPresenter.unBindView(this);
+        mPresenter = null;
     }
 
     @Override
@@ -131,13 +130,6 @@ public class LoginActivity extends AppActivity implements View.OnClickListener, 
         } else {
             showToast("网络未打开");
         }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mPresenter.unBindView(this);
-        mPresenter.onStop();
     }
 
     @Override

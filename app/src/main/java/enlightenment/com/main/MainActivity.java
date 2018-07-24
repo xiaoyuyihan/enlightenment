@@ -77,7 +77,7 @@ public class MainActivity extends AppActivity implements View.OnClickListener,
     }
 
     @Override
-    protected void init() {
+    protected void init(@Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this);
         setDefaultFragment();
         checkNotification();
@@ -90,9 +90,8 @@ public class MainActivity extends AppActivity implements View.OnClickListener,
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        ((EnlightenmentApplication) getApplication()).updateDefaultNightMode();
+    protected void clearData() {
+
     }
 
     private void setDefaultFragment() {
@@ -145,6 +144,9 @@ public class MainActivity extends AppActivity implements View.OnClickListener,
         return false;
     }
 
+    /**
+     * 打开设置通知页面
+     */
     @Override
     public void onSureBut() {
         Intent intent = new Intent();
@@ -167,11 +169,6 @@ public class MainActivity extends AppActivity implements View.OnClickListener,
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
     }
 
     @Override

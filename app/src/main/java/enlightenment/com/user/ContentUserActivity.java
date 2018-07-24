@@ -1,5 +1,8 @@
 package enlightenment.com.user;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+
 import enlightenment.com.base.AppActivity;
 
 /**
@@ -17,12 +20,17 @@ public class ContentUserActivity extends AppActivity {
     }
 
     @Override
-    protected void init() {
+    protected void init(@Nullable Bundle savedInstanceState) {
 
     }
 
     @Override
     protected void initData() {
+
+    }
+
+    @Override
+    protected void clearData() {
 
     }
 }

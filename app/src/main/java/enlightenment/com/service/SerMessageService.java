@@ -1,21 +1,32 @@
 package enlightenment.com.service;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 
+import android.os.MessageQueue;
+import android.support.annotation.Nullable;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.JsonSyntaxException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import enlightenment.com.base.EnlightenmentApplication;
 import enlightenment.com.base.LoginActivity;
+import enlightenment.com.base.R;
 import enlightenment.com.contents.Constants;
 import enlightenment.com.contents.FileUrls;
 import enlightenment.com.contents.HttpUrls;
@@ -25,6 +36,8 @@ import enlightenment.com.tool.File.FileUtils;
 import enlightenment.com.tool.gson.TransformationUtils;
 import enlightenment.com.tool.okhttp.ModelUtil;
 import enlightenment.com.tool.gson.GsonUtils;
+import enlightenment.com.tool.okhttp.OkHttpUtils;
+import enlightenment.com.tool.okhttp.callback.BitmapCallback;
 import okhttp3.Call;
 
 /**
@@ -32,15 +45,20 @@ import okhttp3.Call;
  * 检测模块是否存在或更新
  */
 
-public class SerMessageService extends android.app.Service {
+public class SerMessageService extends AppService {
     public static final String SERVICE_DATA_EXTRA = "MessageService_Extra_Type";
 
     public static final String SERVICE_REQUEST_TOKEN_PHONE = "SERVICE_REQUEST_TOKEN_PHONE";
     public static final String SERVICE_REQUEST_TOKEN_PASSWORD = "SERVICE_REQUEST_TOKEN_PASSWORD";
 
+    public static final String SERVICE_DOWN_IMAGE_URL = "SERVICE_DOWN_IMAGE_URL";
+
     public static final int ACTION_NO = -1;
     public static final int ACTION_DETECT_MODULE_NEW = 1;       //模块更新检测
     public static final int ACTION_DETECT_REQUEST_TOKEN = 2;      //请求token
+    public static final int ACTION_DETECT_DOWN_IMAGE = 3;
+
+    public ArrayList<String> mDownFileUrl = new ArrayList<>();
 
 
     private DownloadBinder messageBinder = new DownloadBinder(this);
@@ -81,7 +99,7 @@ public class SerMessageService extends android.app.Service {
     private void switchService(Intent intent) {
         int action = intent.getIntExtra(SerMessageService.SERVICE_DATA_EXTRA, SerMessageService.ACTION_NO);
         switch (action) {
-            case SerMessageService.ACTION_DETECT_MODULE_NEW:
+            case ACTION_DETECT_MODULE_NEW:
                 extractMajor();
                 extractOrientation();
                 break;
@@ -90,6 +108,70 @@ public class SerMessageService extends android.app.Service {
                 String password = intent.getStringExtra(SerMessageService.SERVICE_REQUEST_TOKEN_PASSWORD);
                 requestToken(phone, password);
                 break;
+            case ACTION_DETECT_DOWN_IMAGE:
+                final String url = intent.getStringExtra(SERVICE_DOWN_IMAGE_URL);
+                synchronized (this) {
+                    mDownFileUrl.add(url);
+                }
+                if (mDownFileUrl.size() <= 1) {
+                    mThreadHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            downImage();
+                        }
+                    });
+                }
+                showNotification(R.mipmap.logo,
+                        "开始下载(" + mDownFileUrl.size() + ")",
+                        "下载中···", NOTIFICATION_ACTION_DOWN);
+
+        }
+    }
+
+    private void downImage() {
+        for (; mDownFileUrl.size() > 0; ) {
+            final String url = mDownFileUrl.get(0);
+            try {
+                Bitmap response = ModelUtil.getInstance().getSynchBitmap(url);
+                final String fileURL = com.utils.FileUtils.getPhotoFilePath();
+                FileUtils.writeFileBitmap(fileURL, response, 100);
+                response.recycle();
+                response = null;
+                synchronized (this) {
+                    mDownFileUrl.remove(url);
+                }
+                mMainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                                Uri.fromFile(new File(fileURL))));
+
+                        Toast.makeText(SerMessageService.this,
+                                "图片：" + fileURL + "下载成功",
+                                Toast.LENGTH_SHORT)
+                                .show();
+                        if (mDownFileUrl.size() == 0)
+                            deleteNotification(NOTIFICATION_ACTION_DOWN);
+                        else
+                            showNotification(R.mipmap.logo,
+                                    "开始下载(" + mDownFileUrl.size() + ")",
+                                    "下载中···", NOTIFICATION_ACTION_DOWN);
+
+                    }
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+                mDownFileUrl.remove(url);
+                mMainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(SerMessageService.this,
+                                "图片：" + url + "下载失败",
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                });
+            }
         }
     }
 
@@ -119,7 +201,7 @@ public class SerMessageService extends android.app.Service {
                                         EnlightenmentApplication.getInstance().getOrientationBeen());
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                            } catch (JsonSyntaxException e){
+                            } catch (JsonSyntaxException e) {
 
                             }
                         }
@@ -213,7 +295,7 @@ public class SerMessageService extends android.app.Service {
                                         EnlightenmentApplication.getInstance().getMajorBeen());
                             } catch (JSONException e) {
                                 e.printStackTrace();
-                            } catch (JsonSyntaxException e){
+                            } catch (JsonSyntaxException e) {
                                 e.printStackTrace();
                             }
                         }

@@ -46,7 +46,7 @@ public class PictureActivity extends AppActivity implements View.OnClickListener
     }
 
     @Override
-    protected void init() {
+    protected void init(@Nullable Bundle savedInstanceState) {
         ButterKnife.bind(this);
         paths = getIntent().getExtras().getStringArrayList(PICTURE_EXTRA);
         rightView.setTextColor(getResources().getColor(R.color.mainTopColor));
@@ -57,6 +57,11 @@ public class PictureActivity extends AppActivity implements View.OnClickListener
 
     @Override
     protected void initData() {
+
+    }
+
+    @Override
+    protected void clearData() {
 
     }
 
