@@ -10,13 +10,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
 import enlightenment.com.base.R;
-import enlightenment.com.main.MainItemAdapter;
 import enlightenment.com.main.MainPresenter;
 import enlightenment.com.main.MainView;
 import enlightenment.com.main.OnRecyclerScrollListener;
+import enlightenment.com.main.mainAdapter.FoundItemAdapter;
 
 /**
  * Created by lw on 2017/9/4.
@@ -63,7 +62,7 @@ public class FoundDynamicFragment extends Fragment implements MainView {
     private SwipeRefreshLayout refreshLayout;
 
     private MainPresenter mainPresenter;
-    private FoundAdapter adapter;
+    private FoundItemAdapter adapter;
 
     public int getTypeFragment() {
         return typeFragment;
@@ -87,7 +86,7 @@ public class FoundDynamicFragment extends Fragment implements MainView {
                 mainPresenter.downRefresh(getTypeFragment(), refreshLayout,adapter);
             }
         });
-        adapter = new FoundAdapter(getActivity());
+        adapter = new FoundItemAdapter(getActivity());
         //线性布局管理器
         RecyclerView.LayoutManager recyclerViewLayoutManager = new LinearLayoutManager(getActivity());
         //设置布局管理器
@@ -131,33 +130,7 @@ public class FoundDynamicFragment extends Fragment implements MainView {
         return null;
     }
 
-
-    public class FoundAdapter extends RecyclerView.Adapter{
-
-        public Context context;
-
-        public FoundAdapter(Context context){
-            this.context=context;
-        }
-
-        @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return  new FoundViewHolder(LayoutInflater.from(context)
-                    .inflate(R.layout.item_learn_text,parent,false));
-        }
-
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return 10;
-        }
-    }
-
-    public class FoundViewHolder extends RecyclerView.ViewHolder{
+    public static class FoundViewHolder extends RecyclerView.ViewHolder{
 
         public FoundViewHolder(View itemView) {
             super(itemView);

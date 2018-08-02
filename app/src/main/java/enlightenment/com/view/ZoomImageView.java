@@ -194,7 +194,7 @@ public class ZoomImageView extends AppCompatImageView {
                 initBitmap(canvas);
                 break;
             default:
-                //canvas.drawBitmap(sourceBitmap, matrix, null);
+                canvas.drawBitmap(sourceBitmap, matrix, null);
                 break;
         }
     }
@@ -318,6 +318,8 @@ public class ZoomImageView extends AppCompatImageView {
         } else {
             minRatio = mClipViewWidth / currentBitmapHeight * initRatio;
         }
+        if (minRatio>initRatio)
+            minRatio=initRatio;
     }
 
     @Override

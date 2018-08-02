@@ -1,15 +1,13 @@
 package enlightenment.com.service;
 
-import android.app.NotificationManager;
 import android.content.Intent;
 import android.os.Binder;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import android.util.ArrayMap;
 
+import com.alibaba.sdk.android.oss.ClientException;
 import com.edit.bean.EditBean;
 import com.provider.utils.IntentBean;
 import com.utils.TypeConverUtil;
@@ -24,13 +22,16 @@ import java.util.Iterator;
 import java.util.Map;
 
 import enlightenment.com.base.R;
+import enlightenment.com.contents.Constants;
 import enlightenment.com.contents.HttpUrls;
 import enlightenment.com.operationBean.InformationBean;
 
 import com.edit.bean.WebContentBean;
 
+import enlightenment.com.tool.File.SharedPreferencesUtils;
 import enlightenment.com.tool.HTMLTemplate;
 import enlightenment.com.tool.Imagecompression.ImageCompression;
+import enlightenment.com.tool.device.AliyunOssUtils;
 import enlightenment.com.tool.gson.GsonUtils;
 import enlightenment.com.tool.gson.TransformationUtils;
 import enlightenment.com.tool.okhttp.ModelUtil;
@@ -242,12 +243,36 @@ public class UploadService extends AppService {
                                         @Override
                                         public void onCompression(String oldUrl, String url) {
                                             bean.setPath(url);
-                                            bean.setHttpPath(onPutService(bean, token));
+                                            bean.setHttpPath(onPutOSS(bean, token));
                                         }
                                     });
                 }
             }
         }
+    }
+
+    private String onPutOSS(EditBean bean,String token){
+        AliyunOssUtils.getInstance(this)
+                .putAsyncObject(SharedPreferencesUtils.getPreferences(this,
+                        Constants.Set.SET_USER_NAME), bean.getPath(), new AliyunOssUtils.OnPutObjectAsyncCall() {
+                    @Override
+                    public void onPutObjectCall(String url) {
+
+                    }
+
+                    @Override
+                    public void onProgress(int progress) {
+
+                    }
+
+                    @Override
+                    public void onFailure(ClientException clientException, String uploadFilePath) {
+
+                    }
+
+
+                });
+        return "";
     }
 
     private String onPutService(EditBean bean, String token) {

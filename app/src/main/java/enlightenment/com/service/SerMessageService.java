@@ -216,8 +216,7 @@ public class SerMessageService extends AppService {
                 new ModelUtil.CallBack() {
                     @Override
                     public void onException(Call call, Exception e, int id) {
-                        //super.onException(call, e, id);
-                        //onUpdateTokenError();
+
                     }
 
                     @Override

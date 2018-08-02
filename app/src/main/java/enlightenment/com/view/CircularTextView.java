@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -18,7 +19,7 @@ import enlightenment.com.tool.device.DisplayUtils;
  * 圆形Textview
  */
 
-public class CircularTextView extends View {
+public class CircularTextView extends TextView {
     /**
      * 需要绘制的文字
      */
@@ -101,16 +102,20 @@ public class CircularTextView extends View {
             multiple = 2.0;
         }
         mTextList.clear();
-        for (int i = 0; i < line; i++) {
-            int beginIndex = i * line;
-            int endIndex = (i + 2) * line;
-            if (beginIndex + 1 >= mText.length()) {
-                return;
+        if(line==1){
+            mTextList.add(mText.toString());
+        }else {
+            for (int i = 0; i < line; i++) {
+                int beginIndex = i * line;
+                int endIndex = (i + 2) * line;
+                if (beginIndex + 1 >= mText.length()) {
+                    return;
+                }
+                if (endIndex > mText.length()) {
+                    endIndex = mText.length();
+                }
+                mTextList.add(mText.toString().substring(beginIndex, endIndex));
             }
-            if (endIndex > mText.length()) {
-                endIndex = mText.length();
-            }
-            mTextList.add(mText.toString().substring(beginIndex, endIndex));
         }
     }
 

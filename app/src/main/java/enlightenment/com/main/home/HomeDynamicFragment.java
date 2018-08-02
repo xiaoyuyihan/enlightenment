@@ -19,10 +19,9 @@ import butterknife.ButterKnife;
 import enlightenment.com.base.AppActivity;
 import enlightenment.com.base.R;
 import enlightenment.com.details.ContentDetailsActivity;
-import enlightenment.com.main.OnRecyclerScrollListener;
 import enlightenment.com.module.ModulesActivity;
 import enlightenment.com.operationBean.ContentBean;
-import enlightenment.com.main.MainItemAdapter;
+import enlightenment.com.main.mainAdapter.HomeItemAdapter;
 import enlightenment.com.main.MainPresenter;
 import enlightenment.com.main.MainView;
 import enlightenment.com.main.OnContentItemListener;
@@ -77,7 +76,7 @@ public class HomeDynamicFragment extends Fragment implements MainView,
     NestedScrollView nestedScrollView;
 
     private int typeFragment;
-    private MainItemAdapter adapter;
+    private HomeItemAdapter adapter;
     LinearLayoutManager mLinearLayoutManager;
 
 
@@ -98,7 +97,7 @@ public class HomeDynamicFragment extends Fragment implements MainView,
         View view = inflater.inflate(R.layout.fragment_scroll_recycler, container, false);
         ButterKnife.bind(this, view);
         mSwipeRefresh.setOnRefreshListener(this);
-        adapter = new MainItemAdapter(getActivity(), mainPresenter.getDataList(getTypeFragment()),
+        adapter = new HomeItemAdapter(getActivity(), mainPresenter.getDataList(getTypeFragment()),
                 R.layout.item_content_view);
         adapter.setOnClickImageListener(new ItemNineGridLayout.OnClickImageListener() {
             @Override
@@ -188,7 +187,7 @@ public class HomeDynamicFragment extends Fragment implements MainView,
             if (scrollY >= (height - vHeight * 2)) {
                 //底部加载
                 if (!mainPresenter.isRefresh()) {
-                    adapter.updataBottomViewType(MainItemAdapter.ITEM_BOTTOM_TYPE_FLAG_REFEWSH);
+                    adapter.updataBottomViewType(HomeItemAdapter.ITEM_BOTTOM_TYPE_FLAG_REFEWSH);
                     adapter.notifyItemChanged(adapter.getItemCount() - 1);
                     mainPresenter.upRefresh(getTypeFragment(), adapter);
                 }

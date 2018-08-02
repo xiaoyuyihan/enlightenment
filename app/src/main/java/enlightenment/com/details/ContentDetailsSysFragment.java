@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -21,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.edit.bean.EditBean;
 
 import java.util.List;
 
@@ -34,13 +36,16 @@ import enlightenment.com.tool.device.CheckUtils;
 import enlightenment.com.tool.device.DisplayUtils;
 import enlightenment.com.tool.glide.GlideCircleTransform;
 import enlightenment.com.tool.recycelr.SpacesItemDecoration;
-import enlightenment.com.view.PopupWindow.ContentShrinkPopupWindow;
+import enlightenment.com.view.Dialog.ImageShowDialog;
+import enlightenment.com.view.PopupWindow.CusPopupWindow;
 
 /**
  * Created by lw on 2018/3/16.
  */
 
-public class ContentDetailsSysFragment extends ContentDetailsFragment {
+public class ContentDetailsSysFragment extends ContentDetailsFragment
+        implements NestedScrollView.OnScrollChangeListener,
+        CusPopupWindow.OnCusPopupListener {
     private String Tag = "ContentDetailsSysFragment";
 
     @BindView(R.id.view_content_details_scroll)
@@ -50,8 +55,7 @@ public class ContentDetailsSysFragment extends ContentDetailsFragment {
     TextView mContentName;
     @BindView(R.id.content_details_recycler_grid)
     RecyclerView mContentRecycler;
-    @BindView(R.id.content_details_recycler_horizontal)
-    RecyclerView mContentHorRecycler;
+
     @BindView(R.id.view_content_details_sys_text)
     TextView mSysContent;
 
@@ -72,7 +76,6 @@ public class ContentDetailsSysFragment extends ContentDetailsFragment {
 
     private GridLayoutManager mGridManager;
     private ContentResAdapter mContentResAdapter;
-    private ContentResAdapter mContentHorAdapter;
     private CommentAdapter mCommentAdapter;
 
     private ContentBean mContent;
@@ -81,10 +84,17 @@ public class ContentDetailsSysFragment extends ContentDetailsFragment {
 
     private View mContentView;
 
-    private ContentShrinkPopupWindow popupWindow = null;
+    private CusPopupWindow resourcePopupWindow = null;
 
     private boolean mResViewFlag = true;
     private boolean mResFlag = true;
+
+    private OnContentResItemClickListener itemClickListener = new OnContentResItemClickListener() {
+        @Override
+        public void onClick(String url, int flag) {
+            showItemContent(url, flag);
+        }
+    };
 
     @Nullable
     @Override
@@ -92,27 +102,7 @@ public class ContentDetailsSysFragment extends ContentDetailsFragment {
         mContentView = inflater.inflate(R.layout.view_content_details_sys, container, false);
         ButterKnife.bind(this, mContentView);
         init();
-        initHor();
         return mContentView;
-    }
-
-    private void initHor() {
-        mContentHorAdapter = new ContentResAdapter(getActivity(), mPhotos, mAudios);
-        mContentHorAdapter.setFlag(true);
-        mContentHorRecycler.setLayoutManager(
-                new LinearLayoutManager(getActivity(),
-                        LinearLayoutManager.HORIZONTAL, false));
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
-                getActivity(), DividerItemDecoration.HORIZONTAL);
-        dividerItemDecoration.setDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.divider_item_transparent));
-        mContentHorRecycler.addItemDecoration(dividerItemDecoration);
-        mContentHorRecycler.setAdapter(mContentHorAdapter);
-        mContentHorAdapter.setOnContentResItemClickListener(new OnContentResItemClickListener() {
-            @Override
-            public void onClick(String url, int flag) {
-                showPopupWindow(url, flag);
-            }
-        });
     }
 
     @Override
@@ -123,16 +113,33 @@ public class ContentDetailsSysFragment extends ContentDetailsFragment {
     @Override
     protected void initData() {
         mContent = getArguments().getParcelable(ContentDetailsActivity.CONTENT_EXTRA_DATA);
-        mGridManager = new GridLayoutManager(getContext(), 3);
+        mGridManager = new GridLayoutManager(getContext(), 2, LinearLayoutManager.HORIZONTAL, false);
         //mGridManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
     }
 
-    private void showPopupWindow(String url, int flag) {
-        popupWindow = new ContentShrinkPopupWindow(getActivity(), url, flag);
+    private void showItemContent(String url, int flag) {
+        if (flag == EditBean.TYPE_PHOTO) {
+            ImageShowDialog imageShowDialog = new ImageShowDialog();
+            Bundle bundle = new Bundle();
+            bundle.putString(ImageShowDialog.IMAGE_SHOW_DATA, url);
+            imageShowDialog.setArguments(bundle);
+            imageShowDialog.show(getFragmentManager(), "ImageShowDialog");
+        }
+    }
+
+    private void showResPopWindow() {
+        resourcePopupWindow = CusPopupWindow.Builder
+                .getInstance(getActivity())
+                .setView(R.layout.fragment_recycler_only)
+                .setHeight(ViewGroup.LayoutParams.WRAP_CONTENT)
+                .setWidth(ViewGroup.LayoutParams.MATCH_PARENT)
+                .setBackground(new ColorDrawable(getResources().getColor(R.color.grey00)))
+                .setOnCusPopupLinener(this)
+                .builder();
         int[] location = new int[2];
         mCoordinator.getLocationOnScreen(location);
         //弹出PopupWindow
-        popupWindow.showAtLocation(mCoordinator,
+        resourcePopupWindow.showAtLocation(mCoordinator,
                 Gravity.TOP | Gravity.CENTER_HORIZONTAL, location[0], location[1]);
     }
 
@@ -152,53 +159,12 @@ public class ContentDetailsSysFragment extends ContentDetailsFragment {
         mSysContent.setText(mContent.getContent());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            mCoordinator.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-                @Override
-                public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                    boolean flag = isViewVisible(mContentRecycler);
-                    if (mResFlag) {
-                        if (scrollY > oldScrollY) {
-                            // down
-                            if (!flag && mResViewFlag) {
-                                mResViewFlag = !mResViewFlag;
-                                mContentRecycler.setVisibility(View.GONE);
-                                mContentHorRecycler.setVisibility(View.VISIBLE);
-                            }
-                        }
-                        if (scrollY < oldScrollY) {
-                            //up
-                            if (flag && !mResViewFlag) {
-                                mResViewFlag = !mResViewFlag;
-                                mContentRecycler.setVisibility(View.VISIBLE);
-                                mContentHorRecycler.setVisibility(View.GONE);
-                            }
-                        }
-
-                        if (scrollY == 0) {
-                            mContentRecycler.setBackground(null);
-                        } else {
-                            mContentRecycler.setBackground(
-                                    getResources().getDrawable(
-                                            R.drawable.background_grey_green_corners_4));
-                        }
-
-                        if (scrollY == (v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
-
-                        }
-                    }
-                }
-
-            });
+            mCoordinator.setOnScrollChangeListener(this);
         }
 
         mContentResAdapter = new ContentResAdapter(getActivity(), mPhotos, mAudios);
         mContentRecycler.setLayoutManager(mGridManager);
-        mContentResAdapter.setOnContentResItemClickListener(new OnContentResItemClickListener() {
-            @Override
-            public void onClick(String url, int flag) {
-                showPopupWindow(url, flag);
-            }
-        });
+        mContentResAdapter.setOnContentResItemClickListener(itemClickListener);
         mContentRecycler.addItemDecoration(new SpacesItemDecoration(16));
         mContentRecycler.setAdapter(mContentResAdapter);
 
@@ -281,11 +247,47 @@ public class ContentDetailsSysFragment extends ContentDetailsFragment {
         Rect rect = new Rect();
         cover = view.getGlobalVisibleRect(rect);
         if (cover) {
-            if (rect.width() == 0 || rect.height() == 0) {
+            if (rect.top >= rect.bottom) {
                 return !cover;
             }
         }
         return cover;
+    }
+
+    @Override
+    public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+        boolean flag = isViewVisible(mContentRecycler);
+
+        if (mResFlag) {
+            if (scrollY > oldScrollY) {
+                // down
+                if (!flag && mResViewFlag) {
+                    mResViewFlag = !mResViewFlag;
+                    showResPopWindow();
+                }
+            }
+            if (scrollY < oldScrollY) {
+                //up
+                if (flag && !mResViewFlag) {
+                    mResViewFlag = !mResViewFlag;
+                    if (resourcePopupWindow!=null){
+                        resourcePopupWindow.dismiss();
+                        resourcePopupWindow=null;
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onCusPopupListener(View view) {
+        RecyclerView mRecycler = (RecyclerView) view;
+        mRecycler.setLayoutManager(new GridLayoutManager(getContext(), 2,
+                LinearLayoutManager.HORIZONTAL, false));
+        mRecycler.addItemDecoration(new SpacesItemDecoration(12));
+        mRecycler.setAdapter(
+                new ContentResAdapter(
+                        getActivity(), mPhotos, mAudios, itemClickListener));
     }
 
     public static class ContentResAdapter extends RecyclerView.Adapter {
@@ -300,6 +302,13 @@ public class ContentDetailsSysFragment extends ContentDetailsFragment {
             this.context = context;
             this.mAudios = Audios;
             this.mPhotos = Photos;
+        }
+
+        public ContentResAdapter(Context context, String[] Photos, String[] Audios, OnContentResItemClickListener itemClickListener) {
+            this.context = context;
+            this.mAudios = Audios;
+            this.mPhotos = Photos;
+            this.onContentResItemClickListener = itemClickListener;
         }
 
         public void setFlag(boolean flag) {
@@ -335,9 +344,9 @@ public class ContentDetailsSysFragment extends ContentDetailsFragment {
                 public void onClick(View view) {
                     if (onContentResItemClickListener != null) {
                         if (position < mPhotos.length) {
-                            onContentResItemClickListener.onClick(mPhotos[position], 1);
+                            onContentResItemClickListener.onClick(mPhotos[position], EditBean.TYPE_PHOTO);
                         } else {
-                            onContentResItemClickListener.onClick(mAudios[position], 2);
+                            onContentResItemClickListener.onClick(mAudios[position], EditBean.TYPE_AUDIO);
                         }
                     }
                 }

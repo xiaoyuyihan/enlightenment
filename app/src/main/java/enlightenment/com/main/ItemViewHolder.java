@@ -126,6 +126,7 @@ public class ItemViewHolder {
             itemNineGridLayout.setIsShowAll(false);
             itemNineGridLayout.setUrlList(Arrays.asList(urls.split(",")));
             itemNineGridLayout.setOnClickImageListener(onClickImageListener);
+            itemNineGridLayout.show();
         }
 
         public void clearImage(){

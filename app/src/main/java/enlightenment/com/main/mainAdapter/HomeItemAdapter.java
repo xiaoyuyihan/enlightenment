@@ -1,4 +1,4 @@
-package enlightenment.com.main;
+package enlightenment.com.main.mainAdapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.edit.EditActivity;
 import com.edit.bean.EditBean;
 import com.edit.bean.WebContentBean;
 import com.google.gson.JsonSyntaxException;
@@ -21,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import enlightenment.com.base.R;
+import enlightenment.com.main.ItemViewHolder;
+import enlightenment.com.main.OnContentItemListener;
 import enlightenment.com.operationBean.ContentBean;
 import enlightenment.com.tool.Image.MediaPlayerUtil;
 import enlightenment.com.tool.device.CheckUtils;
@@ -32,22 +33,9 @@ import enlightenment.com.view.NineGridLayout.ItemNineGridLayout;
  * Created by lw on 2017/7/28.
  */
 
-public class MainItemAdapter extends RecyclerView.Adapter implements View.OnClickListener {
-
-    public static final int ITEM_TYPE_HEADER = 0;
-    public static final int ITEM_TYPE_CONTENT = 1;
-    public static final int ITEM_TYPE_BOTTOM = 2;
-
-    public static final int ITEM_BOTTOM_TYPE_FLAG_REFEWSH = 1001;
-    public static final int ITEM_BOTTOM_TYPE_FLAG_ERROR = 1002;
-    public static final int ITEM_BOTTOM_TYPE_FLAG_END = 1003;
+public class HomeItemAdapter extends BaseAdapter implements View.OnClickListener {
 
 
-    private int mHeaderCount = 1;//头部View个数
-    private int mBottomCount = 1;//底部View个数
-
-    private String mHeaderMsg = "我们正在搜寻····";
-    private int mCurFlag = ITEM_BOTTOM_TYPE_FLAG_REFEWSH;
 
     private Context context;
     private int viewID;
@@ -64,19 +52,7 @@ public class MainItemAdapter extends RecyclerView.Adapter implements View.OnClic
         this.onClickImageListener = onClickImageListener;
     }
 
-    public void setHeaderCount(String msg) {
-        if (msg != null) {
-            this.mHeaderMsg = msg;
-            this.mHeaderCount = 1;
-        } else
-            this.mHeaderCount = 0;
-    }
-
-    public void updataBottomViewType(int flag) {
-        this.mCurFlag = flag;
-    }
-
-    public MainItemAdapter(Context context, ArrayList mData, int viewID) {
+    public HomeItemAdapter(Context context, ArrayList mData, int viewID) {
         this.context = context;
         this.viewID = viewID;
         this.mData = mData;
@@ -111,7 +87,7 @@ public class MainItemAdapter extends RecyclerView.Adapter implements View.OnClic
             case ITEM_TYPE_CONTENT:
                 final ItemViewHolder.ItemHomeViewHolder mTextViewHolder = (ItemViewHolder.ItemHomeViewHolder) holder;
                 mTextViewHolder.setOnContentItemListener(onContentItemListener);
-                final Object bean = mData.get(position);
+                final Object bean = mData.get(position-mHeaderCount);
                 if (bean instanceof ContentBean) {
                     ContentBean contentBean = (ContentBean) bean;
                     Glide.with(context).load(contentBean.getAvatar()).asBitmap().centerCrop()
@@ -129,7 +105,7 @@ public class MainItemAdapter extends RecyclerView.Adapter implements View.OnClic
                     mTextViewHolder.setModelNameView(CheckUtils.getModelName(contentBean));
                     mTextViewHolder.setContentNameView(contentBean.getName());
                     //web
-                    if (GsonUtils.isJSONVaild(contentBean.getContent())) {
+                    if (contentBean.getViewType()==1) {
                         List<WebContentBean> webContentBeans = createShowDate(contentBean.getContent());
                         mTextViewHolder.clearImage();
                         if (webContentBeans.size() > 0) {
@@ -204,7 +180,7 @@ public class MainItemAdapter extends RecyclerView.Adapter implements View.OnClic
         try {
             return GsonUtils.parseJsonArrayWithGson(content, WebContentBean[].class);
         } catch (JsonSyntaxException e) {
-            Log.d(MainItemAdapter.class.getName(), e.toString());
+            Log.d(HomeItemAdapter.class.getName(), e.toString());
             return new ArrayList<>();
         }
     }

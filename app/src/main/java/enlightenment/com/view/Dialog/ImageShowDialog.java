@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.util.DisplayMetrics;
@@ -44,6 +46,17 @@ public class ImageShowDialog extends DialogFragment {
     public ImageView imageView;
     @BindView(R.id.dialog_content_progress)
     public ProgressBar progressBar;
+    private int position = 0;
+
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            if (position==100)
+                position=0;
+            position+=10;
+            mHandler.sendEmptyMessageAtTime(1,100);
+        }
+    };
 
     @Nullable
     @Override
@@ -77,8 +90,10 @@ public class ImageShowDialog extends DialogFragment {
                                                        Target<GlideDrawable> target,
                                                        boolean isFromMemoryCache,
                                                        boolean isFirstResource) {
-                            if (isFromMemoryCache)
+                            if (isFromMemoryCache){
                                 progressBar.setVisibility(View.GONE);
+                                imageView.requestLayout();
+                            }
                             return false;
                         }
                     })
@@ -88,6 +103,11 @@ public class ImageShowDialog extends DialogFragment {
                     .crossFade()
                     .into(imageView);
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 
     @OnClick(R.id.dialog_content_back)

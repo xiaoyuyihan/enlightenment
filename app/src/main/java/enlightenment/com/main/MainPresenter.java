@@ -2,7 +2,6 @@ package enlightenment.com.main;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,7 +18,7 @@ import enlightenment.com.contents.Constants;
 import enlightenment.com.contents.HttpUrls;
 import enlightenment.com.main.found.FoundDynamicFragment;
 import enlightenment.com.main.home.HomeDynamicFragment;
-import enlightenment.com.main.home.HomeFragment;
+import enlightenment.com.main.mainAdapter.BaseAdapter;
 import enlightenment.com.operationBean.ContentBean;
 import enlightenment.com.tool.okhttp.ModelUtil;
 import enlightenment.com.mvp.BasePresenter;
@@ -29,6 +28,7 @@ import okhttp3.Call;
 
 /**
  * Created by lw on 2017/9/4.
+ * mView 是View的副本，无法更改View 的数据，View改变的数据也无法同步到View内
  */
 
 public class MainPresenter<T extends MainView> extends BasePresenter {
@@ -145,11 +145,11 @@ public class MainPresenter<T extends MainView> extends BasePresenter {
         mHandler.post(new Runnable() {
             @Override
             public void run() {
-                MainItemAdapter itemAdapter = (MainItemAdapter) baseAdapter;
+                BaseAdapter itemAdapter = (BaseAdapter) baseAdapter;
                 if (flag) {
                     itemAdapter.setHeaderCount("休息中，请再试一下");
                 } else
-                    itemAdapter.updataBottomViewType(MainItemAdapter.ITEM_BOTTOM_TYPE_FLAG_ERROR);
+                    itemAdapter.updataBottomViewType(BaseAdapter.ITEM_BOTTOM_TYPE_FLAG_ERROR);
 
             }
         });
@@ -167,12 +167,12 @@ public class MainPresenter<T extends MainView> extends BasePresenter {
             @Override
             public void run() {
                 isRefresh=false;
-                ((MainItemAdapter) baseAdapter).setHeaderCount(null);
+                ((BaseAdapter) baseAdapter).setHeaderCount(null);
                 //没有数据，代表滑动到底
                 if (data.size() > 0 && addDataList(data, type, flag))
                     baseAdapter.notifyItemRangeChanged(baseAdapter.getItemCount(), data.size());
                 else {
-                    ((MainItemAdapter) baseAdapter).updataBottomViewType(MainItemAdapter.ITEM_BOTTOM_TYPE_FLAG_END);
+                    ((BaseAdapter) baseAdapter).updataBottomViewType(BaseAdapter.ITEM_BOTTOM_TYPE_FLAG_END);
                     baseAdapter.notifyItemChanged(baseAdapter.getItemCount()-1);
                 }
             }
@@ -198,9 +198,9 @@ public class MainPresenter<T extends MainView> extends BasePresenter {
                 @Override
                 public void run() {
                     isRefresh=false;
-                    ((MainItemAdapter) baseAdapter).setHeaderCount(null);
+                    ((BaseAdapter) baseAdapter).setHeaderCount(null);
                     if (addDataList(data, type, flag))
-                        baseAdapter.notifyItemRangeChanged(0,data.size()-1);
+                        baseAdapter.notifyDataSetChanged();
                     if (swipeRefreshLayout != null)
                         swipeRefreshLayout.setRefreshing(false);
                 }

@@ -42,6 +42,7 @@ import enlightenment.com.base.R;
 import enlightenment.com.main.ItemViewHolder;
 import enlightenment.com.tool.device.DisplayUtils;
 import enlightenment.com.user.SettingActivity;
+import enlightenment.com.user.UserActivity;
 import enlightenment.com.view.GridDividerItemDecoration;
 import enlightenment.com.view.PopupWindow.CusPopupWindow;
 
@@ -443,10 +444,12 @@ public class MyselfFragment extends Fragment implements View.OnTouchListener,
 
     private void onToolClick(int position) {
         switch (position) {
+            case 0:
+                startActivity(new Intent(getActivity(), UserActivity.class));
+                break;
             case 5:
                 startActivity(new Intent(getActivity(), SettingActivity.class));
         }
-        ((AppActivity) getActivity()).showCustomToast("位置" + position);
         mUserToolPopupWindow.dismiss();
         mUserToolPopupWindow = null;
     }

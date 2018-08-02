@@ -27,6 +27,7 @@ import butterknife.ButterKnife;
 import enlightenment.com.base.R;
 import enlightenment.com.main.ItemViewHolder;
 import enlightenment.com.operationBean.PlanBean;
+import enlightenment.com.view.Dialog.PlanViewDialog;
 
 /**
  * Created by admin on 2018/5/27.
@@ -138,9 +139,8 @@ public class MessagePlanFragment extends Fragment implements CalendarView.OnDate
             @Override
             public void onDateSelected(Calendar calendar, boolean isClick) {
                 List<Calendar.Scheme> schemeList = calendar.getSchemes();
-                if (schemeList != null && schemeList.size() > 0)
-                    for (Calendar.Scheme scheme : schemeList)
-                        Toast.makeText(getActivity(), scheme.getScheme() + "------" + scheme.getOther(), Toast.LENGTH_SHORT).show();
+                PlanViewDialog planViewDialog = new PlanViewDialog();
+                planViewDialog.show(getChildFragmentManager(),"PlanViewDialog");
 
             }
         });

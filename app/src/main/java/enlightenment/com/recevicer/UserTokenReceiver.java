@@ -16,17 +16,20 @@ public abstract class UserTokenReceiver extends BroadcastReceiver {
     public static final String RECEIVER_MSG_FLAG = "RECEIVER_MSG_FLAG";
     public static final String RECEIVER_MSG_DATA = "RECEIVER_MSG_DATA";
     public static final String APP_RECEIVER_LOGIN_ERROR = "enlightenment.app.receiver.login_error";
+    public static final int APP_TOKEN_ERROR = 2;
     public static final int APP_LOGIN_ERROR = 1;      //登陆失败，提示用户并回到登陆页面
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (intent.getIntExtra(RECEIVER_MSG_FLAG, 0)
-                == APP_LOGIN_ERROR) {
-            String msgData = intent.getStringExtra(RECEIVER_MSG_DATA);
-            tryNextLogin(context, msgData);
+        int flag = intent.getIntExtra(RECEIVER_MSG_FLAG, 0);
+        String msgData = intent.getStringExtra(RECEIVER_MSG_DATA);
+        if (flag == APP_LOGIN_ERROR) {
+            onLoginErrorCallback(msgData);
             if (checkTokenTimeOut()) {
 
             }
+        } else if (flag == APP_TOKEN_ERROR) {
+            tryNextLogin(context,msgData);
         }
     }
 
