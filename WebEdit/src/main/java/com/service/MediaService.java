@@ -151,6 +151,7 @@ public class MediaService extends Service {
                 mMediaPlayer.stop();
             mMediaPlayer.release();
             mMediaPlayer = null;
+            mPath = "";
             mPlayState = SERVICE_MEDIA_STATE_CREATE;
         }
     }
@@ -183,6 +184,9 @@ public class MediaService extends Service {
                 mPlayState = SERVICE_MEDIA_STATE_PLAYING;
             }
     }
+    public boolean isPlaying(){
+        return mMediaPlayer.isPlaying();
+    }
 
     public void onResetAudio() {
         if (mMediaPlayer != null)
@@ -191,6 +195,10 @@ public class MediaService extends Service {
 
     public int getAudioState() {
         return mPlayState;
+    }
+
+    public String getPlayerPath() {
+        return mPath;
     }
 
     @Override

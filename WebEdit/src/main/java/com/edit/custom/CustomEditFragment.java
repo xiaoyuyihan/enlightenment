@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.edit.EditActivity;
+import com.edit.OnEditOperationListener;
 import com.edit.OnFragmentResultListener;
 import com.edit.bean.EditBean;
 import com.provider.utils.IntentBean;
@@ -43,9 +44,20 @@ import butterknife.ButterKnife;
 
 public class CustomEditFragment extends Fragment implements OnFragmentResultListener {
     private static  CustomEditFragment mCustomFragment;
-    public static CustomEditFragment getInstance() {
+    private static  OnEditOperationListener editOperationListener;
+
+    public static OnEditOperationListener getEditOperationListener() {
+        return editOperationListener;
+    }
+
+    public static void setEditOperationListener(OnEditOperationListener editOperationListener) {
+        CustomEditFragment.editOperationListener = editOperationListener;
+    }
+
+    public static CustomEditFragment getInstance(OnEditOperationListener listener) {
         if (mCustomFragment==null)
             mCustomFragment=new CustomEditFragment();
+        mCustomFragment.setEditOperationListener(listener);
         return mCustomFragment;
     }
     
@@ -103,6 +115,7 @@ public class CustomEditFragment extends Fragment implements OnFragmentResultList
         messageDialogFragment.setOnMsgDialogClickListener(new MessageDialogFragment.OnMsgDialogClickListener() {
             @Override
             public void onSureBut() {
+                editOperationListener.onDelete(mEditBeanList.get(position));
                 mEditBeanList.remove(position);
                 messageDialogFragment.dismiss();
                 mEditAdapter.notifyDataSetChanged();
@@ -207,6 +220,7 @@ public class CustomEditFragment extends Fragment implements OnFragmentResultList
                         }
                     }
                 });
+                audioViewHolder.setSeekBar(0);
             } else if (holder instanceof CustomViewHolder.VideoViewHolder) {
 
             } else if (holder instanceof CustomViewHolder.PhotoViewHolder) {

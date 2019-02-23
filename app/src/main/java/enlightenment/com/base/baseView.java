@@ -1,5 +1,6 @@
 package enlightenment.com.base;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 
 import enlightenment.com.mvp.BaseView;
@@ -11,4 +12,5 @@ import enlightenment.com.mvp.BaseView;
 public interface baseView extends BaseView {
     void startNextActivity(Class name);
     void requestException();
+    Context getContext();
 }

@@ -88,9 +88,20 @@ public abstract class AppActivity extends AppCompatActivity {
         return getSharedPreferences().getBoolean(key, flag);
     }
 
+    public String getSetSharedPreferences(String key, String flag) {
+        return getSharedPreferences().getString(key, flag);
+    }
+
     public boolean setSetSharedPreferences(String key, boolean flag) {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
         editor.putBoolean(key, flag);
+        editor.commit();
+        return true;
+    }
+
+    public boolean setSetSharedPreferences(String key, String value) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putString(key, value);
         editor.commit();
         return true;
     }

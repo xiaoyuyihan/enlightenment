@@ -14,6 +14,7 @@ public class HttpUrls {
     public static final String Http_URL_DETECT_ORIENT=HTTP_URL+"getOrientation";            //DIY的模块
     public static final String HTTP_URL_CHANGE_PASSWORD=HTTP_URL+"changePassword";
     public static final String HTTP_UTL_GET_USER_COLUMN=HTTP_URL+"getUserColumn";
+    public static final String HTTP_URL_REPLACE_UUID = HTTP_URL+"replaceUUID";
 
     /********************************Main***********************************/
     public static final String HTTP_URL_HOME_NEW=HTTP_URL+"newContent";

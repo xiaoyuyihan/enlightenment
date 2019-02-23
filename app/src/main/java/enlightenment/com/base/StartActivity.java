@@ -13,7 +13,6 @@ import butterknife.BindView;
 import enlightenment.com.contents.Constants;
 import enlightenment.com.main.MainActivity;
 import enlightenment.com.service.SerMessageService;
-import enlightenment.com.tool.device.AliyunOssUtils;
 
 /**
  * Created by admin on 2017/7/20.
@@ -37,9 +36,6 @@ public class StartActivity extends AppActivity {
     protected void initData() {
         isLogin = EnlightenmentApplication.getInstance().getSharedPreferences()
                 .getBoolean(Constants.Set.SET_USER_IS, false);
-        AliyunOssUtils.getInstance(this).putAsyncObject("1111",
-                "/storage/emulated/0/DCIM/Camera/IMG_20180708_095722.jpg",null);
-
     }
 
     @Override

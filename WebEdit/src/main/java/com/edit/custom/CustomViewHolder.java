@@ -114,6 +114,10 @@ public class CustomViewHolder {
             mTime.setText(time);
         }
 
+        public void setSeekBar(int prosition) {
+            this.mSeekBar.setProgress(prosition);
+        }
+
         public TextView getCurrentTime() {
             return mCurrentTime;
         }

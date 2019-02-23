@@ -1,5 +1,6 @@
 package enlightenment.com.base;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +8,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.utils.PermissionsUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,7 +22,7 @@ import enlightenment.com.view.CircularProgressButton.CircularProgressButton;
 /***
  * 登录页面
  */
-public class LoginActivity extends AppActivity implements View.OnClickListener, baseView {
+public class LoginActivity extends AppActivity implements View.OnClickListener, LoginView {
 
     @BindView(R.id.login_top_registered)
     public TextView mRegistered;
@@ -125,7 +128,8 @@ public class LoginActivity extends AppActivity implements View.OnClickListener, 
         }
         if (SystemState.isNetworkState()) {
             mLogin.setProgress(50);
-            LoginBean bean = new LoginBean(phone, password);
+            LoginBean bean = new LoginBean(phone, password,
+                    getSetSharedPreferences(Constants.Set.SET_SYSTEM_UUID,""));
             mPresenter.executeLogin(bean);
         } else {
             showToast("网络未打开");
@@ -155,10 +159,26 @@ public class LoginActivity extends AppActivity implements View.OnClickListener, 
         showToast("请求不到数据，请检测一下网络信号");
     }
 
+    @Override
+    public Context getContext() {
+        return this;
+    }
+
+    @Override
+    public void UUIDError() {
+        Intent intent = new Intent(LoginActivity.this, PhoneValidationActivity.class);
+        intent.putExtra(PhoneValidationActivity.TYPE_EXTES, PhoneValidationActivity.TYPE_UUID);
+        intent.putExtra(PhoneValidationActivity.UUID_PHONE_EXTE, mUsername.getText().toString());
+        startActivity(intent);
+        finish();
+    }
+
 
     public static class LoginBean {
         private String username;
         private String password;
+        private String mode = "1";
+        private String uuid;
 
         public String getPassword() {
             return password;
@@ -176,11 +196,18 @@ public class LoginActivity extends AppActivity implements View.OnClickListener, 
             this.password = password;
         }
 
-        private String mode = "1";
+        public String getUuid() {
+            return uuid;
+        }
 
-        public LoginBean(String phone, String password) {
+        public void setUuid(String uuid) {
+            this.uuid = uuid;
+        }
+
+        public LoginBean(String phone, String password, String uuid) {
             this.username = phone;
             this.password = password;
+            this.uuid = uuid;
         }
     }
 }

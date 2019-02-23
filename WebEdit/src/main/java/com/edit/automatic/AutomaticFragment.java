@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.edit.EditActivity;
+import com.edit.OnEditOperationListener;
 import com.edit.OnFragmentResultListener;
 import com.edit.bean.EditBean;
 import com.provider.utils.ContentProviderUtils;
@@ -47,10 +48,20 @@ import butterknife.ButterKnife;
 
 public class AutomaticFragment extends Fragment implements OnFragmentResultListener {
     private static AutomaticFragment mAutomaticFragment;
+    private OnEditOperationListener listener;
 
-    public static AutomaticFragment getInstance() {
+    public OnEditOperationListener getOnEditOperationListener() {
+        return listener;
+    }
+
+    public void setOnEditOperationListener(OnEditOperationListener listener) {
+        this.listener = listener;
+    }
+
+    public static AutomaticFragment getInstance(OnEditOperationListener listener) {
         if (mAutomaticFragment == null)
             mAutomaticFragment = new AutomaticFragment();
+        mAutomaticFragment.setOnEditOperationListener(listener);
         return mAutomaticFragment;
     }
 
@@ -166,6 +177,7 @@ public class AutomaticFragment extends Fragment implements OnFragmentResultListe
             case 2:
                 break;
             case 3:
+                listener.onDeleteAll(mCheckBeanList);
                 mEditBeanList.removeAll(mCheckBeanList);
                 mCheckBeanList.clear();
                 if (mEditBeanList.size() == 0) {

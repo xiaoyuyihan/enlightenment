@@ -1,5 +1,6 @@
 package enlightenment.com.base;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -116,7 +117,8 @@ public class ResetPasswordActivity extends AppActivity implements baseView, View
                 if (password.length() < 6) {
                     showToast("最小密码长度六位");
                 } else if (password.equals(InputPasswordNext.getText().toString())) {
-                    mPresenter.resetPassword(new LoginActivity.LoginBean(Constants.phoneCode, password));
+                    mPresenter.resetPassword(new LoginActivity.LoginBean(Constants.phoneCode,
+                            password,getSetSharedPreferences(Constants.Set.SET_SYSTEM_UUID,"")));
                 } else
                     showToast("两次密码不一致");
                 break;
@@ -148,7 +150,12 @@ public class ResetPasswordActivity extends AppActivity implements baseView, View
 
     @Override
     public void requestException() {
-        showToast("请求不到数据，请检测一下网络信号");
+        showToast("提交失败，请再尝试一下");
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 
 }

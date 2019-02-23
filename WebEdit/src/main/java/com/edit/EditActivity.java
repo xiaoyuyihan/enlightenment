@@ -22,6 +22,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.edit.bean.EditBean;
 import com.edit.custom.CustomViewHolder;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.edit.automatic.AutomaticFragment;
@@ -35,6 +36,7 @@ import com.webedit.HtmlEditActivity;
 import com.webeditproject.R;
 import com.webeditproject.R2;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -47,7 +49,7 @@ import butterknife.OnClick;
  */
 
 public class EditActivity extends BaseActivity implements CustomEditFragment.AudioPlayClick,
-        OnBroadcastReceiverListener {
+        OnBroadcastReceiverListener, OnEditOperationListener {
 
     public static final String ACTIVITY_MODEL_TYPE = "ACTIVITY_MODEL_TYPE";
     public static final int ACTIVITY_MODEL_TYPE_CREATE = 2;
@@ -169,7 +171,7 @@ public class EditActivity extends BaseActivity implements CustomEditFragment.Aud
     @OnClick(R2.id.edit_common_automatic)
     public void onAutomatic(View view) {
         mText.setVisibility(View.GONE);
-        currentFragment = AutomaticFragment.getInstance();
+        currentFragment = AutomaticFragment.getInstance(this);
         currentFragment.setArguments(newBundle());
         mAutomatic.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.powderBlue)));
         mCustom.setBackgroundTintList(null);
@@ -190,7 +192,7 @@ public class EditActivity extends BaseActivity implements CustomEditFragment.Aud
     @OnClick(R2.id.edit_common_custom)
     public void onCustom(View view) {
         mText.setVisibility(View.VISIBLE);
-        currentFragment = CustomEditFragment.getInstance();
+        currentFragment = CustomEditFragment.getInstance(this);
         currentFragment.setArguments(newBundle());
         mCustom.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.powderBlue)));
         mAutomatic.setBackgroundTintList(null);
@@ -252,6 +254,8 @@ public class EditActivity extends BaseActivity implements CustomEditFragment.Aud
 
     @Override
     public void onReceiver(Intent intent) {
+        if (mTimer == null)
+            mTimer = new Timer();
         mViewHolderBar.setMax(intent.getIntExtra(MediaService.DATA_AUDIO_DURATION, 0));
         TimerTask mTimerTask = new TimerTask() {
             @Override
@@ -293,6 +297,27 @@ public class EditActivity extends BaseActivity implements CustomEditFragment.Aud
         }
         mediaService.setMediaDataSource(path);
     }
+
+    @Override
+    public void onDelete(EditBean bean) {
+        if (mediaService.getPlayerPath().equals(bean.getPath())) {
+            mTimer.cancel();
+            mTimer = null;
+            mediaService.onCloseAudio();
+        }
+    }
+
+    @Override
+    public void onDeleteAll(ArrayList<EditBean> beans) {
+        for (EditBean bean : beans) {
+            if (mediaService.getPlayerPath().equals(bean.getPath())) {
+                mTimer.cancel();
+                mTimer = null;
+                mediaService.onCloseAudio();
+            }
+        }
+    }
+
 
     public static class DurationBroadcastReceiver extends BroadcastReceiver {
 

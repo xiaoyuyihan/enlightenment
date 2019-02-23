@@ -33,6 +33,7 @@ import enlightenment.com.contents.HttpUrls;
 import enlightenment.com.module.ModuleBean;
 import enlightenment.com.recevicer.UserTokenReceiver;
 import enlightenment.com.tool.File.FileUtils;
+import enlightenment.com.tool.File.SharedPreferencesUtils;
 import enlightenment.com.tool.gson.TransformationUtils;
 import enlightenment.com.tool.okhttp.ModelUtil;
 import enlightenment.com.tool.gson.GsonUtils;
@@ -212,7 +213,9 @@ public class SerMessageService extends AppService {
     private void requestToken(String phone, String password) {
         ModelUtil.getInstance().post(HttpUrls.HTTP_URL_LOGIN,
                 TransformationUtils.beanToMap(
-                        new LoginActivity.LoginBean(phone, password)),
+                        new LoginActivity.LoginBean(phone, password,
+                                SharedPreferencesUtils.getPreferences(this,
+                                        Constants.Set.SET_SYSTEM_UUID))),
                 new ModelUtil.CallBack() {
                     @Override
                     public void onException(Call call, Exception e, int id) {

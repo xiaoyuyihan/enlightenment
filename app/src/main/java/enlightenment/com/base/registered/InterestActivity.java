@@ -3,6 +3,7 @@ package enlightenment.com.base.registered;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -215,6 +216,11 @@ public class InterestActivity extends AppActivity implements baseView,
     @Override
     public void requestException() {
         showToast("请求不到数据，请检测一下网络信号");
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 
     @Override

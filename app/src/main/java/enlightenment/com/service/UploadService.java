@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 
 import android.util.ArrayMap;
 
-import com.alibaba.sdk.android.oss.ClientException;
 import com.edit.bean.EditBean;
 import com.provider.utils.IntentBean;
 import com.utils.TypeConverUtil;
@@ -31,7 +30,7 @@ import com.edit.bean.WebContentBean;
 import enlightenment.com.tool.File.SharedPreferencesUtils;
 import enlightenment.com.tool.HTMLTemplate;
 import enlightenment.com.tool.Imagecompression.ImageCompression;
-import enlightenment.com.tool.device.AliyunOssUtils;
+import enlightenment.com.tool.aliyun.oss.AliyunOssUtils;
 import enlightenment.com.tool.gson.GsonUtils;
 import enlightenment.com.tool.gson.TransformationUtils;
 import enlightenment.com.tool.okhttp.ModelUtil;
@@ -235,7 +234,7 @@ public class UploadService extends AppService {
     private void onSaveEditBean(final ArrayList<EditBean> beanArrayList, final String token) {
         synchronized (this) {
             for (final EditBean bean : beanArrayList) {
-                if (bean.getType() != EditBean.TYPE_TEXT && bean.getPath() != null &&
+                if (bean.getType() == EditBean.TYPE_PHOTO && bean.getPath() != null &&
                         !bean.getPath().equals("")) {
                     ImageCompression.getInstance()
                             .compressionImage(bean.getPath(),
@@ -243,36 +242,19 @@ public class UploadService extends AppService {
                                         @Override
                                         public void onCompression(String oldUrl, String url) {
                                             bean.setPath(url);
-                                            bean.setHttpPath(onPutOSS(bean, token));
                                         }
                                     });
+                }else if (bean.getType()!=EditBean.TYPE_TEXT){
+                    bean.setHttpPath(onPutOSS(bean, token));
                 }
             }
         }
     }
 
     private String onPutOSS(EditBean bean,String token){
-        AliyunOssUtils.getInstance(this)
-                .putAsyncObject(SharedPreferencesUtils.getPreferences(this,
-                        Constants.Set.SET_USER_NAME), bean.getPath(), new AliyunOssUtils.OnPutObjectAsyncCall() {
-                    @Override
-                    public void onPutObjectCall(String url) {
-
-                    }
-
-                    @Override
-                    public void onProgress(int progress) {
-
-                    }
-
-                    @Override
-                    public void onFailure(ClientException clientException, String uploadFilePath) {
-
-                    }
-
-
-                });
-        return "";
+        return "https://enlightenment.oss-cn-hangzhou.aliyuncs.com/"+ AliyunOssUtils.getInstance(this)
+                .putSynchroObject(SharedPreferencesUtils.getPreferences(this,
+                        Constants.Set.SET_USER_NAME), bean.getPath());
     }
 
     private String onPutService(EditBean bean, String token) {

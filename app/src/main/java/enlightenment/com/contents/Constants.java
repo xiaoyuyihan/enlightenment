@@ -48,6 +48,10 @@ public class Constants {
         public static final String SET_PICTURE_MODE="SET_PICTURE_MODE";
         //夜间模式
         public static final String SET_NIGHT_MODE="SET_ILLUMINATION_MODE";
+        //自动播放
+
+        //UUID
+        public static final String SET_SYSTEM_UUID="SET_SYSTEM_UUID";
 
     }
 }

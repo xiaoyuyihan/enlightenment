@@ -40,7 +40,7 @@
                 android:layout_height="match_parent"
                 android:background="@null"
                 android:inputType="phone"
-                android:hint="请输入验证码"
+                android:hint="请输入获取到的验证码"
                 android:paddingLeft="42dp"
                 android:ems="10"
                 android:id="@+id/registered_number" />

@@ -31,7 +31,8 @@ public class TransformationUtils {
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
-                map.put(proName, proValue.toString());
+                if (proValue!=null)
+                    map.put(proName,proValue.toString() );
             }
             return map;
         }

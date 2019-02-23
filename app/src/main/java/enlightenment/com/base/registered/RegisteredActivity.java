@@ -1,6 +1,7 @@
 package enlightenment.com.base.registered;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
+import java.util.UUID;
 
 import butterknife.ButterKnife;
 import butterknife.BindView;
@@ -72,6 +74,9 @@ public class RegisteredActivity extends AppActivity implements baseView, View.On
 
     private String photoURL = "";
     private String clipPhotoURL = "";
+    private String UUID;
+    private String source="1";
+    private String status ="1";
 
     @Override
     protected int getLayoutId() {
@@ -83,6 +88,8 @@ public class RegisteredActivity extends AppActivity implements baseView, View.On
         ButterKnife.bind(this);
         mRegistered.setOnClickListener(this);
         mUserImage.setOnClickListener(this);
+        UUID = java.util.UUID.randomUUID().toString().replace("-","");
+        setSetSharedPreferences(Constants.Set.SET_SYSTEM_UUID,UUID);
         onRestoreState(savedInstanceState);
     }
 
@@ -153,6 +160,11 @@ public class RegisteredActivity extends AppActivity implements baseView, View.On
     @Override
     public void requestException() {
         showToast("请求不到数据，请检测一下网络信号");
+    }
+
+    @Override
+    public Context getContext() {
+        return this;
     }
 
     @Override
@@ -235,8 +247,8 @@ public class RegisteredActivity extends AppActivity implements baseView, View.On
             if (SystemState.isNetworkState()) {
                 mRegistered.setProgress(50);
                 RegisteredBean registeredBean = new RegisteredBean(Constants.phoneCode, password,
-                        mUsername.getText().toString(), "1", "1",
-                        EnlightenmentApplication.getInstance().getModules());
+                        mUsername.getText().toString(), source, status,
+                        EnlightenmentApplication.getInstance().getModules(),UUID);
                 mPresenter.submitInfo(clipPhotoURL, registeredBean);
             } else
                 showToast("网络未打开");
@@ -257,18 +269,22 @@ public class RegisteredActivity extends AppActivity implements baseView, View.On
         private String phone;
         private String password;
         private String username;
-        private String sourceint;
+        private String source;
         private String status;
         private String interest;
+        private String avatar;
+        private String uuid;
+        private String address="";
 
-        public RegisteredBean(String phone, String password, String username, String sourceint,
-                              String status, String interest) {
+        public RegisteredBean(String phone, String password, String username, String source,
+                              String status, String interest,String uuid) {
             this.phone = phone;
             this.password = password;
             this.username = username;
-            this.sourceint = sourceint;
+            this.source = source;
             this.status = status;
             this.interest = interest;
+            this.uuid = uuid;
         }
 
         public String getPhone() {
@@ -295,14 +311,6 @@ public class RegisteredActivity extends AppActivity implements baseView, View.On
             this.username = username;
         }
 
-        public String getSourceint() {
-            return sourceint;
-        }
-
-        public void setSourceint(String sourceint) {
-            this.sourceint = sourceint;
-        }
-
         public String getStatus() {
             return status;
         }
@@ -317,6 +325,38 @@ public class RegisteredActivity extends AppActivity implements baseView, View.On
 
         public void setInterest(String interest) {
             this.interest = interest;
+        }
+
+        public String getSource() {
+            return source;
+        }
+
+        public void setSource(String source) {
+            this.source = source;
+        }
+
+        public String getAvatar() {
+            return avatar;
+        }
+
+        public void setAvatar(String avatar) {
+            this.avatar = avatar;
+        }
+
+        public String getUuid() {
+            return uuid;
+        }
+
+        public void setUuid(String uuid) {
+            this.uuid = uuid;
+        }
+
+        public String getAddress() {
+            return address;
+        }
+
+        public void setAddress(String address) {
+            this.address = address;
         }
     }
 }
